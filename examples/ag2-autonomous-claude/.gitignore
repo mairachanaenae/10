@@ -1,0 +1,3 @@
+# The executor's working directory + any code/artifacts the agent writes at runtime.
+runs/
+__pycache__/
