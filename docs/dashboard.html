@@ -127,6 +127,11 @@
      text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
   .sheet .stat{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;}
   .row-btn{cursor:pointer;} .row-btn:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px;}
+  .cbot{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:flex-start;}
+  .cbot:last-child{border-bottom:0;}
+  .cav{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;display:grid;place-items:center;position:relative;flex:0 0 auto;background:#141b2a;}
+  .cav .cb{position:absolute;bottom:-6px;right:-6px;font-size:11px;background:#0e131e;border-radius:50%;}
+  .cbot b{color:var(--cyan);}
   .view{display:none;} .view.active{display:block;}
   .foot{color:var(--muted);font-size:11px;letter-spacing:.06em;margin-top:30px;}
   /* ---------- responsive (tablet) ---------- */
@@ -352,6 +357,14 @@ function verdictText(h){
   const tier=(h.rk==='S'||h.rk==='A')?"a sturdy long-term dividend hunter":h.rk==='B'?"a decent holding worth watching":"a fragile pick — handle with care";
   return `Rank ${h.rk} — ${tier}. Biggest watch-item: ${concern}. (A metaphor for dividend safety, not a buy signal.)`;
 }
+function council(h){return [
+  ["Buffett","💰",(h.payout<=60&&h.years>=10)?"Earnings comfortably cover a long-rising dividend — the durable kind I like.":(h.payout>90)?"The payout leaves almost no cushion; I'd want more cover.":"Decent — I'd check the moat protects these earnings over a decade."],
+  ["Munger","🧠",(h.de>150||h.payout>90)?"Invert it: high debt and a stretched payout are what snap a dividend. Avoid that combo.":"Few obvious ways this breaks — low-ish debt and a sane payout."],
+  ["Lynch","🛒",(h.yield>8)?"A yield that high usually means the market expects a cut. Be careful.":"Understandable and steady — just don't overpay for it."],
+  ["Graham","🛡️",(h.years>=20)?"A long, unbroken record — the defensive investor's friend.":(h.years<5)?"Too short a record to lean on yet.":"A fair record; insist on a margin of safety."],
+  ["Risk","⚠️",(h.yield>8)?"That yield smells like a trap — size it very small.":(h.de>250)?"Heavy debt — a downturn could force a cut.":"Diversify and size it small regardless."],
+  ["Analyst","📊","Score "+h.s+"/100 — "+(h.s>=70?"sturdy":h.s>=45?"watch it":"fragile")+". Make it one holding among many; nothing here is guaranteed."],
+];}
 function bd(label,pts,max){const w=Math.round(pts/max*100);
   return `<div class="bd"><div class="l"><span>${label}</span><span>${pts}/${max}</span></div>
     <div class="bar"><i style="width:${w}%"></i></div></div>`;}
@@ -375,6 +388,8 @@ function openSheet(sym){
     <h2 class="t" style="margin-top:18px">Power Breakdown</h2>
     ${bd("Payout coverage",p.cover,30)}${bd("Debt safety",p.debt,25)}
     ${bd("Dividend record",p.rec,25)}${bd("Yield (trap?) safety",p.yld,20)}
+    <h2 class="t" style="margin-top:18px">🤖 Mentor Council</h2>
+    ${council(h).map(c=>`<div class="cbot"><span class="cav">🤖<span class="cb">${c[1]}</span></span><div><b>${esc(c[0])}-bot</b><div>${esc(c[2])}</div></div></div>`).join("")}
     <h2 class="t" style="margin-top:18px">Raw Stats</h2>
     <div class="stat"><span>Price</span><span>$${h.price??'—'}</span></div>
     <div class="stat"><span>Dividend yield</span><span>${h.yield.toFixed(2)}%</span></div>
