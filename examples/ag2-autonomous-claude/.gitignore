@@ -1,5 +1,6 @@
 # The executor's working directory + any code/artifacts the agent writes at runtime.
 runs/
 __pycache__/
-# Generated, contains a point-in-time live-data snapshot:
+# Generated, contain point-in-time live-data snapshots:
 web/demo_snapshot.html
+web/mentor_panel.html

@@ -112,6 +112,20 @@ python3 web/app.py
   and shown.
 - **Live** mode generates fresh mentor replies with Claude (needs `ANTHROPIC_API_KEY`).
 
+### One-file offline version (`web/build_static.py`)
+
+Prefer a single HTML file you can just double-click — no server? Generate one. It bakes in
+real numbers for several stocks plus the canned mentor replies, with JavaScript so the
+dropdown and button work offline.
+
+```bash
+python3 web/build_static.py            # -> web/mentor_panel.html (default tickers)
+python3 web/build_static.py KO PEP O   # choose your own tickers
+```
+
+Open the resulting `web/mentor_panel.html` in any browser. (It's a point-in-time snapshot
+of the numbers, so regenerate it to refresh.)
+
 ## ⚠️ Safety
 
 `code_execution_config` uses `use_docker=False`, which runs **model-written code directly
