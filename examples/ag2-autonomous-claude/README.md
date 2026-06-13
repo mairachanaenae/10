@@ -111,20 +111,28 @@ python3 web/app.py
   in-character replies). If you enter a ticker, the **real live numbers are still fetched**
   and shown.
 - **Live** mode generates fresh mentor replies with Claude (needs `ANTHROPIC_API_KEY`).
+- The **"Ask your own question"** box lets you drive the panel — in live mode the mentors
+  answer your actual question (with the stock's real numbers as context).
 
-### One-file offline version (`web/build_static.py`)
+### One-file interactive version (`web/build_static.py`)
 
-Prefer a single HTML file you can just double-click — no server? Generate one. It bakes in
-real numbers for several stocks plus the canned mentor replies, with JavaScript so the
-dropdown and button work offline.
+Prefer a single HTML file you can just double-click — no server, no key, no internet?
+Generate one. It bakes in real numbers **and 1-year price history** for several stocks,
+then embeds JavaScript so you can:
+
+- pick a stock (fills the sliders with its real numbers and draws its price chart), or
+- drag the sliders (yield, payout ratio, debt, years of dividend growth),
+
+and watch a **live dividend-safety score**, an **auto-checklist**, and **each mentor react**
+(approve / caution / warn) instantly as you change the inputs.
 
 ```bash
 python3 web/build_static.py            # -> web/mentor_panel.html (default tickers)
 python3 web/build_static.py KO PEP O   # choose your own tickers
 ```
 
-Open the resulting `web/mentor_panel.html` in any browser. (It's a point-in-time snapshot
-of the numbers, so regenerate it to refresh.)
+Open the resulting `web/mentor_panel.html` in any browser. (The numbers are a point-in-time
+snapshot, so regenerate it to refresh.)
 
 ## ⚠️ Safety
 

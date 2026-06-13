@@ -87,6 +87,7 @@ PAGE = """<!doctype html>
       <option value="demo" {{ 'selected' if mode=='demo' else '' }}>Demo (no key)</option>
       <option value="live" {{ 'selected' if mode=='live' else '' }}>Live (needs API key)</option>
     </select>
+    <input type="text" name="question" style="flex:1 1 100%;" placeholder="Ask your own question (live mode answers it for real), e.g. 'Is this dividend safe?'" value="{{ question }}">
     <button type="submit">Ask the panel</button>
   </form>
 
@@ -108,10 +109,14 @@ PAGE = """<!doctype html>
 app = Flask(__name__)
 
 
-def build_bubbles(ticker: str, mode: str):
+def build_bubbles(ticker: str, mode: str, question: str = ""):
     """Return (facts_text, bubbles, error). bubbles = [(name, emoji, text, is_learner)]."""
     facts_text = fetch_stock_facts(ticker) if ticker else None
-    if ticker:
+    ask = (question or "").strip()
+    if ask:
+        # Your own question drives the panel; real numbers are added as context if present.
+        opener = (facts_text + "\n\n" + ask) if facts_text else ask
+    elif ticker:
         opener = (
             (facts_text or f"(could not fetch live data for {ticker.upper()})")
             + "\n\nUsing these numbers and market history, is this a solid long-term dividend holding?"
@@ -138,10 +143,10 @@ def build_bubbles(ticker: str, mode: str):
     return facts_text, bubbles, error
 
 
-def render(ticker: str, mode: str) -> str:
-    facts_text, bubbles, error = build_bubbles(ticker, mode)
+def render(ticker: str, mode: str, question: str = "") -> str:
+    facts_text, bubbles, error = build_bubbles(ticker, mode, question)
     return render_template_string(
-        PAGE, disclaimer=DISCLAIMER, ticker=ticker, mode=mode,
+        PAGE, disclaimer=DISCLAIMER, ticker=ticker, mode=mode, question=question,
         facts=facts_text, bubbles=bubbles, error=error,
     )
 
@@ -151,7 +156,8 @@ def index():
     if request.method == "POST":
         ticker = (request.form.get("ticker") or "").strip()
         mode = request.form.get("mode", "demo")
-        return render(ticker, mode)
+        question = (request.form.get("question") or "").strip()
+        return render(ticker, mode, question)
     # First load: show a demo session so the page is never empty.
     return render("", "demo")
 
