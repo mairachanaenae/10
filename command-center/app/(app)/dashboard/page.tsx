@@ -1,3 +1,5 @@
+import { PerformanceChart } from "@/components/charts/PerformanceChart";
+import { WealthMap } from "@/components/dashboard/WealthMap";
 import { GlassCard, SectionHeading } from "@/components/ui/GlassCard";
 import { KpiCard, type Kpi } from "@/components/ui/KpiCard";
 import { getDisplayName } from "@/lib/auth";
@@ -8,6 +10,18 @@ export default async function DashboardPage() {
   const name = await getDisplayName();
   const holdings = await getHoldings();
   const s = summarize(holdings);
+
+  const invested = holdings.filter((h) => h.assetClass !== "Cash");
+  const top = [...invested].sort((a, b) => b.value - a.value)[0];
+  const topW = (top.value / s.total) * 100;
+  const idxW =
+    (invested.filter((h) => h.assetClass === "ETF").reduce((a, h) => a + h.value, 0) / s.total) * 100;
+  const insights = [
+    `Portfolio is ${s.dayPct >= 0 ? "up" : "down"} <b>${s.dayPct.toFixed(2)}%</b> today. Top mover: <b>${s.best.symbol}</b> +${s.best.dayPct.toFixed(2)}%.`,
+    `Biggest position is <b>${top.symbol}</b> at ${topW.toFixed(0)}% of invested assets.`,
+    `About ${idxW.toFixed(0)}% sits in broad index ETFs, a diversified core.`,
+    `You are ${Math.round((s.netWorth / 100000) * 100)}% of the way to a NOK 100,000 portfolio.`,
+  ];
 
   const kpis: Kpi[] = [
     {
@@ -53,18 +67,26 @@ export default async function DashboardPage() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <GlassCard>
-          <SectionHeading hint="next milestone">Portfolio Performance</SectionHeading>
-          <div className="grid h-[180px] place-items-center rounded-xl border border-dashed border-line text-sm text-faint">
-            Recharts performance chart — Milestone 2
-          </div>
+          <SectionHeading hint="illustrative">Portfolio Performance</SectionHeading>
+          <PerformanceChart />
         </GlassCard>
         <GlassCard>
-          <SectionHeading hint="next milestone">Wealth Map</SectionHeading>
-          <div className="grid h-[180px] place-items-center rounded-xl border border-dashed border-line text-sm text-faint">
-            Animated asset-node graph — Milestone 2
-          </div>
+          <SectionHeading hint="hover a node">Wealth Map</SectionHeading>
+          <WealthMap holdings={holdings} />
         </GlassCard>
       </div>
+
+      <GlassCard className="mt-4">
+        <SectionHeading hint="auto-generated">Wealth Insights</SectionHeading>
+        <ul className="space-y-2.5 text-[13.5px]">
+          {insights.map((t, i) => (
+            <li key={i} className="flex gap-3 text-muted">
+              <span className="text-emerald">◆</span>
+              <span dangerouslySetInnerHTML={{ __html: t }} />
+            </li>
+          ))}
+        </ul>
+      </GlassCard>
     </>
   );
 }
