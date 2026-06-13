@@ -4,3 +4,4 @@ __pycache__/
 # Generated, contain point-in-time live-data snapshots:
 web/demo_snapshot.html
 web/mentor_panel.html
+web/dashboard.html
