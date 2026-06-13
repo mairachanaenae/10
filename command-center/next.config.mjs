@@ -7,6 +7,10 @@ const nextConfig = {
     ? {
         output: "export",
         images: { unoptimized: true },
+        // route/index.html so GitHub Pages serves /dashboard/ correctly.
+        trailingSlash: true,
+        // For GitHub Pages project sites served at /<repo>/ (e.g. /10).
+        ...(process.env.BASE_PATH ? { basePath: process.env.BASE_PATH } : {}),
         // Clerk registers server actions (unsupported in static export). Stub it out
         // for the export build — demo mode never calls it anyway.
         webpack: (config) => {
