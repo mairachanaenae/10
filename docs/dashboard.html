@@ -111,6 +111,22 @@
      padding:14px 22px;border-radius:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;
      transition:.4s;pointer-events:none;z-index:50;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  /* ---- hunter stat sheet (modal) ---- */
+  .overlay{position:fixed;inset:0;background:rgba(2,4,10,.74);backdrop-filter:blur(3px);
+     display:none;place-items:center;z-index:60;padding:18px;}
+  .overlay.show{display:grid;}
+  .sheet{width:min(560px,96vw);max-height:90vh;overflow:auto;position:relative;padding:24px;
+     background:linear-gradient(180deg,rgba(13,22,46,.97),rgba(8,12,26,.97));
+     border:1px solid var(--cyan);border-radius:18px;box-shadow:0 0 44px rgba(56,224,255,.35);}
+  .sheet h3{margin:0 0 2px;font-size:24px;letter-spacing:.04em;}
+  .sheet .close{position:absolute;top:14px;right:14px;width:34px;height:34px;cursor:pointer;font-size:17px;
+     background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:9px;}
+  .sheet .close:hover,.sheet .close:focus-visible{color:var(--cyan);border-color:var(--cyan);outline:none;}
+  .sheet .verdict{margin:14px 0 16px;font-size:15px;line-height:1.6;}
+  .bd{margin:10px 0;} .bd .l{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.1em;
+     text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+  .sheet .stat{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;}
+  .row-btn{cursor:pointer;} .row-btn:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px;}
   .view{display:none;} .view.active{display:block;}
   .foot{color:var(--muted);font-size:11px;letter-spacing:.06em;margin-top:30px;}
   /* ---------- responsive (tablet) ---------- */
@@ -217,6 +233,9 @@
     <p class="foot">⟡ Stylized demo — not financial advice. Numbers are a point-in-time snapshot. Built with ag2 + Claude.</p>
   </main>
 </div>
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheet" id="sheet"></div>
+</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -291,7 +310,7 @@ $("alloc").innerHTML=hunters.map(h=>{const w=Math.round((h.price*10)/portVal*100
 
 // ----- roster -----
 $("roster").innerHTML=hunters.map(h=>{const plw=Math.min(100,Math.round(h.s));
-  return `<tr><td><span class="rk ${h.rk}">${h.rk}</span></td>
+  return `<tr class="row-btn" tabindex="0" role="button" aria-label="Open ${esc(h.sym)} stat sheet" data-sym="${esc(h.sym)}"><td><span class="rk ${h.rk}">${h.rk}</span></td>
     <td><b>${esc(h.sym)}</b><div style="color:var(--muted);font-size:11px">${esc(h.name)}</div></td>
     <td><div class="pl"><span>${fmt(h.pw)}</span><span class="mini"><i style="width:${plw}%"></i></span></div></td>
     <td>${h.yield.toFixed(2)}%</td><td>${h.payout}%</td><td>${h.years} yr</td><td>$${h.price??'—'}</td></tr>`;}).join("");
@@ -304,7 +323,7 @@ $("market").innerHTML=hunters.map(h=>{
       return x.toFixed(1)+","+y.toFixed(1);}).join(" ");
     const col=k[k.length-1]>=k[0]?"#5ef0b0":"#ff6b8a";
     spark=`<svg viewBox="0 0 240 54" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2"/></svg>`;}
-  return `<div class="panel mcard"><div style="display:flex;justify-content:space-between;align-items:center">
+  return `<div class="panel mcard row-btn" tabindex="0" role="button" aria-label="Open ${esc(h.sym)} stat sheet" data-sym="${esc(h.sym)}"><div style="display:flex;justify-content:space-between;align-items:center">
      <div><div class="sym">${esc(h.sym)} <span class="rk ${h.rk}" style="font-size:11px">${h.rk}</span></div>
      <div class="nm">${esc(h.name)}</div></div><div style="text-align:right"><b>$${h.price??'—'}</b>
      <div class="nm">${h.yield.toFixed(2)}% yield</div></div></div>${spark}</div>`;}).join("");
@@ -320,6 +339,64 @@ const quests=[
 $("quests").innerHTML=quests.map(q=>`<div class="quest ${q.done?'done':''}">
    <span class="chk" aria-hidden="true"></span><div class="q"><div class="ttl">${esc(q.t)}</div>
    <div class="rw">Reward ${q.r}</div></div></div>`).join("");
+
+// ----- hunter stat sheet (modal) -----
+function parts(v){return {
+  cover:v.payout<=40?30:v.payout<=60?24:v.payout<=75?15:v.payout<=90?6:0,
+  debt: v.de<=50?25:v.de<=100?18:v.de<=150?10:v.de<=250?4:0,
+  rec:  v.years>=25?25:v.years>=10?18:v.years>=5?10:v.years>=1?4:0,
+  yld:  v.yield<=5?20:v.yield<=7?12:v.yield<=10?5:0 };}
+function verdictText(h){
+  const concern=h.payout>90?"its payout leaves almost no cushion":h.de>200?"its debt load is heavy":
+    h.yield>8?"its very high yield can signal a cut":h.years<5?"its dividend record is short":"no single glaring red flag";
+  const tier=(h.rk==='S'||h.rk==='A')?"a sturdy long-term dividend hunter":h.rk==='B'?"a decent holding worth watching":"a fragile pick — handle with care";
+  return `Rank ${h.rk} — ${tier}. Biggest watch-item: ${concern}. (A metaphor for dividend safety, not a buy signal.)`;
+}
+function bd(label,pts,max){const w=Math.round(pts/max*100);
+  return `<div class="bd"><div class="l"><span>${label}</span><span>${pts}/${max}</span></div>
+    <div class="bar"><i style="width:${w}%"></i></div></div>`;}
+let lastFocus=null;
+function openSheet(sym){
+  const h=hunters.find(x=>x.sym===sym); if(!h) return;
+  const p=parts(h); const k=h.hist||[]; let spark="";
+  if(k.length>1){const W=512,H=70,pad=4,mn=Math.min(...k),mx=Math.max(...k),sp=(mx-mn)||1;
+    const pts=k.map((x,i)=>{const px=pad+(W-2*pad)*i/(k.length-1);const py=pad+(H-2*pad)*(1-(x-mn)/sp);
+      return px.toFixed(1)+","+py.toFixed(1);}).join(" ");
+    spark=`<svg viewBox="0 0 512 70" preserveAspectRatio="none" style="width:100%;height:70px" role="img" aria-label="${esc(h.sym)} price trend"><polyline points="${pts}" fill="none" stroke="#38e0ff" stroke-width="2.5"/></svg>`;}
+  $("sheet").innerHTML=`<button class="close" id="sheetClose" aria-label="Close">✕</button>
+    <div style="display:flex;align-items:center;gap:14px">
+      <span class="rank-badge" style="width:46px;height:46px;font-size:20px">${h.rk}</span>
+      <div><h3 id="sheetTitle">${esc(h.sym)}</h3><div class="ptitle">${esc(h.name)}</div></div>
+      <div style="margin-left:auto;text-align:right"><div class="k" style="font-size:11px;color:var(--muted);letter-spacing:.2em">POWER</div>
+        <div style="font-size:22px;font-weight:800">${fmt(h.pw)}</div></div>
+    </div>
+    <p class="verdict">${verdictText(h)}</p>
+    ${spark}
+    <h2 class="t" style="margin-top:18px">Power Breakdown</h2>
+    ${bd("Payout coverage",p.cover,30)}${bd("Debt safety",p.debt,25)}
+    ${bd("Dividend record",p.rec,25)}${bd("Yield (trap?) safety",p.yld,20)}
+    <h2 class="t" style="margin-top:18px">Raw Stats</h2>
+    <div class="stat"><span>Price</span><span>$${h.price??'—'}</span></div>
+    <div class="stat"><span>Dividend yield</span><span>${h.yield.toFixed(2)}%</span></div>
+    <div class="stat"><span>Payout ratio</span><span>${h.payout}%</span></div>
+    <div class="stat"><span>Debt-to-equity</span><span>${h.de}</span></div>
+    <div class="stat"><span>Years of dividend growth</span><span>${h.years}</span></div>
+    <div class="stat"><span>Safety score</span><span>${h.s}/100</span></div>`;
+  lastFocus=document.activeElement;
+  $("overlay").classList.add('show');
+  $("sheetClose").focus();
+  $("sheetClose").onclick=closeSheet;
+}
+function closeSheet(){ $("overlay").classList.remove('show'); if(lastFocus) lastFocus.focus(); }
+document.addEventListener('click',e=>{
+  const r=e.target.closest('[data-sym]'); if(r){openSheet(r.dataset.sym);return;}
+  if(e.target.id==='overlay') closeSheet();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeSheet();
+  const r=e.target.closest && e.target.closest('[data-sym]');
+  if(r && (e.key==='Enter'||e.key===' ')){e.preventDefault();openSheet(r.dataset.sym);}
+});
 
 // ----- nav (accessible view switching) -----
 const btns=[...document.querySelectorAll('nav.side button')];
