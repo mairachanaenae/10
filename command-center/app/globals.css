@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* deep black + charcoal surfaces, emerald profit, soft-blue AI, gold wealth */
+  --bg: #06080d;
+  --surface: #0e1320;
+  --surface2: #131a2b;
+  --line: rgba(255, 255, 255, 0.08);
+  --line2: rgba(255, 255, 255, 0.14);
+  --ink: #eef2fb;
+  --muted: #9aa7c2;
+  --faint: #5e6b86;
+  --emerald: #34d399;
+  --blue: #6ea8fe;
+  --gold: #e9c46a;
+  --violet: #9d8bf6;
+  --danger: #fb7185;
+  /* channel forms so Tailwind alpha modifiers (bg-blue/[0.14]) work */
+  --blue-rgb: 110 168 254;
+  --emerald-rgb: 52 211 153;
+  --gold-rgb: 233 196 106;
+  --violet-rgb: 157 139 246;
+  --danger-rgb: 251 113 133;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* glass card */
+.glass {
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+}
+
+.tnum { font-variant-numeric: tabular-nums; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 99px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
