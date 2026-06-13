@@ -1,89 +1,4 @@
-#!/usr/bin/env python3
-"""Generate ONE self-contained, very-interactive HTML file for the mentor panel.
-
-It bakes in real numbers + 1y price history for several dividend stocks, then embeds
-JavaScript so you can:
-  - pick a stock (fills the sliders with its real numbers + draws its price chart), or
-  - drag the sliders yourself (yield, payout ratio, debt, years of dividend growth),
-and watch a live safety score, an auto-checklist, and the ROBOT MENTORS react instantly.
-A "Watch the robots discuss" button lights them up one-by-one as they speak.
-No server, no API key, no internet.
-
-    python3 web/build_static.py            # default tickers -> web/mentor_panel.html
-    python3 web/build_static.py KO PEP O   # your own tickers
-"""
-
-from __future__ import annotations
-
-import datetime
-import json
-import os
-import sys
-
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from investing_mentors import DISCLAIMER  # noqa: E402
-
-DEFAULT_TICKERS = ["KO", "PEP", "JNJ", "PG", "O", "MCD", "ABBV", "VZ"]
-
-
-def fetch_struct(ticker: str) -> dict | None:
-    try:
-        import yfinance as yf
-    except ImportError:
-        print("[build] yfinance not installed — run: pip install yfinance")
-        return None
-    try:
-        t = yf.Ticker(ticker)
-        info = t.info or {}
-        name = info.get("shortName") or info.get("longName") or ticker
-        price = info.get("currentPrice") or info.get("regularMarketPrice")
-        dy = info.get("dividendYield")
-        payout = info.get("payoutRatio")
-        de = info.get("debtToEquity")
-
-        dy_pct = round((dy * 100 if (dy is not None and dy < 1) else (dy or 0)), 2)
-        payout_pct = round((payout or 0) * 100)
-
-        years = 0
-        try:
-            divs = t.dividends
-            if divs is not None and len(divs):
-                annual = divs.groupby(divs.index.year).sum()
-                annual = annual[annual.index < datetime.datetime.now().year]
-                vals = [annual[y] for y in sorted(annual.index)]
-                streak = 1
-                for i in range(len(vals) - 1, 0, -1):
-                    if vals[i] >= vals[i - 1] - 1e-9:
-                        streak += 1
-                    else:
-                        break
-                years = streak if len(vals) > 1 else 0
-        except Exception:
-            pass
-
-        hist = []
-        try:
-            h = t.history(period="1y", interval="1mo")
-            hist = [round(float(x), 2) for x in h["Close"].dropna().tolist()]
-        except Exception:
-            pass
-
-        return {
-            "name": name,
-            "price": round(float(price), 2) if price else None,
-            "yield": dy_pct,
-            "payout": payout_pct,
-            "de": round(float(de), 1) if de is not None else 100.0,
-            "years": int(years),
-            "hist": hist,
-        }
-    except Exception as e:
-        print(f"[build] could not fetch {ticker}: {type(e).__name__}: {str(e)[:120]}")
-        return None
-
-
-# JSON is injected via .replace() on __TOKENS__ (so no brace-doubling needed in CSS/JS).
-TEMPLATE = r"""<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -166,7 +81,7 @@ TEMPLATE = r"""<!doctype html>
 <div class="wrap">
   <h1>🤖 Investing Robot Mentors</h1>
   <p class="sub">Pick a stock or move the sliders — the robot mentors react live. Long-term &amp; dividends.</p>
-  <div class="disclaimer">__DISCLAIMER__</div>
+  <div class="disclaimer">EDUCATIONAL ONLY — not financial advice. These are imitations of public investing philosophies, meant to teach how careful investors think. No one can reliably predict markets; nothing here guarantees returns. Do your own research and consider a licensed advisor before investing real money.</div>
 
   <div class="card">
     <h2>How one robot agent works</h2>
@@ -232,7 +147,7 @@ TEMPLATE = r"""<!doctype html>
 </div>
 
 <script>
-const DATA = __DATA__;
+const DATA = {"KO": {"name": "Coca-Cola Company (The)", "price": 82.62, "yield": 2.57, "payout": 65, "de": 124.9, "years": 24, "hist": [66.45, 67.52, 64.91, 67.95, 72.11, 68.95, 74.3, 81.0, 75.53, 78.76, 79.01, 82.62]}, "PEP": {"name": "Pepsico, Inc.", "price": 144.27, "yield": 4.1, "payout": 89, "de": 244.8, "years": 28, "hist": [132.67, 142.99, 135.09, 141.9, 144.47, 139.4, 150.68, 166.49, 152.31, 156.84, 142.69, 144.27]}, "JNJ": {"name": "Johnson & Johnson", "price": 240.87, "yield": 2.23, "payout": 60, "de": 67.7, "years": 64, "hist": [160.72, 172.85, 182.23, 185.62, 203.36, 204.68, 224.76, 245.7, 243.04, 228.54, 224.04, 240.87]}, "PG": {"name": "Procter & Gamble Company (The)", "price": 149.61, "yield": 2.85, "payout": 62, "de": 67.7, "years": 23, "hist": [146.26, 153.69, 150.37, 147.16, 146.02, 141.24, 149.57, 165.95, 143.36, 145.99, 143.56, 149.61]}, "O": {"name": "Realty Income Corporation", "price": 62.72, "yield": 5.18, "payout": 265, "de": 73.5, "years": 2, "hist": [53.16, 55.91, 58.12, 55.69, 55.84, 54.9, 59.85, 65.86, 60.38, 63.68, 61.01, 62.72]}, "MCD": {"name": "McDonald's Corporation", "price": 284.81, "yield": 2.61, "payout": 60, "de": 100.0, "years": 51, "hist": [292.96, 306.11, 296.69, 293.01, 306.16, 300.08, 311.14, 336.88, 306.98, 291.61, 277.32, 284.81]}, "ABBV": {"name": "AbbVie Inc.", "price": 227.73, "yield": 3.04, "payout": 326, "de": 100.0, "years": 13, "hist": [183.06, 205.52, 226.17, 212.98, 224.02, 224.8, 219.41, 230.17, 215.7, 209.58, 217.72, 227.73]}, "VZ": {"name": "Verizon Communications Inc.", "price": 48.11, "yield": 5.88, "payout": 67, "de": 192.0, "years": 25, "hist": [40.06, 42.11, 41.84, 37.83, 39.81, 39.44, 43.11, 49.4, 49.46, 47.32, 47.81, 48.11]}};
 // name, big robot avatar is 🤖; the small badge shows the mentor's role.
 const ROLES = [
   ["Buffett","💰"],["Munger","🧠"],["Lynch","🛒"],["Graham","🛡️"],
@@ -381,32 +296,4 @@ presetSel.onchange=()=>applyPreset(presetSel.value);
 applyPreset(Object.keys(DATA)[0]);
 </script>
 </body>
-</html>"""
-
-
-def main() -> int:
-    tickers = [a.upper() for a in sys.argv[1:]] or DEFAULT_TICKERS
-    data = {}
-    for t in tickers:
-        print(f"[build] fetching {t} ...")
-        d = fetch_struct(t)
-        if d:
-            data[t] = d
-        else:
-            print(f"[build] skipped {t}")
-    if not data:
-        print("[build] no data — aborting.")
-        return 1
-
-    out = (TEMPLATE
-           .replace("__DISCLAIMER__", DISCLAIMER)
-           .replace("__DATA__", json.dumps(data)))
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mentor_panel.html")
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(out)
-    print(f"[build] wrote {path}  ({len(out)} bytes, {len(data)} stocks)")
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+</html>
