@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
 import { authConfigured } from "@/lib/auth";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "The Investor's Command Center",
   description:
-    "A premium AI-powered investment command center — mentors, agents, and your portfolio in one place.",
+    "A premium AI-powered investment command center: mentors, agents, and your portfolio in one place.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const tree = (
     <html lang="en">
       <head>
@@ -26,6 +25,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 
-  // Only mount ClerkProvider when configured (it throws without a publishable key).
-  return authConfigured() ? <ClerkProvider>{tree}</ClerkProvider> : tree;
+  // Only pull Clerk into the graph when configured — keeps the static export
+  // (which has no server actions) clean, and avoids Clerk throwing without keys.
+  if (authConfigured()) {
+    const { ClerkProvider } = await import("@clerk/nextjs");
+    return <ClerkProvider>{tree}</ClerkProvider>;
+  }
+  return tree;
 }
