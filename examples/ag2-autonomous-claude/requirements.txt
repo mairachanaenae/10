@@ -1,1 +1,3 @@
 ag2[anthropic]>=0.13,<0.14
+# Optional — only needed for the investing_mentors.py --ticker live-data feature:
+yfinance>=0.2

@@ -59,16 +59,37 @@ config changes; the loop is identical. For OpenAI, use
 ## Variation: investing mentor panel (`investing_mentors.py`)
 
 A second example that reuses the same Claude config but flips the shape from "two robots
-running code" to a **round-table of legendary investors who mentor you**. Each is an
-agent with a famous investor's style — Buffett, Munger, Lynch, Graham — plus a **financial
-historian** (lessons from past crashes, bubbles, and dividend track records) and an
-**analyst** who ties it together into a plain-English takeaway. Focus: long-term + dividends.
+running code" to a **round-table of legendary investors who mentor you**. The seats:
+
+| Seat | Brings |
+|------|--------|
+| Buffett | wonderful businesses, durable moats, long holding |
+| Munger | mental models, inversion, avoiding mistakes |
+| Lynch | invest in what you understand, fair price |
+| Graham | margin of safety, don't overpay, check the dividend record |
+| **Historian** | lessons from market history — crashes, bubbles, dividend track records |
+| **Risk** | protecting you: diversification, position sizing, what could go wrong |
+| Analyst | synthesizes it into a plain-English takeaway + checklist |
+
+Focus: long-term + dividends.
 
 ```bash
-python3 investing_mentors.py          # self-driving panel, seeded with a beginner question
-python3 investing_mentors.py --chat   # you type questions and the panel answers
-python3 investing_mentors.py --smoke  # check wiring, no API key, no network
+python3 investing_mentors.py            # self-driving panel, seeded beginner question
+python3 investing_mentors.py --ticker KO  # analyze REAL numbers for a stock (live data)
+python3 investing_mentors.py --chat     # 3-question intake, then you type questions
+python3 investing_mentors.py --demo     # offline canned run — NO API key, NO network
+python3 investing_mentors.py --smoke    # check wiring only
 ```
+
+**Features**
+- **Real stock data** (`--ticker SYMBOL`): looks up live price, dividend yield, payout
+  ratio, debt, and years of dividend growth via `yfinance`, and feeds those real numbers
+  to the panel so it reasons about an actual company. (Requires internet; install with
+  `pip install yfinance`.)
+- **Personal intake** (`--chat`): asks your timeline, amount, and risk comfort so the
+  advice is tailored to you.
+- **Offline demo** (`--demo`): the full panel runs with canned, in-character replies —
+  no API key and no network needed, so you can see exactly how a session flows.
 
 > **Educational only — not financial advice.** The agents imitate public investing
 > philosophies to teach how careful investors *reason*. No one can reliably predict
