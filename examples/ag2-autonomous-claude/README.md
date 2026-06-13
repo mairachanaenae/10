@@ -96,6 +96,22 @@ python3 investing_mentors.py --smoke    # check wiring only
 > markets and nothing here promises returns. Do your own research and consider a licensed
 > advisor before investing real money.
 
+## Web page (`web/app.py`)
+
+A tiny browser version of the mentor panel — type a stock symbol and read the panel as
+chat bubbles.
+
+```bash
+pip install flask
+python3 web/app.py
+# open http://127.0.0.1:5000 in your browser
+```
+
+- **Demo** mode works with **no API key and no network** for the commentary (canned,
+  in-character replies). If you enter a ticker, the **real live numbers are still fetched**
+  and shown.
+- **Live** mode generates fresh mentor replies with Claude (needs `ANTHROPIC_API_KEY`).
+
 ## ⚠️ Safety
 
 `code_execution_config` uses `use_docker=False`, which runs **model-written code directly
