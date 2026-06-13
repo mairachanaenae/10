@@ -56,6 +56,25 @@ Swap the provider by changing `build_llm_config()` in `autonomous_agent.py` — 
 config changes; the loop is identical. For OpenAI, use
 `{"model": "gpt-4o", "api_key": os.environ["OPENAI_API_KEY"]}` and `pip install ag2[openai]`.
 
+## Variation: investing mentor panel (`investing_mentors.py`)
+
+A second example that reuses the same Claude config but flips the shape from "two robots
+running code" to a **round-table of legendary investors who mentor you**. Each is an
+agent with a famous investor's style — Buffett, Munger, Lynch, Graham — plus a **financial
+historian** (lessons from past crashes, bubbles, and dividend track records) and an
+**analyst** who ties it together into a plain-English takeaway. Focus: long-term + dividends.
+
+```bash
+python3 investing_mentors.py          # self-driving panel, seeded with a beginner question
+python3 investing_mentors.py --chat   # you type questions and the panel answers
+python3 investing_mentors.py --smoke  # check wiring, no API key, no network
+```
+
+> **Educational only — not financial advice.** The agents imitate public investing
+> philosophies to teach how careful investors *reason*. No one can reliably predict
+> markets and nothing here promises returns. Do your own research and consider a licensed
+> advisor before investing real money.
+
 ## ⚠️ Safety
 
 `code_execution_config` uses `use_docker=False`, which runs **model-written code directly
