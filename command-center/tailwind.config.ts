@@ -42,7 +42,9 @@ const config: Config = {
       },
       animation: {
         "pulse-dot": "pulse 1.8s infinite",
-        fade: "fade .35s ease",
+        // `both` fill-mode: holds the hidden state during delay, holds visible after.
+        // Pure CSS, so content reveals even if JS never hydrates.
+        fade: "fade .5s ease both",
       },
     },
   },
