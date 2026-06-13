@@ -1,0 +1,4 @@
+
+# agentmemory / iii engine runtime state (created when the server runs in cwd)
+data/
+.agentmemory/
