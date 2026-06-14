@@ -129,9 +129,9 @@ export function AutonomousLoop() {
                   height={b.h}
                   rx={6}
                   fill={b.ag ? "rgba(34,211,238,.14)" : "rgba(255,255,255,.06)"}
-                  stroke={isActive ? "#34d399" : b.ag ? "#22d3ee" : "var(--line2)"}
+                  stroke={isActive ? "#38bdf8" : b.ag ? "#22d3ee" : "var(--line2)"}
                   strokeWidth={isActive ? 2.4 : 1}
-                  style={isActive ? { filter: "drop-shadow(0 0 8px #34d399)" } : undefined}
+                  style={isActive ? { filter: "drop-shadow(0 0 8px #38bdf8)" } : undefined}
                 />
                 <text x={b.x + b.w / 2} y={b.y + b.h / 2 + 3} textAnchor="middle" style={{ fill: "var(--ink)", fontSize: 9.5 }}>
                   {b.t}

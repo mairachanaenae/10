@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PasswordGate } from "@/components/PasswordGate";
 import { authConfigured } from "@/lib/auth";
 import "./globals.css";
 
@@ -20,7 +21,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body className="min-h-screen bg-bg bg-radial-glow font-sans text-ink antialiased">
-        {children}
+        <PasswordGate>{children}</PasswordGate>
       </body>
     </html>
   );

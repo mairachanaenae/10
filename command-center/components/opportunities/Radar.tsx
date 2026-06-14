@@ -23,7 +23,7 @@ const OPPS: Opp[] = [
 ];
 
 const CATS: Cat[] = ["Growth", "Value", "Dividend"];
-const COLOR: Record<Cat, string> = { Growth: "#6ea8fe", Value: "#9d8bf6", Dividend: "#34d399" };
+const COLOR: Record<Cat, string> = { Growth: "#6ea8fe", Value: "#9d8bf6", Dividend: "#22d3ee" };
 
 export function Radar() {
   const [on, setOn] = useState<Set<Cat>>(new Set(CATS));

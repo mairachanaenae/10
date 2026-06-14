@@ -7,7 +7,7 @@ import { money } from "@/lib/utils";
 const PALETTE: Record<string, string> = {
   ETF: "#6ea8fe",
   Stock: "#9d8bf6",
-  Cash: "#34d399",
+  Cash: "#22d3ee",
   Crypto: "#22d3ee",
   RealEstate: "#e9c46a",
   Business: "#fb7185",

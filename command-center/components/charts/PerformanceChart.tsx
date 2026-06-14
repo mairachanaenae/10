@@ -50,8 +50,8 @@ export function PerformanceChart() {
           <AreaChart data={data} margin={{ top: 6, right: 6, left: -22, bottom: 0 }}>
             <defs>
               <linearGradient id="perf" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#34d399" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="#34d399" stopOpacity={0} />
+                <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.35} />
+                <stop offset="100%" stopColor="#38bdf8" stopOpacity={0} />
               </linearGradient>
             </defs>
             <XAxis dataKey="i" hide />
@@ -66,7 +66,7 @@ export function PerformanceChart() {
               labelFormatter={() => ""}
               formatter={(v: number) => [`index ${v}`, ""]}
             />
-            <Area type="monotone" dataKey="v" stroke="#34d399" strokeWidth={2.4} fill="url(#perf)" />
+            <Area type="monotone" dataKey="v" stroke="#38bdf8" strokeWidth={2.4} fill="url(#perf)" />
           </AreaChart>
         </ResponsiveContainer>
       </div>

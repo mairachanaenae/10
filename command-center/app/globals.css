@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  /* deep black + charcoal surfaces, emerald profit, soft-blue AI, gold wealth */
+  /* deep black + charcoal surfaces, blue accent, gold wealth */
   --bg: #06080d;
   --surface: #0e1320;
   --surface2: #131a2b;
@@ -12,14 +12,15 @@
   --ink: #eef2fb;
   --muted: #9aa7c2;
   --faint: #5e6b86;
-  --emerald: #34d399;
+  /* "emerald" token kept for naming, now a sky-blue accent (no green) */
+  --emerald: #38bdf8;
   --blue: #6ea8fe;
   --gold: #e9c46a;
   --violet: #9d8bf6;
   --danger: #fb7185;
   /* channel forms so Tailwind alpha modifiers (bg-blue/[0.14]) work */
   --blue-rgb: 110 168 254;
-  --emerald-rgb: 52 211 153;
+  --emerald-rgb: 56 189 248;
   --gold-rgb: 233 196 106;
   --violet-rgb: 157 139 246;
   --danger-rgb: 251 113 133;

@@ -3,7 +3,7 @@
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import type { Holding } from "@/lib/types";
 
-const COLORS = ["#6ea8fe", "#9d8bf6", "#34d399", "#e9c46a", "#fb7185", "#22d3ee"];
+const COLORS = ["#6ea8fe", "#9d8bf6", "#22d3ee", "#e9c46a", "#fb7185", "#22d3ee"];
 
 export function AllocationDonut({ holdings }: { holdings: Holding[] }) {
   const total = holdings.reduce((a, h) => a + h.value, 0) || 1;
