@@ -1,6 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { ask, hasKey } from "@/lib/browser-ai";
+import { portfolioContext } from "@/lib/portfolio-context";
 
 type AgentId = "exec" | "ctx" | "create" | "prio";
 
@@ -34,20 +36,51 @@ const exec = (t: string) => {
   return EXEC.default;
 };
 
+/** Ask Claude to actually perform a task against the portfolio and decide what to do next.
+ * Returns a short result plus 0-2 follow-up tasks it spawns itself. */
+async function execLive(
+  objective: string,
+  task: string,
+  memory: string[],
+): Promise<{ result: string; next: string[] }> {
+  const system =
+    "You are the Execution agent in an autonomous BabyAGI-style loop managing a personal investment " +
+    "research objective. You reason about the user's real portfolio, then output STRICT JSON only: " +
+    '{"result": string (one concise sentence of what you found/did), "next": string[] (0-2 short ' +
+    "follow-up task titles that move the objective forward, no duplicates of prior work)}. " +
+    "Educational only, never financial advice.\n\nPortfolio:\n" +
+    portfolioContext() +
+    (memory.length ? "\n\nPrior findings:\n- " + memory.join("\n- ") : "");
+  const user = `Objective: ${objective}\nCurrent task: ${task}\n\nReturn JSON only.`;
+  const raw = await ask(system, user, 320);
+  const match = raw.match(/\{[\s\S]*\}/);
+  const parsed = match ? JSON.parse(match[0]) : { result: raw, next: [] };
+  return {
+    result: String(parsed.result ?? raw).trim(),
+    next: Array.isArray(parsed.next) ? parsed.next.map((s: unknown) => String(s)).filter(Boolean).slice(0, 2) : [],
+  };
+}
+
 export function AutonomousLoop() {
   const [objective, setObjective] = useState("Grow my portfolio toward financial freedom");
   const [queue, setQueue] = useState<string[]>([]);
   const [memory, setMemory] = useState<string[]>([]);
   const [log, setLog] = useState<{ who: string; text: string }[]>([]);
   const [active, setActive] = useState<AgentId | null>(null);
+  const [live, setLive] = useState(false);
   const running = useRef(false);
+
+  useEffect(() => setLive(hasKey()), []);
 
   async function run() {
     if (running.current) return;
     running.current = true;
+    const useLive = hasKey();
     let q = ["Find the portfolio's biggest risk", "Improve diversification", "Check for over-concentration"];
     const mem: string[] = [];
-    const out: { who: string; text: string }[] = [{ who: "system", text: "Objective: " + objective }];
+    const out: { who: string; text: string }[] = [
+      { who: "system", text: "Objective: " + objective + (useLive ? "  ·  engine: live Claude" : "  ·  engine: demo") },
+    ];
     setQueue([...q]);
     setMemory([]);
     setLog([...out]);
@@ -62,38 +95,68 @@ export function AutonomousLoop() {
       setQueue([...q]);
       setActive("exec");
       addLog("Execution", "▶ " + task);
-      await sleep(620);
-      const res = exec(task);
+      await sleep(useLive ? 120 : 620);
+
+      let res = "";
+      let spawned: string[] = [];
+      if (useLive) {
+        try {
+          const r = await execLive(objective, task, mem);
+          res = r.result;
+          spawned = r.next;
+        } catch (e) {
+          res = exec(task) + ` (live fell back: ${e instanceof Error ? e.message.slice(0, 60) : "error"})`;
+        }
+      } else {
+        res = exec(task);
+      }
       addLog("Execution", "✓ " + res);
-      await sleep(420);
+      await sleep(useLive ? 120 : 420);
+
       setActive("ctx");
       mem.push(res);
       setMemory([...mem]);
       addLog("Context", `stored result · retrieved ${Math.min(mem.length, 2)} related memories`);
-      await sleep(520);
+      await sleep(useLive ? 160 : 520);
+
       setActive("create");
-      if (Math.random() > 0.25) {
-        const sp = SPAWN[i % SPAWN.length];
-        q.push(sp);
-        addLog("Task Creation", "＋ " + sp);
+      if (!useLive) spawned = Math.random() > 0.25 ? [SPAWN[i % SPAWN.length]] : [];
+      if (spawned.length) {
+        for (const sp of spawned) {
+          q.push(sp);
+          addLog("Task Creation", "＋ " + sp);
+        }
       } else addLog("Task Creation", "no new task needed");
       setQueue([...q]);
-      await sleep(500);
+      await sleep(useLive ? 160 : 500);
+
       setActive("prio");
-      q = q.sort(() => Math.random() - 0.5);
+      // keep the freshest objective-driven tasks first; stable-ish shuffle in demo
+      q = useLive ? q : q.sort(() => Math.random() - 0.5);
       addLog("Prioritization", `re-ranked the list (${q.length} left)`);
       setQueue([...q]);
-      await sleep(500);
+      await sleep(useLive ? 140 : 500);
     }
     setActive(null);
-    addLog("system", `Loop paused · ${mem.length} insights stored. (Capped at 6 cycles for the demo.)`);
+    addLog("system", `Loop paused · ${mem.length} insights stored. (Capped at 6 cycles.)`);
     running.current = false;
   }
 
   return (
     <div className="grid gap-4 lg:grid-cols-2">
       <div className="glass p-5">
-        <div className="mb-3 font-display text-[13px] font-semibold">The Loop · watch the agents light up</div>
+        <div className="mb-3 flex items-center gap-2 font-display text-[13px] font-semibold">
+          The Loop · watch the agents light up
+          <span
+            className={
+              "ml-auto inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-normal " +
+              (live ? "border-emerald text-emerald" : "border-line text-faint")
+            }
+          >
+            <span className={"h-1.5 w-1.5 rounded-full " + (live ? "bg-emerald animate-pulse-dot" : "bg-faint")} />
+            {live ? "live Claude" : "demo engine"}
+          </span>
+        </div>
         <svg viewBox="0 0 460 330" className="h-[320px] w-full" role="img" aria-label="Autonomous agent loop">
           <defs>
             <marker id="ah" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto">
