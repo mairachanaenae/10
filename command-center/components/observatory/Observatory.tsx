@@ -6,13 +6,13 @@ import {
   CartesianGrid, Tooltip, PieChart, Pie, Cell, LineChart, Line,
 } from "recharts";
 import {
-  Wallet, Radar, Activity, Landmark, Search, Bell, Plus, Minus, Clock, Circle,
-  ArrowUpRight, ArrowDownRight, Sparkles, KeyRound, Send,
+  Wallet, Radar, Activity, Landmark, Search, Plus, Minus, Clock, Circle,
+  ArrowUpRight, ArrowDownRight, Sparkles, KeyRound, Send, X,
 } from "lucide-react";
 import { MENTORS } from "@/lib/mentors";
-import { chat, hasKey, setApiKey, type Msg as AiMsg } from "@/lib/browser-ai";
+import { chat, hasKey, getApiKey, setApiKey, clearApiKey, type Msg as AiMsg } from "@/lib/browser-ai";
 import { fetchQuotes, type Quote } from "@/lib/market-api";
-import { hasNewsKey } from "@/lib/news-api";
+import { hasNewsKey, getNewsKey, setNewsKey, clearNewsKey } from "@/lib/news-api";
 import { fetchGov, type GovData } from "@/lib/gov-api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useHoldings, upsertHolding, removeHolding, resetHoldings, type Position } from "@/lib/holdings-store";
@@ -1126,10 +1126,43 @@ const NAV = [
   { id: "gov", label: "Gov", Icon: Landmark, View: Government },
 ];
 
+function Connections({ onClose }: { onClose: () => void }) {
+  const [ai, setAi] = useState(getApiKey() || "");
+  const [fin, setFin] = useState(getNewsKey() || "");
+  function save() {
+    if (ai.trim()) setApiKey(ai); else clearApiKey();
+    if (fin.trim()) setNewsKey(fin); else clearNewsKey();
+    onClose();
+  }
+  const field = (label: string, hint: string, val: string, set: (s: string) => void, ph: string) => (
+    <div className="iv-field">
+      <label>{label}</label>
+      <div className="iv-input"><input type="password" value={val} onChange={(e) => set(e.target.value)} placeholder={ph} /></div>
+      <span style={{ fontSize: 11, color: "var(--mute)" }}>{hint}</span>
+    </div>
+  );
+  return (
+    <div onClick={(e) => e.target === e.currentTarget && onClose()}
+      style={{ position: "fixed", inset: 0, zIndex: 60, display: "grid", placeItems: "center", padding: 16, background: "rgba(3,5,11,.7)", backdropFilter: "blur(6px)" }}>
+      <div className="iv-panel" style={{ width: "min(440px,96vw)" }}>
+        <div style={{ display: "flex", alignItems: "center", marginBottom: 6 }}>
+          <span className="iv-eyebrow">Connections</span>
+          <button className="iv-icon-btn" style={{ marginLeft: "auto" }} onClick={onClose} aria-label="Close"><X size={16} /></button>
+        </div>
+        <p style={{ fontSize: 12.5, color: "var(--mute)", marginBottom: 6 }}>Keys live only in this browser and are sent only to their provider. For a shared deployment, use server keys on Vercel.</p>
+        {field("Anthropic (Claude)", "Powers the Advisor council + agent summaries. platform.claude.com", ai, setAi, "sk-ant-…")}
+        {field("Finnhub (live quotes)", "Live prices in Folio, Markets, Trade. finnhub.io — free.", fin, setFin, "finnhub key")}
+        <button className="iv-cta brassbtn" onClick={save}>Save connections</button>
+      </div>
+    </div>
+  );
+}
+
 export default function Observatory() {
   const [active, setActive] = useState("portfolio");
   const View = NAV.find((n) => n.id === active)!.View;
   const [clock, setClock] = useState("");
+  const [keys, setKeys] = useState(false);
   useEffect(() => {
     const tick = () => setClock(new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }));
     tick(); const id = setInterval(tick, 30000); return () => clearInterval(id);
@@ -1155,11 +1188,12 @@ export default function Observatory() {
             <div className="iv-srch"><Search size={16} /><input placeholder="Search ticker, fund, or agency…" /></div>
             <div className="iv-pill iv-mob-hide"><span className="dot-live" /> Markets open</div>
             <div className="iv-pill iv-mob-hide"><Clock size={14} /> <span className="iv-mono">{clock}</span></div>
-            <button className="iv-icon-btn" aria-label="Notifications"><Bell size={17} /></button>
+            <button className="iv-icon-btn" aria-label="Connections" onClick={() => setKeys(true)}><KeyRound size={17} /></button>
           </div>
           <View />
         </div>
       </div>
+      {keys && <Connections onClose={() => setKeys(false)} />}
     </div>
   );
 }
