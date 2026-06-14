@@ -14,8 +14,10 @@ import { chat, hasKey, setApiKey, type Msg as AiMsg } from "@/lib/browser-ai";
 import { fetchQuotes, type Quote } from "@/lib/market-api";
 import { hasNewsKey } from "@/lib/news-api";
 import { fetchGov, type GovData } from "@/lib/gov-api";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useHoldings, upsertHolding, removeHolding, resetHoldings, type Position } from "@/lib/holdings-store";
 import { computeMetrics, needsRebalance, type PortfolioMetrics } from "@/lib/analytics";
+import { summarizer, anomalyFlagger, stewardReport, type AgentResult } from "@/lib/agents";
 import { propose, approve, dismiss, usePendingApprovals } from "@/lib/approvals";
 import { useAudit } from "@/lib/audit";
 
@@ -292,19 +294,28 @@ function useCountUp(target: number, ms = 1100) {
 }
 
 /* ---------- live quotes hook (Finnhub, optional) ---------- */
-function useLiveQuotes(symbols: string[]): { q: Record<string, Quote>; live: boolean } {
+type QuoteStatus = "off" | "loading" | "live" | "error";
+function useLiveQuotes(symbols: string[]): { q: Record<string, Quote>; live: boolean; status: QuoteStatus } {
   const [q, setQ] = useState<Record<string, Quote>>({});
-  const [live, setLive] = useState(false);
+  const [status, setStatus] = useState<QuoteStatus>("off");
   const keyset = symbols.join(",");
   useEffect(() => {
-    if (!hasNewsKey()) return;
+    if (!hasNewsKey()) { setStatus("off"); return; }
     let alive = true;
+    setStatus("loading");
     fetchQuotes(keyset.split(","))
-      .then((res) => { if (alive && Object.keys(res).length) { setQ(res); setLive(true); } })
-      .catch(() => {});
+      .then((res) => { if (!alive) return; if (Object.keys(res).length) { setQ(res); setStatus("live"); } else setStatus("error"); })
+      .catch(() => { if (alive) setStatus("error"); });
     return () => { alive = false; };
   }, [keyset]);
-  return { q, live };
+  return { q, live: status === "live", status };
+}
+function quoteBadge(status: QuoteStatus, liveLabel: string) {
+  const map: Record<QuoteStatus, { t: string; c?: string }> = {
+    off: { t: "Sample · add key" }, loading: { t: "Fetching quotes…" },
+    live: { t: liveLabel, c: "var(--up)" }, error: { t: "Live unavailable · sample", c: "var(--down)" },
+  };
+  return map[status];
 }
 
 /* ---------- small components ---------- */
@@ -329,7 +340,8 @@ function Portfolio() {
   const [tf, setTf] = useState("1Y");
   const [editing, setEditing] = useState(false);
   const holdings = useHoldings();
-  const { q, live } = useLiveQuotes(holdings.map((h) => h.quoteSym || h.sym));
+  const { q, status } = useLiveQuotes(holdings.map((h) => h.quoteSym || h.sym));
+  const qb = quoteBadge(status, "Live quotes");
   const rows: Position[] = holdings.map((h) => {
     const quote = q[h.quoteSym || h.sym];
     return { ...h, px: quote?.last ?? h.px, chg: quote?.chg ?? h.chg ?? 0 };
@@ -349,8 +361,8 @@ function Portfolio() {
           <div className="iv-hero-sub">
             <ChgTag v={totals.dayPct} big /><span>·</span>
             <span className={totals.dayAbs >= 0 ? "up" : "down"}>{sign(totals.dayAbs)}{usd(totals.dayAbs)} today</span>
-            <span className="iv-tag" style={live ? { color: "var(--up)", borderColor: "rgba(91,224,176,.4)" } : undefined}>
-              <Circle size={8} /> {live ? "Live quotes" : "Sample · add key"}
+            <span className="iv-tag" style={qb.c ? { color: qb.c, borderColor: qb.c } : undefined}>
+              <Circle size={8} /> {qb.t}
             </span>
           </div>
           <div className="iv-rule" style={{ width: 64 }} />
@@ -630,7 +642,8 @@ function Markets() {
   const [cat, setCat] = useState("All");
   const [sortK, setSortK] = useState<"last" | "chg">("chg");
   const [asc, setAsc] = useState(false);
-  const { q, live } = useLiveQuotes(SCAN.map((s) => s.sym));
+  const { q, status } = useLiveQuotes(SCAN.map((s) => s.sym));
+  const qb = quoteBadge(status, "Live · Finnhub");
   const scan = useMemo(() => SCAN.map((s) => ({ ...s, last: q[s.sym]?.last ?? s.last, chg: q[s.sym]?.chg ?? s.chg })), [q]);
   const rows = useMemo(() => {
     let r = cat === "All" ? scan : scan.filter((x) => x.cat === cat);
@@ -651,8 +664,8 @@ function Markets() {
         <div><span className="iv-eyebrow">Markets</span>
           <div className="iv-display" style={{ fontSize: 34, marginTop: 6 }}>Scanner</div>
           <div className="iv-hero-sub" style={{ marginTop: 8 }}>
-            <span className="iv-tag" style={live ? { color: "var(--up)", borderColor: "rgba(91,224,176,.4)" } : undefined}>
-              <Circle size={8} /> {live ? "Live · Finnhub" : "Sample · add Finnhub key in /settings"}
+            <span className="iv-tag" style={qb.c ? { color: qb.c, borderColor: qb.c } : undefined}>
+              <Circle size={8} /> {qb.t}
             </span>
           </div>
           <div className="iv-rule" /></div>
@@ -700,7 +713,8 @@ function Trade() {
   const [side, setSide] = useState<"buy" | "sell">("buy");
   const [type, setType] = useState<"market" | "limit">("market");
   const [qty, setQty] = useState(10);
-  const { q, live } = useLiveQuotes(["NVDA"]);
+  const { q, status } = useLiveQuotes(["NVDA"]);
+  const qb = quoteBadge(status, "Live");
   const px = q["NVDA"]?.last ?? 176.30;
   const chgPct = q["NVDA"]?.chg ?? 2.61;
   const limit = (px * 0.995).toFixed(2);
@@ -727,8 +741,8 @@ function Trade() {
               <span className="iv-display" style={{ fontSize: 34 }}>NVDA</span>
               <span className="iv-mono" style={{ fontSize: 20 }}>{usd(px)}</span>
               <ChgTag v={chgPct} big />
-              <span className="iv-tag" style={live ? { color: "var(--up)", borderColor: "rgba(91,224,176,.4)" } : undefined}>
-                <Circle size={8} /> {live ? "Live" : "Sample"}
+              <span className="iv-tag" style={qb.c ? { color: qb.c, borderColor: qb.c } : undefined}>
+                <Circle size={8} /> {qb.t}
               </span>
             </div>
           </div>
@@ -821,6 +835,70 @@ function Trade() {
 }
 
 /* ============================== ADVISOR (live Claude) ============================== */
+/* ---------- Agent Ops: role-colored, explainable, approval-gated ---------- */
+type AgentRole = "messenger" | "scout" | "steward";
+const ROLES: Record<AgentRole, { name: string; color: string; desc: string }> = {
+  messenger: { name: "Messenger", color: "#37E6FF", desc: "Plain-language portfolio summary" },
+  scout: { name: "Scout", color: "#F4B23E", desc: "Scans for unusual moves & drawdowns" },
+  steward: { name: "Steward", color: "#FF5C7A", desc: "Drift & concentration risk" },
+};
+const toneColor: Record<AgentResult["tone"], string> = { good: "var(--up)", warn: "var(--warn)", bad: "var(--down)" };
+
+function AgentOps({ holdings }: { holdings: Position[] }) {
+  const metrics = useMemo(() => computeMetrics(holdings), [holdings]);
+  const [out, setOut] = useState<Partial<Record<AgentRole, AgentResult>>>({});
+
+  function run(role: AgentRole) {
+    const r = role === "messenger" ? summarizer(holdings, metrics) : role === "scout" ? anomalyFlagger(holdings) : stewardReport(metrics);
+    setOut((o) => ({ ...o, [role]: r }));
+  }
+  function send(role: AgentRole, r: AgentResult) {
+    if (!r.proposal) return;
+    propose({ agent: ROLES[role].name, title: r.proposal.title, why: r.proposal.why, confidence: r.proposal.confidence, kind: "note", payload: r.proposal.payload });
+  }
+
+  return (
+    <div className="iv-panel" style={{ marginBottom: 18 }}>
+      <div style={{ display: "flex", alignItems: "center", marginBottom: 4 }}>
+        <span className="iv-eyebrow">Agent Ops</span>
+        <span style={{ marginLeft: "auto", fontSize: 11.5, color: "var(--mute)" }}>read-only · every action needs your approval</span>
+      </div>
+      <div className="iv-grid" style={{ gridTemplateColumns: "repeat(3,1fr)", marginTop: 12 }}>
+        {(Object.keys(ROLES) as AgentRole[]).map((role) => {
+          const meta = ROLES[role]; const r = out[role];
+          return (
+            <div key={role} style={{ border: "1px solid var(--line)", borderRadius: 14, padding: 16, background: "var(--frost)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ width: 9, height: 9, borderRadius: "50%", background: meta.color, boxShadow: `0 0 10px ${meta.color}` }} />
+                <span style={{ fontWeight: 600, fontFamily: "Rajdhani, sans-serif", letterSpacing: ".02em" }}>{meta.name}</span>
+              </div>
+              <div style={{ fontSize: 12, color: "var(--mute)", margin: "6px 0 12px" }}>{meta.desc}</div>
+              <button className="iv-chip" style={{ padding: "6px 14px" }} onClick={() => run(role)}>Run</button>
+              {r && (
+                <div style={{ marginTop: 12 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: toneColor[r.tone] }}>{r.summary}</div>
+                  <p style={{ fontSize: 12.5, color: "var(--mute)", margin: "6px 0" }}>{r.detail}</p>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 5, margin: "8px 0" }}>
+                    {r.evidence.map((e, i) => (
+                      <span key={i} className="iv-mono" style={{ fontSize: 10.5, color: "var(--mute)", border: "1px solid var(--line2)", borderRadius: 6, padding: "2px 7px" }}>{e}</span>
+                    ))}
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span className="iv-tag" style={{ borderColor: "var(--line)" }}>conf {(r.confidence * 100).toFixed(0)}%</span>
+                    {r.proposal && (
+                      <button className="iv-cta brassbtn" style={{ width: "auto", margin: 0, padding: "6px 12px", fontSize: 12 }} onClick={() => send(role, r)}>Send to approvals</button>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function Advisor() {
   const [activeId, setActiveId] = useState(MENTORS[0].id);
   const [connected, setConnected] = useState(false);
@@ -878,10 +956,13 @@ function Advisor() {
           <div className="iv-rule" /></div>
       </div>
 
+      <AgentOps holdings={holdings} />
+      <div style={{ marginBottom: 18 }}><ApprovalStrip /></div>
+
       {!connected && (
         <div className="iv-panel" style={{ marginBottom: 18 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-            <span className="iv-badge" style={{ background: "rgba(217,178,106,.14)", color: "var(--brass)" }}><KeyRound size={16} /></span>
+            <span className="iv-badge" style={{ background: "rgba(55,230,255,.14)", color: "var(--cyan)" }}><KeyRound size={16} /></span>
             <div style={{ flex: 1, minWidth: 200 }}>
               <div style={{ fontWeight: 600 }}>Connect Claude</div>
               <div style={{ fontSize: 12.5, color: "#8A93A3" }}>Paste your Anthropic key (stored only in this browser) to make the council reason live.</div>
@@ -996,13 +1077,21 @@ function Government() {
         <div className="iv-panel">
           <span className="iv-eyebrow">Where it goes · outlays by function</span>
           <div style={{ marginTop: 14 }}>
-            {fns.map((f) => (
-              <div className="iv-fnrow" key={f.k}>
-                <span style={{ fontSize: 13.5 }}>{f.k}</span>
-                <div className="iv-track"><div className="iv-fill" style={{ width: (f.v / maxF) * 100 + "%" }} /></div>
-                <span className="iv-mono" style={{ fontSize: 13, color: "#ECEAE3", minWidth: 64, textAlign: "right" }}>${fmt(f.v / 1000, 2)}T</span>
-              </div>
-            ))}
+            {!tried
+              ? [0, 1, 2, 3, 4, 5].map((i) => (
+                  <div className="iv-fnrow" key={i}>
+                    <Skeleton style={{ height: 13, width: 110 }} />
+                    <Skeleton style={{ height: 9, width: "100%" }} />
+                    <Skeleton style={{ height: 13, width: 56 }} />
+                  </div>
+                ))
+              : fns.map((f) => (
+                  <div className="iv-fnrow" key={f.k}>
+                    <span style={{ fontSize: 13.5 }}>{f.k}</span>
+                    <div className="iv-track"><div className="iv-fill" style={{ width: (f.v / maxF) * 100 + "%" }} /></div>
+                    <span className="iv-mono" style={{ fontSize: 13, color: "#ECEAE3", minWidth: 64, textAlign: "right" }}>${fmt(f.v / 1000, 2)}T</span>
+                  </div>
+                ))}
           </div>
         </div>
       </div>
