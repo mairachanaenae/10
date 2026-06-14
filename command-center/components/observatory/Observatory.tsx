@@ -14,6 +14,10 @@ import { chat, hasKey, setApiKey, type Msg as AiMsg } from "@/lib/browser-ai";
 import { fetchQuotes, type Quote } from "@/lib/market-api";
 import { hasNewsKey } from "@/lib/news-api";
 import { fetchGov, type GovData } from "@/lib/gov-api";
+import { useHoldings, upsertHolding, removeHolding, resetHoldings, type Position } from "@/lib/holdings-store";
+import { computeMetrics, needsRebalance, type PortfolioMetrics } from "@/lib/analytics";
+import { propose, approve, dismiss, usePendingApprovals } from "@/lib/approvals";
+import { useAudit } from "@/lib/audit";
 
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
@@ -225,15 +229,7 @@ type Pt = { t: number; v: number };
 const series = (arr: number[]): Pt[] => arr.map((v, i) => ({ t: i, v: +v.toFixed(2) }));
 
 /* ---------- mock data (replace with API) ---------- */
-type Holding = { sym: string; name: string; sh: number; px: number; chg: number; tone: string; quoteSym?: string };
-// The user's real positions (Finnhub symbols where they differ from the display ticker).
-const HOLDINGS: Holding[] = [
-  { sym: "VUAG", name: "Vanguard S&P 500 UCITS", sh: 12, px: 266.67, chg: 1.30, tone: "#5B7CFF", quoteSym: "VUAG.L" },
-  { sym: "JNJ", name: "Johnson & Johnson", sh: 14, px: 172.14, chg: 0.75, tone: "#C8102E" },
-  { sym: "KO", name: "Coca-Cola", sh: 22, px: 82.50, chg: 1.25, tone: "#F40000" },
-  { sym: "NVDA", name: "NVIDIA", sh: 9, px: 180.00, chg: 1.95, tone: "#76B900" },
-  { sym: "O", name: "Realty Income", sh: 20, px: 59.00, chg: -0.50, tone: "#0033A0" },
-];
+type Holding = Position; // positions come from the persistent store
 const PORT_SERIES: Record<string, Pt[]> = {
   "1M": series(walk(238000, 30, 0.012, 11)),
   "3M": series(walk(221000, 60, 0.013, 23)),
@@ -272,12 +268,12 @@ const GOV_SPLIT = [
 ];
 
 /* portfolio context for the AI advisor (built from what's on screen) */
-function advisorContext(): string {
-  const value = HOLDINGS.reduce((a, h) => a + h.sh * h.px, 0);
-  const lines = HOLDINGS.map(
-    (h) => `- ${h.sym} (${h.name}) · ${h.sh} sh @ ${usd(h.px)} = ${usd(h.sh * h.px, 0)} · today ${sign(h.chg)}${h.chg}%`,
+function advisorContext(holdings: Position[]): string {
+  const value = holdings.reduce((a, h) => a + h.sh * h.px, 0);
+  const lines = holdings.map(
+    (h) => `- ${h.sym} (${h.name}) · ${h.sh} sh @ ${usd(h.px)} = ${usd(h.sh * h.px, 0)} · target ${h.target ?? 0}% · today ${sign(h.chg ?? 0)}${h.chg ?? 0}%`,
   );
-  return [`Portfolio value ${usd(value, 0)} across ${HOLDINGS.length} positions.`, "Holdings:", ...lines].join("\n");
+  return [`Portfolio value ${usd(value, 0)} across ${holdings.length} positions.`, "Holdings:", ...lines].join("\n");
 }
 
 /* ---------- count-up hook ---------- */
@@ -331,16 +327,15 @@ const Tip = ({ active, payload, prefix = "$" }: any) =>
 /* ============================== PORTFOLIO ============================== */
 function Portfolio() {
   const [tf, setTf] = useState("1Y");
-  const { q, live } = useLiveQuotes(HOLDINGS.map((h) => h.quoteSym || h.sym));
-  const rows = HOLDINGS.map((h) => {
+  const [editing, setEditing] = useState(false);
+  const holdings = useHoldings();
+  const { q, live } = useLiveQuotes(holdings.map((h) => h.quoteSym || h.sym));
+  const rows: Position[] = holdings.map((h) => {
     const quote = q[h.quoteSym || h.sym];
-    return { ...h, px: quote?.last ?? h.px, chg: quote?.chg ?? h.chg };
+    return { ...h, px: quote?.last ?? h.px, chg: quote?.chg ?? h.chg ?? 0 };
   });
-  const totals = useMemo(() => {
-    const value = rows.reduce((a, h) => a + h.sh * h.px, 0);
-    const dayAbs = rows.reduce((a, h) => a + h.sh * h.px * (h.chg / 100), 0);
-    return { value, dayAbs, dayPct: (dayAbs / (value - dayAbs)) * 100 };
-  }, [rows]);
+  const metrics = useMemo(() => computeMetrics(rows), [rows]);
+  const totals = { value: metrics.total, dayPct: metrics.dayChangePct, dayAbs: (metrics.dayChangePct / 100) * metrics.total };
   const shown = useCountUp(totals.value);
   const data = PORT_SERIES[tf];
   const donut = rows.map((h) => ({ name: h.sym, value: +(h.sh * h.px).toFixed(0), tone: h.tone }));
@@ -412,24 +407,210 @@ function Portfolio() {
         </div>
 
         <div className="iv-panel">
-          <span className="iv-eyebrow">Holdings</span>
-          <table className="iv-tbl" style={{ marginTop: 12 }}>
-            <thead><tr><th>Position</th><th className="iv-mob-hide">Shares</th><th>Price</th><th>Value</th><th>Day</th></tr></thead>
-            <tbody>
-              {rows.map((h) => (
-                <tr key={h.sym}>
-                  <td><div className="iv-sym"><Badge sym={h.sym} tone={h.tone} />
-                    <div><div style={{ fontWeight: 600 }}>{h.sym}</div><div className="iv-symname iv-mob-hide">{h.name}</div></div></div></td>
-                  <td className="iv-mono iv-mob-hide">{h.sh}</td>
-                  <td className="iv-mono">{usd(h.px)}</td>
-                  <td className="iv-mono">{usd(h.sh * h.px, 0)}</td>
-                  <td style={{ textAlign: "right" }}><ChgTag v={h.chg} /></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: 4 }}>
+            <span className="iv-eyebrow">Holdings</span>
+            <button className="iv-chip" style={{ marginLeft: "auto", padding: "5px 12px" }} onClick={() => setEditing((e) => !e)}>
+              {editing ? "Done" : "Edit"}
+            </button>
+          </div>
+          {editing ? (
+            <HoldingEditor holdings={holdings} />
+          ) : (
+            <table className="iv-tbl" style={{ marginTop: 10 }}>
+              <thead><tr><th>Position</th><th className="iv-mob-hide">Shares</th><th>Price</th><th>Value</th><th>Day</th></tr></thead>
+              <tbody>
+                {rows.map((h) => (
+                  <tr key={h.sym}>
+                    <td><div className="iv-sym"><Badge sym={h.sym} tone={h.tone} />
+                      <div><div style={{ fontWeight: 600 }}>{h.sym}</div><div className="iv-symname iv-mob-hide">{h.name}</div></div></div></td>
+                    <td className="iv-mono iv-mob-hide">{h.sh}</td>
+                    <td className="iv-mono">{usd(h.px)}</td>
+                    <td className="iv-mono">{usd(h.sh * h.px, 0)}</td>
+                    <td style={{ textAlign: "right" }}><ChgTag v={h.chg ?? 0} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
+
+      <RiskTargets metrics={metrics} />
+      <ApprovalStrip />
+    </div>
+  );
+}
+
+/* ---------- Steward agent: drift/concentration check -> approvable proposal ---------- */
+function runStewardCheck(m: PortfolioMetrics) {
+  if (!needsRebalance(m, 5) || !m.maxDrift) {
+    propose({
+      agent: "Steward",
+      title: "Portfolio on target",
+      why: `No position drifts more than 5 points from its target. Concentration is ${m.concentrationLabel.toLowerCase()} (top weight ${m.topWeight.toFixed(0)}%). No action needed.`,
+      confidence: 0.9,
+      kind: "note",
+      payload: {},
+    });
+    return;
+  }
+  const d = m.maxDrift;
+  const trim = d.drift > 0;
+  propose({
+    agent: "Steward",
+    title: `${trim ? "Trim" : "Add to"} ${d.sym} toward its ${d.target}% target`,
+    why: `${d.sym} is ${d.weight.toFixed(0)}% of the book vs a ${d.target}% target (${d.drift > 0 ? "+" : ""}${d.drift.toFixed(0)}pp drift). Concentration is ${m.concentrationLabel.toLowerCase()} (top weight ${m.topWeight.toFixed(0)}%). Consider ${trim ? "trimming" : "adding to"} it to move back toward target. Educational only — approving logs this recommendation to your audit trail; it does not place any trade.`,
+    confidence: Math.min(0.85, 0.5 + Math.abs(d.drift) / 100),
+    kind: "note",
+    payload: { sym: d.sym },
+  });
+}
+
+/* ---------- Allocation vs target + concentration (decision layer) ---------- */
+function RiskTargets({ metrics }: { metrics: PortfolioMetrics }) {
+  const over = needsRebalance(metrics, 5);
+  const concTone = metrics.concentrationLabel === "Concentrated" ? "var(--down)" : metrics.concentrationLabel === "Moderate" ? "var(--warn)" : "var(--up)";
+  return (
+    <div className="iv-grid" style={{ gridTemplateColumns: "1.5fr 1fr", marginTop: 18 }}>
+      <div className="iv-panel">
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          <span className="iv-eyebrow">Allocation vs Target</span>
+          <button className="iv-chip" style={{ marginLeft: "auto", padding: "5px 12px" }} onClick={() => runStewardCheck(metrics)}>Run Steward check</button>
+          <span className="iv-tag" style={{ color: over ? "var(--warn)" : "var(--up)", borderColor: over ? "rgba(244,178,62,.4)" : "rgba(67,230,160,.4)" }}>
+            <Circle size={8} /> {over ? "Rebalance suggested" : "On target"}
+          </span>
+        </div>
+        <div style={{ marginTop: 14, display: "grid", gap: 12 }}>
+          {metrics.positions.map((p) => {
+            const drift = p.drift; const w = Math.min(50, Math.abs(drift)) / 50 * 50; // half-width %
+            return (
+              <div key={p.sym} style={{ display: "grid", gridTemplateColumns: "56px 1fr 84px", gap: 12, alignItems: "center" }}>
+                <span className="iv-mono" style={{ fontSize: 12.5 }}>{p.sym}</span>
+                <div style={{ position: "relative", height: 10, borderRadius: 6, background: "var(--line2)" }}>
+                  <div style={{ position: "absolute", left: "50%", top: -2, bottom: -2, width: 1, background: "rgba(255,255,255,.25)" }} />
+                  <div style={{ position: "absolute", top: 0, bottom: 0, borderRadius: 6,
+                    [drift >= 0 ? "left" : "right"]: "50%", width: w + "%",
+                    background: drift >= 0 ? "linear-gradient(90deg,var(--cyan),#1a86c0)" : "linear-gradient(90deg,#b5454f,var(--down))" } as React.CSSProperties} />
+                </div>
+                <span className="iv-mono" style={{ fontSize: 12, textAlign: "right", color: Math.abs(drift) >= 5 ? "var(--warn)" : "var(--mute)" }}>
+                  {p.weight.toFixed(0)}% / {p.target}%
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        <p className="iv-foot" style={{ marginTop: 14 }}>Bars show drift from your target weight. Set targets in Holdings → Edit. Rebalance is only suggested when any position drifts more than 5 points.</p>
+      </div>
+
+      <div className="iv-panel">
+        <span className="iv-eyebrow">Concentration</span>
+        <div className="iv-display" style={{ fontSize: 40, marginTop: 8, color: concTone }}>{metrics.topWeight.toFixed(0)}%</div>
+        <div style={{ color: "var(--mute)", fontSize: 13 }}>largest single position</div>
+        <div style={{ marginTop: 16, display: "grid", gap: 10 }}>
+          <Row k="Risk level" v={metrics.concentrationLabel} vc={concTone} />
+          <Row k="HHI index" v={metrics.hhi.toFixed(0)} />
+          <Row k="Total drift" v={metrics.totalDrift.toFixed(1) + " pp"} />
+          {metrics.maxDrift && <Row k="Worst drift" v={`${metrics.maxDrift.sym} ${metrics.maxDrift.drift >= 0 ? "+" : ""}${metrics.maxDrift.drift.toFixed(0)}pp`} />}
+        </div>
+      </div>
+    </div>
+  );
+}
+const Row = ({ k, v, vc }: { k: string; v: string; vc?: string }) => (
+  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, borderTop: "1px solid var(--line2)", paddingTop: 8 }}>
+    <span style={{ color: "var(--mute)" }}>{k}</span>
+    <span className="iv-mono" style={{ color: vc || "var(--paper)" }}>{v}</span>
+  </div>
+);
+
+/* ---------- Editable holdings ---------- */
+function HoldingEditor({ holdings }: { holdings: Position[] }) {
+  const [sym, setSym] = useState("");
+  const targetSum = holdings.reduce((a, h) => a + (h.target ?? 0), 0);
+  return (
+    <div style={{ marginTop: 10 }}>
+      <table className="iv-tbl">
+        <thead><tr><th>Position</th><th>Shares</th><th>Price</th><th>Target %</th><th></th></tr></thead>
+        <tbody>
+          {holdings.map((h) => (
+            <tr key={h.sym}>
+              <td style={{ fontWeight: 600 }}>{h.sym}</td>
+              <td style={{ textAlign: "right" }}>
+                <input className="iv-mono" type="number" defaultValue={h.sh} onChange={(e) => upsertHolding({ ...h, sh: Math.max(0, +e.target.value || 0) })}
+                  style={{ width: 64, textAlign: "right", background: "var(--abyss)", border: "1px solid var(--line)", borderRadius: 8, color: "var(--paper)", padding: "5px 8px" }} />
+              </td>
+              <td style={{ textAlign: "right" }}>
+                <input className="iv-mono" type="number" defaultValue={h.px} onChange={(e) => upsertHolding({ ...h, px: Math.max(0, +e.target.value || 0) })}
+                  style={{ width: 76, textAlign: "right", background: "var(--abyss)", border: "1px solid var(--line)", borderRadius: 8, color: "var(--paper)", padding: "5px 8px" }} />
+              </td>
+              <td style={{ textAlign: "right" }}>
+                <input className="iv-mono" type="number" defaultValue={h.target ?? 0} onChange={(e) => upsertHolding({ ...h, target: Math.max(0, Math.min(100, +e.target.value || 0)) })}
+                  style={{ width: 56, textAlign: "right", background: "var(--abyss)", border: "1px solid var(--line)", borderRadius: 8, color: "var(--paper)", padding: "5px 8px" }} />
+              </td>
+              <td style={{ textAlign: "right" }}>
+                <button className="iv-chip" style={{ padding: "4px 10px", color: "var(--down)" }} onClick={() => removeHolding(h.sym)}>Remove</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div style={{ display: "flex", gap: 8, marginTop: 12, alignItems: "center", flexWrap: "wrap" }}>
+        <input value={sym} onChange={(e) => setSym(e.target.value.toUpperCase())} placeholder="Add ticker (e.g. MSFT)"
+          style={{ background: "var(--abyss)", border: "1px solid var(--line)", borderRadius: 10, color: "var(--paper)", padding: "9px 12px", fontFamily: "JetBrains Mono" }} />
+        <button className="iv-cta brassbtn" style={{ width: "auto", margin: 0, padding: "9px 16px" }}
+          onClick={() => { if (sym.trim()) { upsertHolding({ sym: sym.trim(), name: sym.trim(), sh: 0, px: 0, tone: "#37E6FF", target: 0 }); setSym(""); } }}>
+          Add
+        </button>
+        <span style={{ marginLeft: "auto", fontSize: 12, color: targetSum === 100 ? "var(--up)" : "var(--warn)" }} className="iv-mono">
+          targets sum: {targetSum}%
+        </span>
+        <button className="iv-chip" style={{ padding: "6px 12px" }} onClick={() => resetHoldings()}>Reset</button>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Approval queue + audit (trust) ---------- */
+function ApprovalStrip() {
+  const pending = usePendingApprovals();
+  const audit = useAudit();
+  if (!pending.length && !audit.length) return null;
+  return (
+    <div className="iv-grid" style={{ gridTemplateColumns: pending.length ? "1.3fr 1fr" : "1fr", marginTop: 18 }}>
+      {pending.length > 0 && (
+        <div className="iv-panel">
+          <span className="iv-eyebrow">Pending approvals</span>
+          <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
+            {pending.map((a) => (
+              <div key={a.id} style={{ border: "1px solid var(--line)", borderRadius: 12, padding: 14, background: "var(--frost)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontWeight: 600 }}>{a.title}</span>
+                  <span className="iv-tag" style={{ marginLeft: "auto" }}>conf {(a.confidence * 100).toFixed(0)}%</span>
+                </div>
+                <p style={{ color: "var(--mute)", fontSize: 13, margin: "6px 0 10px" }}>{a.why}</p>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button className="iv-cta brassbtn" style={{ width: "auto", margin: 0, padding: "8px 16px" }} onClick={() => approve(a.id)}>Approve</button>
+                  <button className="iv-chip" style={{ padding: "8px 16px" }} onClick={() => dismiss(a.id)}>Dismiss</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {audit.length > 0 && (
+        <div className="iv-panel">
+          <span className="iv-eyebrow">Audit trail</span>
+          <div style={{ marginTop: 12, display: "grid", gap: 8, maxHeight: 220, overflow: "auto" }}>
+            {audit.slice(0, 12).map((e) => (
+              <div key={e.id} style={{ fontSize: 12.5, borderTop: "1px solid var(--line2)", paddingTop: 8 }}>
+                <span className="iv-mono" style={{ color: "var(--mute)" }}>{new Date(e.ts).toLocaleTimeString().slice(0, 5)}</span>{" "}
+                <span style={{ color: "var(--cyan)" }}>{e.actor}</span> {e.action} — <span style={{ color: "var(--mute)" }}>{e.detail}</span>
+                {e.undoneAt && <span className="down"> (undone)</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -650,6 +831,7 @@ function Advisor() {
     Object.fromEntries(MENTORS.map((m) => [m.id, [{ who: "ai" as const, text: `I'm your ${m.name}. Ask about a holding, risk, or strategy.` }]])),
   );
   useEffect(() => setConnected(hasKey()), []);
+  const holdings = useHoldings();
   const active = MENTORS.find((m) => m.id === activeId)!;
 
   function saveKey() {
@@ -673,7 +855,7 @@ function Advisor() {
     try {
       const history: AiMsg[] = threads[id].filter((_, i) => i > 0).map((m) => ({ role: m.who === "me" ? "user" : "assistant", content: m.text }));
       history.push({ role: "user", content: v });
-      const system = active.systemPrompt + "\n\nThe user's portfolio (reason about these specifics):\n" + advisorContext();
+      const system = active.systemPrompt + "\n\nThe user's portfolio (reason about these specifics):\n" + advisorContext(holdings);
       const reply = await chat(system, history, 500);
       setThreads((p) => ({ ...p, [id]: [...p[id], { who: "ai", text: reply || active.fallback(v) }] }));
     } catch (e) {
