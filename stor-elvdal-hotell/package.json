@@ -1,0 +1,13 @@
+{
+  "name": "stor-elvdal-hotell-landing-page",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Premium static landing page prototype for Stor-Elvdal Hotell in Koppang.",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "preview": "node server.js",
+    "check": "python3 - <<'PY'\nfrom pathlib import Path\nfor path in ['index.html', 'styles.css', 'script.js', 'server.js']:\n    data = Path(path).read_text(encoding='utf-8')\n    if not data.strip():\n        raise SystemExit(f'{path} is empty')\n    print(f'{path}: {len(data)} bytes')\nPY",
+    "url": "node -e \"console.log('http://localhost:' + (process.env.PORT || 3000) + '/')\""
+  }
+}
