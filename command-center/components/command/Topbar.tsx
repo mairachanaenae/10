@@ -1,12 +1,12 @@
 "use client";
 
 import { Search } from "lucide-react";
-import { MobileNav } from "./MobileNav";
 
 export function Topbar({ name }: { name: string }) {
   return (
     <div className="mb-6 flex items-center gap-2.5 sm:gap-3">
-      <MobileNav />
+      {/* brand badge stands in for the (hidden) sidebar on mobile */}
+      <span className="h-9 w-9 flex-none rounded-[10px] bg-gradient-to-br from-blue via-violet to-emerald shadow-glow md:hidden" />
       <div className="flex min-w-0 max-w-[420px] flex-1 items-center gap-2 rounded-xl border border-line bg-white/[0.045] px-3.5 py-2.5 text-[13.5px] text-muted">
         <Search className="h-4 w-4 flex-none" />
         <input

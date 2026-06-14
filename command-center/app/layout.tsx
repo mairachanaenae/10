@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { PasswordGate } from "@/components/PasswordGate";
 import { authConfigured } from "@/lib/auth";
 import "./globals.css";
@@ -7,6 +7,13 @@ export const metadata: Metadata = {
   title: "The Investor's Command Center",
   description:
     "A premium AI-powered investment command center: mentors, agents, and your portfolio in one place.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#06080d",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

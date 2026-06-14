@@ -65,7 +65,7 @@ export function AIChatDock() {
   }
 
   return (
-    <div className="fixed bottom-5 right-4 z-40 sm:bottom-6 sm:right-6">
+    <div className="fixed bottom-[84px] right-4 z-40 sm:bottom-6 sm:right-6">
       {open && (
         <div className="glass glass-raised mb-3 w-[min(360px,92vw)] animate-fade p-4">
           <div className="mb-3 flex items-center justify-between">
