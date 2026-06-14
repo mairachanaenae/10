@@ -11,6 +11,9 @@ import {
 } from "lucide-react";
 import { MENTORS } from "@/lib/mentors";
 import { chat, hasKey, setApiKey, type Msg as AiMsg } from "@/lib/browser-ai";
+import { fetchQuotes, type Quote } from "@/lib/market-api";
+import { hasNewsKey } from "@/lib/news-api";
+import { fetchGov, type GovData } from "@/lib/gov-api";
 
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
@@ -201,15 +204,14 @@ type Pt = { t: number; v: number };
 const series = (arr: number[]): Pt[] => arr.map((v, i) => ({ t: i, v: +v.toFixed(2) }));
 
 /* ---------- mock data (replace with API) ---------- */
-type Holding = { sym: string; name: string; sh: number; px: number; chg: number; tone: string };
+type Holding = { sym: string; name: string; sh: number; px: number; chg: number; tone: string; quoteSym?: string };
+// The user's real positions (Finnhub symbols where they differ from the display ticker).
 const HOLDINGS: Holding[] = [
-  { sym: "VUAA", name: "Vanguard S&P 500 UCITS", sh: 612, px: 112.40, chg: 1.04, tone: "#5B7CFF" },
-  { sym: "NVDA", name: "NVIDIA", sh: 210, px: 176.30, chg: 2.61, tone: "#76B900" },
-  { sym: "AMZN", name: "Amazon", sh: 140, px: 223.10, chg: 0.92, tone: "#FF9900" },
-  { sym: "GOOGL", name: "Alphabet", sh: 120, px: 198.45, chg: -0.43, tone: "#4285F4" },
-  { sym: "AAPL", name: "Apple", sh: 95, px: 241.80, chg: 0.38, tone: "#C9CDD2" },
-  { sym: "AVGO", name: "Broadcom", sh: 38, px: 342.60, chg: 1.74, tone: "#CC092F" },
-  { sym: "NVO", name: "Novo Nordisk", sh: 160, px: 58.20, chg: -1.12, tone: "#001965" },
+  { sym: "VUAG", name: "Vanguard S&P 500 UCITS", sh: 12, px: 266.67, chg: 1.30, tone: "#5B7CFF", quoteSym: "VUAG.L" },
+  { sym: "JNJ", name: "Johnson & Johnson", sh: 14, px: 172.14, chg: 0.75, tone: "#C8102E" },
+  { sym: "KO", name: "Coca-Cola", sh: 22, px: 82.50, chg: 1.25, tone: "#F40000" },
+  { sym: "NVDA", name: "NVIDIA", sh: 9, px: 180.00, chg: 1.95, tone: "#76B900" },
+  { sym: "O", name: "Realty Income", sh: 20, px: 59.00, chg: -0.50, tone: "#0033A0" },
 ];
 const PORT_SERIES: Record<string, Pt[]> = {
   "1M": series(walk(238000, 30, 0.012, 11)),
@@ -272,6 +274,22 @@ function useCountUp(target: number, ms = 1100) {
   return val;
 }
 
+/* ---------- live quotes hook (Finnhub, optional) ---------- */
+function useLiveQuotes(symbols: string[]): { q: Record<string, Quote>; live: boolean } {
+  const [q, setQ] = useState<Record<string, Quote>>({});
+  const [live, setLive] = useState(false);
+  const keyset = symbols.join(",");
+  useEffect(() => {
+    if (!hasNewsKey()) return;
+    let alive = true;
+    fetchQuotes(keyset.split(","))
+      .then((res) => { if (alive && Object.keys(res).length) { setQ(res); setLive(true); } })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, [keyset]);
+  return { q, live };
+}
+
 /* ---------- small components ---------- */
 const ChgTag = ({ v, big }: { v: number; big?: boolean }) => (
   <span className={v >= 0 ? "up" : "down"} style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: big ? 14 : 13, fontWeight: 500 }}>
@@ -292,14 +310,19 @@ const Tip = ({ active, payload, prefix = "$" }: any) =>
 /* ============================== PORTFOLIO ============================== */
 function Portfolio() {
   const [tf, setTf] = useState("1Y");
+  const { q, live } = useLiveQuotes(HOLDINGS.map((h) => h.quoteSym || h.sym));
+  const rows = HOLDINGS.map((h) => {
+    const quote = q[h.quoteSym || h.sym];
+    return { ...h, px: quote?.last ?? h.px, chg: quote?.chg ?? h.chg };
+  });
   const totals = useMemo(() => {
-    const value = HOLDINGS.reduce((a, h) => a + h.sh * h.px, 0);
-    const dayAbs = HOLDINGS.reduce((a, h) => a + h.sh * h.px * (h.chg / 100), 0);
+    const value = rows.reduce((a, h) => a + h.sh * h.px, 0);
+    const dayAbs = rows.reduce((a, h) => a + h.sh * h.px * (h.chg / 100), 0);
     return { value, dayAbs, dayPct: (dayAbs / (value - dayAbs)) * 100 };
-  }, []);
+  }, [rows]);
   const shown = useCountUp(totals.value);
   const data = PORT_SERIES[tf];
-  const donut = HOLDINGS.map((h) => ({ name: h.sym, value: +(h.sh * h.px).toFixed(0), tone: h.tone }));
+  const donut = rows.map((h) => ({ name: h.sym, value: +(h.sh * h.px).toFixed(0), tone: h.tone }));
 
   return (
     <div className="iv-page">
@@ -310,6 +333,9 @@ function Portfolio() {
           <div className="iv-hero-sub">
             <ChgTag v={totals.dayPct} big /><span>·</span>
             <span className={totals.dayAbs >= 0 ? "up" : "down"}>{sign(totals.dayAbs)}{usd(totals.dayAbs)} today</span>
+            <span className="iv-tag" style={live ? { color: "var(--up)", borderColor: "rgba(91,224,176,.4)" } : undefined}>
+              <Circle size={8} /> {live ? "Live quotes" : "Sample · add key"}
+            </span>
           </div>
           <div className="iv-rule" style={{ width: 64 }} />
         </div>
@@ -369,7 +395,7 @@ function Portfolio() {
           <table className="iv-tbl" style={{ marginTop: 12 }}>
             <thead><tr><th>Position</th><th className="iv-mob-hide">Shares</th><th>Price</th><th>Value</th><th>Day</th></tr></thead>
             <tbody>
-              {HOLDINGS.map((h) => (
+              {rows.map((h) => (
                 <tr key={h.sym}>
                   <td><div className="iv-sym"><Badge sym={h.sym} tone={h.tone} />
                     <div><div style={{ fontWeight: 600 }}>{h.sym}</div><div className="iv-symname iv-mob-hide">{h.name}</div></div></div></td>
@@ -402,12 +428,14 @@ function Markets() {
   const [cat, setCat] = useState("All");
   const [sortK, setSortK] = useState<"last" | "chg">("chg");
   const [asc, setAsc] = useState(false);
+  const { q, live } = useLiveQuotes(SCAN.map((s) => s.sym));
+  const scan = useMemo(() => SCAN.map((s) => ({ ...s, last: q[s.sym]?.last ?? s.last, chg: q[s.sym]?.chg ?? s.chg })), [q]);
   const rows = useMemo(() => {
-    let r = cat === "All" ? SCAN : SCAN.filter((x) => x.cat === cat);
+    let r = cat === "All" ? scan : scan.filter((x) => x.cat === cat);
     r = [...r].sort((a, b) => (a[sortK] < b[sortK] ? -1 : 1) * (asc ? 1 : -1));
     return r;
-  }, [cat, sortK, asc]);
-  const movers = [...SCAN].sort((a, b) => b.chg - a.chg);
+  }, [cat, sortK, asc, scan]);
+  const movers = [...scan].sort((a, b) => b.chg - a.chg);
   const top = movers.slice(0, 3), bottom = movers.slice(-3).reverse();
   const head = (k: "last" | "chg", lbl: string) => (
     <th onClick={() => { if (sortK === k) setAsc(!asc); else { setSortK(k); setAsc(false); } }}>
@@ -420,6 +448,11 @@ function Markets() {
       <div className="iv-pagehead">
         <div><span className="iv-eyebrow">Markets</span>
           <div className="iv-display" style={{ fontSize: 34, marginTop: 6 }}>Scanner</div>
+          <div className="iv-hero-sub" style={{ marginTop: 8 }}>
+            <span className="iv-tag" style={live ? { color: "var(--up)", borderColor: "rgba(91,224,176,.4)" } : undefined}>
+              <Circle size={8} /> {live ? "Live · Finnhub" : "Sample · add Finnhub key in /settings"}
+            </span>
+          </div>
           <div className="iv-rule" /></div>
       </div>
 
@@ -465,7 +498,10 @@ function Trade() {
   const [side, setSide] = useState<"buy" | "sell">("buy");
   const [type, setType] = useState<"market" | "limit">("market");
   const [qty, setQty] = useState(10);
-  const px = 176.30; const limit = (px * 0.995).toFixed(2);
+  const { q, live } = useLiveQuotes(["NVDA"]);
+  const px = q["NVDA"]?.last ?? 176.30;
+  const chgPct = q["NVDA"]?.chg ?? 2.61;
+  const limit = (px * 0.995).toFixed(2);
   const tfMap: Record<string, [number, number, number]> = { "1D": [78, 0.006, 5], "1W": [60, 0.01, 9], "1M": [60, 0.014, 13], "3M": [60, 0.02, 17], "1Y": [120, 0.025, 21] };
   const [n, vol, seed] = tfMap[tf];
   const price = series(walk(px, n, vol, seed));
@@ -485,10 +521,13 @@ function Trade() {
           <Badge sym="N" tone="#76B900" />
           <div>
             <span className="iv-eyebrow">Trade</span>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
               <span className="iv-display" style={{ fontSize: 34 }}>NVDA</span>
               <span className="iv-mono" style={{ fontSize: 20 }}>{usd(px)}</span>
-              <ChgTag v={2.61} big />
+              <ChgTag v={chgPct} big />
+              <span className="iv-tag" style={live ? { color: "var(--up)", borderColor: "rgba(91,224,176,.4)" } : undefined}>
+                <Circle size={8} /> {live ? "Live" : "Sample"}
+              </span>
             </div>
           </div>
         </div>
@@ -691,24 +730,41 @@ function Advisor() {
 
 /* ============================== GOVERNMENT ============================== */
 function Government() {
-  const total = GOV_FUNCTIONS.reduce((a, f) => a + f.v, 0);
-  const maxF = Math.max(...GOV_FUNCTIONS.map((f) => f.v));
-  const shownT = useCountUp(total);
+  const [gov, setGov] = useState<GovData | null>(null);
+  const [tried, setTried] = useState(false);
+  useEffect(() => {
+    fetchGov().then((d) => { setGov(d); setTried(true); }).catch(() => setTried(true));
+  }, []);
+
+  // function list (in $B for the bars) + hero total (in $T)
+  const fns = gov
+    ? gov.functions.map((f) => ({ k: f.name, v: f.amount / 1e9 }))
+    : GOV_FUNCTIONS;
+  const totalB = fns.reduce((a, f) => a + f.v, 0);
+  const maxF = Math.max(...fns.map((f) => f.v));
+  const shownT = useCountUp(totalB);
+  const live = !!gov;
+
   return (
     <div className="iv-page">
       <div className="iv-pagehead">
         <div>
           <span className="iv-eyebrow">Federal Spending</span>
           <div className="iv-display iv-hero-num" style={{ fontSize: "clamp(36px,5vw,58px)" }}>${fmt(shownT / 1000, 2)}T</div>
-          <div className="iv-hero-sub"><span>Total outlays · fiscal year</span><span className="iv-tag"><Circle size={8} /> Sample data</span></div>
+          <div className="iv-hero-sub">
+            <span>Total outlays · {gov ? gov.fiscalLabel : "fiscal year"}</span>
+            <span className="iv-tag" style={live ? { color: "var(--up)", borderColor: "rgba(91,224,176,.4)" } : undefined}>
+              <Circle size={8} /> {live ? "Live · Treasury + USAspending" : tried ? "Sample (live unavailable)" : "Loading…"}
+            </span>
+          </div>
           <div className="iv-rule" />
         </div>
       </div>
 
       <div className="iv-grid" style={{ gridTemplateColumns: "repeat(3,1fr)", marginBottom: 18 }}>
-        <div className="iv-stat"><div className="k">Receipts</div><div className="v">$4.9T</div></div>
-        <div className="iv-stat"><div className="k">Deficit</div><div className="v down">−$2.0T</div></div>
-        <div className="iv-stat"><div className="k">Debt held public</div><div className="v">$28.9T</div></div>
+        <div className="iv-stat"><div className="k">Debt held public</div><div className="v">{gov && gov.debtPublic ? "$" + fmt(gov.debtPublic / 1e12, 1) + "T" : "$28.9T"}</div></div>
+        <div className="iv-stat"><div className="k">Total public debt</div><div className="v">{gov && gov.totalDebt ? "$" + fmt(gov.totalDebt / 1e12, 1) + "T" : "$36.2T"}</div></div>
+        <div className="iv-stat"><div className="k">Largest function</div><div className="v" style={{ fontSize: 20 }}>{fns[0]?.k ?? "—"}</div></div>
       </div>
 
       <div className="iv-grid" style={{ gridTemplateColumns: "minmax(280px,1fr) 1.7fr" }}>
@@ -737,7 +793,7 @@ function Government() {
         <div className="iv-panel">
           <span className="iv-eyebrow">Where it goes · outlays by function</span>
           <div style={{ marginTop: 14 }}>
-            {GOV_FUNCTIONS.map((f) => (
+            {fns.map((f) => (
               <div className="iv-fnrow" key={f.k}>
                 <span style={{ fontSize: 13.5 }}>{f.k}</span>
                 <div className="iv-track"><div className="iv-fill" style={{ width: (f.v / maxF) * 100 + "%" }} /></div>
@@ -756,11 +812,13 @@ function Government() {
           <span className="iv-mono" style={{ fontSize: 13 }}>9 / 12 bills</span>
         </div>
         <p className="iv-foot">
-          Figures shown are illustrative placeholders. Connect live numbers from the U.S. Treasury{" "}
-          <a href="https://fiscaldata.treasury.gov/api-documentation" target="_blank" rel="noreferrer">FiscalData API</a>{" "}
-          (outlays, receipts, deficit, debt) and{" "}
+          {live
+            ? "Outlays by function and total are live from "
+            : "Live source unavailable right now; showing illustrative sample. Data comes from "}
           <a href="https://api.usaspending.gov" target="_blank" rel="noreferrer">USAspending.gov</a>{" "}
-          (spending by agency, function, and award). Both are free and require no key.
+          (spending by budget function), with debt from the U.S. Treasury{" "}
+          <a href="https://fiscaldata.treasury.gov/api-documentation" target="_blank" rel="noreferrer">FiscalData API</a>.
+          Both are free, public, and require no key. The mandatory/discretionary split is illustrative.
         </p>
       </div>
     </div>
