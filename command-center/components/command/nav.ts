@@ -2,7 +2,9 @@ import {
   Bot,
   Compass,
   GraduationCap,
+  History,
   LayoutDashboard,
+  Newspaper,
   Radar,
   Sparkles,
   Target,
@@ -13,6 +15,8 @@ import {
 export const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/portfolio", label: "Portfolio", icon: Wallet },
+  { href: "/news", label: "News", icon: Newspaper },
+  { href: "/history", label: "Financial History", icon: History },
   { href: "/mentors", label: "Mentors", icon: Users },
   { href: "/agents", label: "Agents", icon: Bot },
   { href: "/autonomous", label: "Autonomous", icon: Sparkles },
