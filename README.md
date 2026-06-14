@@ -11,13 +11,13 @@ npm run dev
 Then open:
 
 ```text
-http://localhost:4173/
+http://localhost:3000/
 ```
 
-If your preview environment assigns a port automatically, set `PORT` before starting the server:
+If your preview environment assigns a port automatically, set `PORT` before starting the server. If you are opening the site from a hosted workspace, do not use your personal computer's `localhost`; use the workspace's forwarded port URL for port 3000:
 
 ```bash
-PORT=3000 npm run dev
+PORT=4173 npm run dev
 ```
 
 ## Files
