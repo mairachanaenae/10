@@ -1,3 +1,4 @@
+import { Briefcase, Home, Landmark, Wallet } from "lucide-react";
 import type { Goal, Holding } from "./types";
 
 /**
@@ -19,10 +20,10 @@ export const SAMPLE_HOLDINGS: Holding[] = [
 ];
 
 export const SAMPLE_GOALS: Goal[] = [
-  { id: "g1", title: "$100k portfolio", icon: "💼", current: 11725, target: 100000, forecast: "2031", unit: "currency" },
-  { id: "g2", title: "Financial freedom", icon: "🗽", current: 47, target: 100, forecast: "2040", unit: "score" },
-  { id: "g3", title: "Dividend income / yr", icon: "💵", current: 320, target: 5000, forecast: "2035", unit: "currency" },
-  { id: "g4", title: "First rental property", icon: "🏠", current: 11725, target: 300000, forecast: "2034", unit: "currency" },
+  { id: "g1", title: "$100k portfolio", icon: Briefcase, current: 11725, target: 100000, forecast: "2031", unit: "currency" },
+  { id: "g2", title: "Financial freedom", icon: Landmark, current: 47, target: 100, forecast: "2040", unit: "score" },
+  { id: "g3", title: "Dividend income / yr", icon: Wallet, current: 320, target: 5000, forecast: "2035", unit: "currency" },
+  { id: "g4", title: "First rental property", icon: Home, current: 11725, target: 300000, forecast: "2034", unit: "currency" },
 ];
 
 export interface PortfolioSummary {

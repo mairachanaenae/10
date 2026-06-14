@@ -157,12 +157,12 @@ function StatSheet({ holding, onClose }: { holding: Holding; onClose: () => void
         {bar("Dividend record", "record")}
         {bar("Yield (trap?) safety", "yieldSafety")}
 
-        <h4 className="mb-2 mt-5 font-display text-[12px] uppercase tracking-[0.18em] text-blue">🤖 Mentor council</h4>
+        <h4 className="mb-2 mt-5 font-display text-[12px] uppercase tracking-[0.18em] text-blue">Mentor council</h4>
         <div className="space-y-2.5">
           {council.map((c) => (
             <div key={c.name} className="flex items-start gap-3 text-[13px]">
-              <span className="grid h-8 w-8 flex-none place-items-center rounded-lg border border-line2 bg-surface2">
-                {c.emoji}
+              <span className="grid h-8 w-8 flex-none place-items-center rounded-lg border border-line2 bg-surface2 text-blue">
+                <c.Icon className="h-4 w-4" strokeWidth={1.75} />
               </span>
               <div>
                 <div className="font-semibold text-blue">{c.name}-bot</div>

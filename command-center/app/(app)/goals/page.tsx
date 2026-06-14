@@ -17,8 +17,11 @@ export default async function GoalsPage() {
           return (
             <GlassCard key={g.id}>
               <div className="flex items-baseline justify-between">
-                <div className="flex items-center gap-2 font-display text-[15px] font-semibold">
-                  <span>{g.icon}</span> {g.title}
+                <div className="flex items-center gap-2.5 font-display text-[15px] font-semibold">
+                  <span className="grid h-9 w-9 place-items-center rounded-xl border border-line2 bg-blue/[0.12] text-blue">
+                    <g.icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                  </span>
+                  {g.title}
                 </div>
                 <div className="font-display text-lg font-bold text-emerald">{pc}%</div>
               </div>

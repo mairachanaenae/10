@@ -82,8 +82,8 @@ export function MentorHub() {
             }
           >
             <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-xl border border-line2 bg-blue/[0.12] text-xl">
-                {m.emoji}
+              <span className="grid h-11 w-11 place-items-center rounded-xl border border-line2 bg-blue/[0.12] text-blue">
+                <m.Icon className="h-5 w-5" strokeWidth={1.75} />
               </span>
               <div>
                 <div className="font-display text-[15px] font-semibold">{m.name}</div>
@@ -99,7 +99,7 @@ export function MentorHub() {
 
       <div className="glass flex flex-col p-5">
         <div className="mb-3 flex items-center gap-2 font-display text-[13px] font-semibold">
-          {active.emoji} {active.name}
+          <active.Icon className="h-4 w-4 text-blue" strokeWidth={1.75} /> {active.name}
           <span className="ml-auto inline-flex items-center gap-1.5 text-[11px] font-normal text-muted">
             <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-emerald" /> {live ? "live · Claude" : "online"}
           </span>

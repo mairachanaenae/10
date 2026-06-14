@@ -9,6 +9,7 @@ export interface NewsItem {
   summary: string;
   tone: NewsTone;
   tags: string[];
+  url?: string;
 }
 
 /**

@@ -34,7 +34,7 @@ const config: Config = {
       },
       backgroundImage: {
         "radial-glow":
-          "radial-gradient(50% 40% at 85% -5%, rgba(110,168,254,.12), transparent 60%), radial-gradient(45% 38% at 0% 100%, rgba(52,211,153,.08), transparent 60%)",
+          "radial-gradient(50% 40% at 85% -5%, rgba(110,168,254,.08), transparent 60%), radial-gradient(45% 38% at 0% 100%, rgba(157,139,246,.05), transparent 60%)",
       },
       keyframes: {
         pulse: { "50%": { opacity: "0.35" } },

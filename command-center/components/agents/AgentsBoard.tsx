@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { LucideIcon } from "lucide-react";
+import { BookOpen, Microscope, Satellite, Scale } from "lucide-react";
 import { ask, hasKey } from "@/lib/browser-ai";
 import { portfolioContext } from "@/lib/portfolio-context";
 
 interface AgentDef {
   id: string;
   name: string;
-  emoji: string;
+  Icon: LucideIcon;
   desc: string;
   steps: string[];
   /** What this agent is asked to actually do when Claude is connected. */
@@ -15,16 +17,16 @@ interface AgentDef {
 }
 
 const AGENTS: AgentDef[] = [
-  { id: "an", name: "Stock Analyst", emoji: "🔬", desc: "Analyzes companies, earnings, risks → report",
+  { id: "an", name: "Stock Analyst", Icon: Microscope, desc: "Analyzes companies, earnings, risks → report",
     steps: ["Pulling fundamentals…", "Reading latest earnings…", "Scoring risk & moat…"],
     goal: "Pick the single holding with the most fragile dividend or richest valuation, and explain the key risk and what to watch, in 3 short sentences." },
-  { id: "pm", name: "Portfolio Manager", emoji: "⚖️", desc: "Rebalancing & diversification",
+  { id: "pm", name: "Portfolio Manager", Icon: Scale, desc: "Rebalancing & diversification",
     steps: ["Reading your holdings…", "Measuring concentration…", "Modeling rebalances…"],
     goal: "Assess concentration and diversification across these holdings and suggest one concrete rebalancing idea, in 3 short sentences." },
-  { id: "of", name: "Opportunity Finder", emoji: "🛰️", desc: "Scans markets for ideas",
+  { id: "of", name: "Opportunity Finder", Icon: Satellite, desc: "Scans markets for ideas",
     steps: ["Scanning tickers…", "Filtering by your style…", "Ranking opportunities…"],
     goal: "Given this portfolio's gaps, name one category or type of asset (not a hot tip) that would diversify it and why, in 3 short sentences." },
-  { id: "re", name: "Research", emoji: "📚", desc: "Gathers info, writes briefs",
+  { id: "re", name: "Research", Icon: BookOpen, desc: "Gathers info, writes briefs",
     steps: ["Gathering sources…", "Summarizing filings…", "Cross-checking…"],
     goal: "Write a concise plain-English brief on the dividend durability of the income holdings here, in 3 short sentences." },
 ];
@@ -97,8 +99,8 @@ export function AgentsBoard() {
         {AGENTS.map((a) => (
           <div key={a.id} className="glass p-5">
             <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-xl border border-line2 bg-blue/[0.12] text-xl">
-                {a.emoji}
+              <span className="grid h-11 w-11 place-items-center rounded-xl border border-line2 bg-blue/[0.12] text-blue">
+                <a.Icon className="h-5 w-5" strokeWidth={1.75} />
               </span>
               <div>
                 <div className="font-display text-[15px] font-semibold">{a.name} Agent</div>

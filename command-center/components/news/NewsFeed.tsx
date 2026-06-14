@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Sparkles, TrendingDown, TrendingUp, Minus } from "lucide-react";
 import { NEWS, NEWS_SYMBOLS, type NewsItem, type NewsTone } from "@/lib/news";
 import { ask, hasKey } from "@/lib/browser-ai";
+import { fetchNews, hasNewsKey } from "@/lib/news-api";
 import { portfolioContext } from "@/lib/portfolio-context";
 
 const toneStyles: Record<NewsTone, { cls: string; label: string; Icon: typeof TrendingUp }> = {
@@ -15,15 +16,54 @@ const toneStyles: Record<NewsTone, { cls: string; label: string; Icon: typeof Tr
 export function NewsFeed() {
   const [filter, setFilter] = useState<string>("All");
   const [live, setLive] = useState(false);
+  const [liveNews, setLiveNews] = useState(false);
+  const [feed, setFeed] = useState<NewsItem[] | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [feedNote, setFeedNote] = useState("");
   const [takes, setTakes] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState<Record<string, boolean>>({});
 
-  useEffect(() => setLive(hasKey()), []);
+  useEffect(() => {
+    setLive(hasKey());
+    setLiveNews(hasNewsKey());
+  }, []);
 
-  const items = useMemo(
+  const sample = useMemo(
     () => (filter === "All" ? NEWS : NEWS.filter((n) => n.symbol === filter)),
     [filter],
   );
+
+  // Try the browser-direct Finnhub key first; otherwise probe the Vercel /api/news
+  // server route (present only on the deployed app — 404s silently on Pages → sample).
+  const loadLive = useCallback(async (sym: string) => {
+    setLoading(true);
+    setFeedNote("");
+    try {
+      let data;
+      if (hasNewsKey()) {
+        data = await fetchNews(sym);
+      } else {
+        const res = await fetch(`/api/news?symbol=${encodeURIComponent(sym)}`);
+        if (!res.ok) throw new Error(`server ${res.status}`);
+        const json = await res.json();
+        data = Array.isArray(json.items) ? json.items : [];
+        if (!data.length) throw new Error(json.error || "no items");
+        setLiveNews(true);
+      }
+      setFeed(data.length ? data : NEWS.filter((n) => sym === "All" || n.symbol === sym));
+      if (!data.length) setFeedNote("No live stories for this filter — showing sample.");
+    } catch {
+      setFeed(null); // silent fall back to curated sample
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadLive(filter);
+  }, [filter, loadLive]);
+
+  const items = feed ?? sample;
 
   async function summarize(n: NewsItem) {
     if (busy[n.id]) return;
@@ -67,6 +107,15 @@ export function NewsFeed() {
         <span
           className={
             "ml-auto inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] " +
+            (liveNews ? "border-blue text-blue" : "border-line text-faint")
+          }
+        >
+          <span className={"h-1.5 w-1.5 rounded-full " + (liveNews ? "bg-blue animate-pulse-dot" : "bg-faint")} />
+          {liveNews ? "live headlines" : "sample headlines"}
+        </span>
+        <span
+          className={
+            "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] " +
             (live ? "border-emerald text-emerald" : "border-line text-faint")
           }
         >
@@ -75,6 +124,19 @@ export function NewsFeed() {
         </span>
       </div>
 
+      {feedNote && <p className="text-[12px] text-faint">{feedNote}</p>}
+
+      {loading ? (
+        <div className="grid gap-3">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="glass animate-pulse p-5">
+              <div className="h-3 w-32 rounded bg-white/[0.06]" />
+              <div className="mt-3 h-4 w-3/4 rounded bg-white/[0.08]" />
+              <div className="mt-2 h-3 w-full rounded bg-white/[0.05]" />
+            </div>
+          ))}
+        </div>
+      ) : (
       <div className="grid gap-3">
         {items.map((n) => {
           const tone = toneStyles[n.tone];
@@ -89,7 +151,13 @@ export function NewsFeed() {
                   <tone.Icon className="h-3 w-3" /> {tone.label}
                 </span>
               </div>
-              <h3 className="mt-2 font-display text-[15.5px] font-semibold leading-snug">{n.headline}</h3>
+              {n.url ? (
+                <a href={n.url} target="_blank" rel="noopener noreferrer" className="mt-2 block font-display text-[15.5px] font-semibold leading-snug hover:text-blue">
+                  {n.headline}
+                </a>
+              ) : (
+                <h3 className="mt-2 font-display text-[15.5px] font-semibold leading-snug">{n.headline}</h3>
+              )}
               <p className="mt-1.5 text-[13.5px] text-muted">{n.summary}</p>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 {n.tags.map((t) => (
@@ -114,6 +182,7 @@ export function NewsFeed() {
           );
         })}
       </div>
+      )}
     </div>
   );
 }

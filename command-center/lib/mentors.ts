@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+import { AlertTriangle, BarChart3, Brain, Globe, Rocket, Shield, ShoppingCart, Sprout, Wallet } from "lucide-react";
 import type { DividendStats } from "./types";
 
 /** Shared rules appended to every mentor's system prompt (ported from
@@ -11,7 +13,7 @@ export const HOUSE_RULES =
 export interface Mentor {
   id: string;
   name: string;
-  emoji: string;
+  Icon: LucideIcon;
   focus: string;
   tags: string[];
   systemPrompt: string;
@@ -32,7 +34,7 @@ export const MENTORS: Mentor[] = [
   {
     id: "lt",
     name: "Long-Term Investor",
-    emoji: "🌱",
+    Icon: Sprout,
     focus: "Compound growth · dividends · preservation",
     tags: ["Compounding", "Dividends", "Patience"],
     systemPrompt:
@@ -50,7 +52,7 @@ export const MENTORS: Mentor[] = [
   {
     id: "gr",
     name: "Growth Investor",
-    emoji: "🚀",
+    Icon: Rocket,
     focus: "Innovation · high-growth · trends",
     tags: ["Innovation", "Momentum", "Tech"],
     systemPrompt:
@@ -68,7 +70,7 @@ export const MENTORS: Mentor[] = [
   {
     id: "va",
     name: "Value Investor",
-    emoji: "🛡️",
+    Icon: Shield,
     focus: "Undervalued · margin of safety · fundamentals",
     tags: ["Margin of safety", "Valuation", "Patience"],
     systemPrompt:
@@ -86,7 +88,7 @@ export const MENTORS: Mentor[] = [
   {
     id: "ma",
     name: "Macro Strategist",
-    emoji: "🌍",
+    Icon: Globe,
     focus: "Cycles · rates · global",
     tags: ["Rates", "Cycles", "Global"],
     systemPrompt:
@@ -110,7 +112,7 @@ export function getMentor(id: string): Mentor | undefined {
 /** Per-holding "council" reactions, ported from web/dashboard.py:382-389. */
 export interface CouncilOpinion {
   name: string;
-  emoji: string;
+  Icon: LucideIcon;
   text: string;
   tone: "good" | "warn" | "bad";
 }
@@ -119,7 +121,7 @@ export function councilReactions(v: DividendStats, s: number): CouncilOpinion[] 
   return [
     {
       name: "Buffett",
-      emoji: "💰",
+      Icon: Wallet,
       text:
         v.payout <= 60 && v.years >= 10
           ? "Earnings comfortably cover a long-rising dividend — the durable kind I like."
@@ -130,7 +132,7 @@ export function councilReactions(v: DividendStats, s: number): CouncilOpinion[] 
     },
     {
       name: "Munger",
-      emoji: "🧠",
+      Icon: Brain,
       text:
         v.de > 150 || v.payout > 90
           ? "Invert it: high debt and a stretched payout are what snap a dividend. Avoid that combo."
@@ -139,7 +141,7 @@ export function councilReactions(v: DividendStats, s: number): CouncilOpinion[] 
     },
     {
       name: "Lynch",
-      emoji: "🛒",
+      Icon: ShoppingCart,
       text:
         v.yield > 8
           ? "A yield that high usually means the market expects a cut. Be careful."
@@ -148,7 +150,7 @@ export function councilReactions(v: DividendStats, s: number): CouncilOpinion[] 
     },
     {
       name: "Graham",
-      emoji: "🛡️",
+      Icon: Shield,
       text:
         v.years >= 20
           ? "A long, unbroken record — the defensive investor's friend."
@@ -159,7 +161,7 @@ export function councilReactions(v: DividendStats, s: number): CouncilOpinion[] 
     },
     {
       name: "Risk",
-      emoji: "⚠️",
+      Icon: AlertTriangle,
       text:
         v.yield > 8
           ? "That yield smells like a trap — size it very small."
@@ -170,7 +172,7 @@ export function councilReactions(v: DividendStats, s: number): CouncilOpinion[] 
     },
     {
       name: "Analyst",
-      emoji: "📊",
+      Icon: BarChart3,
       text: `Score ${s}/100 — ${s >= 70 ? "sturdy" : s >= 45 ? "watch it" : "fragile"}. One holding among many; nothing here is guaranteed.`,
       tone: s >= 70 ? "good" : s >= 45 ? "warn" : "bad",
     },

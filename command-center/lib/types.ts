@@ -24,7 +24,7 @@ export interface DividendStats {
 export interface Goal {
   id: string;
   title: string;
-  icon: string;
+  icon: import("lucide-react").LucideIcon;
   current: number;
   target: number;
   forecast: string;
