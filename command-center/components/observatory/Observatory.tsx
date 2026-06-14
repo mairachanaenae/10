@@ -20,48 +20,62 @@ const CSS = `
 
 .iv-root *{box-sizing:border-box;margin:0;padding:0}
 .iv-root{
-  --ink:#0A0E14; --abyss:#070A0F; --paper:#ECEAE3; --mute:#8A93A3;
-  --frost:rgba(255,255,255,.05); --frost2:rgba(255,255,255,.08);
-  --line:rgba(255,255,255,.10); --line2:rgba(255,255,255,.06);
-  --up:#5BE0B0; --down:#FF6B7A; --brass:#D9B26A;
+  /* HUD: Iron Man cyan + Wakanda gold on deep navy glass */
+  --ink:#05070E; --abyss:#03050B; --paper:#E8F0FF; --mute:#7E8BA6;
+  --frost:rgba(120,170,255,.05); --frost2:rgba(120,170,255,.09);
+  --line:rgba(120,200,255,.14); --line2:rgba(120,200,255,.07);
+  --up:#43E6A0; --down:#FF5C7A; --warn:#F4B23E;
+  --cyan:#37E6FF; --gold:#F4B23E; --magenta:#E26DF0;
+  --brass:#37E6FF; /* legacy alias -> cyan, so existing accents turn HUD-cyan */
   position:fixed; inset:0; overflow:hidden;
-  background:var(--ink); color:var(--paper);
+  background:
+    radial-gradient(120% 90% at 50% -10%, #0A1024, transparent 70%),
+    radial-gradient(100% 80% at 100% 110%, #0A0A1E, transparent 70%),
+    var(--ink);
+  color:var(--paper);
   font-family:'Inter',system-ui,sans-serif; font-size:14px; line-height:1.45;
   -webkit-font-smoothing:antialiased;
 }
-.iv-aurora{position:absolute; inset:-20%; z-index:0; pointer-events:none; filter:blur(40px);
+/* faint global scanlines + grid for the HUD texture */
+.iv-root::after{content:""; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.5;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(120,200,255,.025) 0 1px, transparent 1px 3px),
+    linear-gradient(rgba(120,200,255,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120,200,255,.03) 1px, transparent 1px);
+  background-size:100% 3px, 46px 46px, 46px 46px;}
+.iv-aurora{position:absolute; inset:-20%; z-index:0; pointer-events:none; filter:blur(46px);
   background:
-    radial-gradient(40% 50% at 18% 22%, rgba(109,90,224,.20), transparent 70%),
-    radial-gradient(45% 45% at 82% 30%, rgba(43,184,196,.16), transparent 70%),
-    radial-gradient(50% 50% at 60% 95%, rgba(217,178,106,.10), transparent 70%);
+    radial-gradient(40% 50% at 16% 20%, rgba(55,230,255,.16), transparent 70%),
+    radial-gradient(45% 45% at 84% 26%, rgba(226,109,240,.12), transparent 70%),
+    radial-gradient(50% 50% at 62% 98%, rgba(244,178,62,.10), transparent 70%);
   animation:drift 26s ease-in-out infinite alternate;
 }
 @keyframes drift{ from{transform:translate3d(-2%,-1%,0) scale(1)} to{transform:translate3d(3%,2%,0) scale(1.08)} }
 
-.iv-display{font-family:'Fraunces',Georgia,serif; font-optical-sizing:auto; letter-spacing:-.01em}
+.iv-display{font-family:'Rajdhani','Inter',sans-serif; font-weight:600; letter-spacing:.01em}
 .iv-mono{font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums}
-.iv-eyebrow{font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--mute); font-weight:600}
-.up{color:var(--up)} .down{color:var(--down)} .brass{color:var(--brass)}
+.iv-eyebrow{font-family:'Orbitron','Inter',sans-serif; font-size:10.5px; letter-spacing:.28em; text-transform:uppercase; color:var(--cyan); font-weight:600}
+.up{color:var(--up)} .down{color:var(--down)} .brass{color:var(--cyan)}
 
 .iv-shell{position:relative; z-index:1; display:grid; grid-template-columns:84px 1fr; height:100%}
 .iv-rail{display:flex; flex-direction:column; align-items:center; gap:6px; padding:22px 0;
-  border-right:1px solid var(--line2); background:rgba(7,10,15,.45); backdrop-filter:blur(14px)}
+  border-right:1px solid var(--line); background:rgba(5,8,18,.6); backdrop-filter:blur(14px)}
 .iv-mark{width:34px; height:34px; border-radius:11px; margin-bottom:20px;
-  background:linear-gradient(140deg,var(--brass),#8a6e3a); display:grid; place-items:center;
-  font-family:'Fraunces',serif; font-weight:600; color:#0A0E14; font-size:18px;
-  box-shadow:0 6px 18px rgba(217,178,106,.30)}
+  background:linear-gradient(140deg,var(--gold),#b5791f); display:grid; place-items:center;
+  font-family:'Orbitron',sans-serif; font-weight:700; color:#0A0E14; font-size:16px;
+  box-shadow:0 0 18px rgba(244,178,62,.5), inset 0 1px 0 rgba(255,255,255,.4)}
 .iv-navbtn{position:relative; width:52px; height:52px; border:0; background:transparent; cursor:pointer;
   border-radius:14px; color:var(--mute); display:grid; place-items:center; transition:.18s}
 .iv-navbtn:hover{color:var(--paper); background:var(--frost)}
 .iv-navbtn.on{color:var(--paper); background:var(--frost2)}
 .iv-navbtn.on::before{content:""; position:absolute; left:-2px; top:14px; bottom:14px; width:3px;
-  border-radius:3px; background:var(--brass); box-shadow:0 0 12px rgba(217,178,106,.7)}
+  border-radius:3px; background:var(--cyan); box-shadow:0 0 12px rgba(55,230,255,.8)}
 .iv-navlbl{font-size:9.5px; letter-spacing:.08em; margin-top:2px}
 
 .iv-main{overflow-y:auto; overflow-x:hidden; padding:0}
 .iv-topbar{position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:16px;
-  padding:18px 30px; border-bottom:1px solid var(--line2);
-  background:rgba(10,14,20,.72); backdrop-filter:blur(18px)}
+  padding:18px 30px; border-bottom:1px solid var(--line);
+  background:rgba(5,8,18,.8); backdrop-filter:blur(18px)}
 .iv-srch{flex:1; max-width:420px; display:flex; align-items:center; gap:10px; padding:10px 14px;
   background:var(--frost); border:1px solid var(--line); border-radius:12px; color:var(--mute)}
 .iv-srch input{background:transparent; border:0; outline:0; color:var(--paper); width:100%; font-size:13.5px}
@@ -76,9 +90,16 @@ const CSS = `
 .iv-page{padding:30px; max-width:1320px; margin:0 auto}
 .iv-pagehead{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:22px; flex-wrap:wrap}
 
-.iv-panel{background:var(--frost); border:1px solid var(--line); border-radius:20px; padding:24px;
-  box-shadow:0 18px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.10);
-  backdrop-filter:blur(20px) saturate(135%)}
+.iv-panel{position:relative; background:linear-gradient(180deg, rgba(120,170,255,.06), rgba(120,170,255,.02));
+  border:1px solid var(--line); border-radius:16px; padding:24px; overflow:hidden;
+  box-shadow:0 22px 50px -24px rgba(0,8,24,.9), inset 0 1px 0 rgba(120,200,255,.12), 0 0 0 1px rgba(55,230,255,.04);
+  backdrop-filter:blur(20px) saturate(130%)}
+/* scanline veil + top neon edge on every panel */
+.iv-panel::before{content:""; position:absolute; inset:0; pointer-events:none; opacity:.6; border-radius:16px;
+  background:repeating-linear-gradient(0deg, rgba(120,200,255,.03) 0 1px, transparent 1px 4px)}
+.iv-panel::after{content:""; position:absolute; left:14px; right:14px; top:0; height:1px; pointer-events:none;
+  background:linear-gradient(90deg, transparent, rgba(55,230,255,.5), transparent)}
+.iv-panel > *{position:relative}
 .iv-grid{display:grid; gap:18px}
 
 .iv-hero-num{font-size:clamp(40px,6vw,68px); font-weight:400; line-height:1; margin:10px 0 6px}
@@ -89,7 +110,7 @@ const CSS = `
 .iv-tabs{display:inline-flex; gap:2px; padding:3px; border-radius:11px; background:var(--frost); border:1px solid var(--line)}
 .iv-tab{border:0; background:transparent; color:var(--mute); padding:6px 13px; border-radius:8px;
   cursor:pointer; font-size:12.5px; font-weight:500; font-family:'JetBrains Mono',monospace}
-.iv-tab.on{background:var(--frost2); color:var(--paper)}
+.iv-tab.on{background:rgba(55,230,255,.14); color:#bff4ff; box-shadow:inset 0 0 0 1px rgba(55,230,255,.35)}
 
 .iv-tbl{width:100%; border-collapse:collapse}
 .iv-tbl th{text-align:right; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
@@ -99,12 +120,12 @@ const CSS = `
 .iv-tbl tr:hover td{background:rgba(255,255,255,.02)}
 .iv-sym{display:flex; align-items:center; gap:12px}
 .iv-badge{width:36px; height:36px; border-radius:10px; display:grid; place-items:center;
-  font-family:'Fraunces',serif; font-weight:600; font-size:15px; flex:none}
+  font-family:'Orbitron',sans-serif; font-weight:700; font-size:14px; flex:none}
 .iv-symname{font-size:12px; color:var(--mute)}
 
 .iv-chip{border:1px solid var(--line); background:var(--frost); color:var(--mute);
   padding:7px 14px; border-radius:999px; cursor:pointer; font-size:12.5px; font-weight:500}
-.iv-chip.on{background:var(--brass); border-color:var(--brass); color:#0A0E14; font-weight:600}
+.iv-chip.on{background:var(--cyan); border-color:var(--cyan); color:#04121a; font-weight:600; box-shadow:0 0 14px rgba(55,230,255,.4)}
 
 .iv-mover{flex:none; min-width:150px; padding:14px 16px; border-radius:14px;
   background:var(--frost); border:1px solid var(--line)}
@@ -124,11 +145,11 @@ const CSS = `
   color:var(--paper);cursor:pointer;display:grid;place-items:center}
 .iv-cta{width:100%; margin-top:20px; padding:14px; border:0; border-radius:12px; cursor:pointer;
   font-weight:600; font-size:14px; letter-spacing:.02em}
-.iv-cta.buy{background:var(--up); color:#04130d} .iv-cta.sell{background:var(--down); color:#1a0508}
-.iv-cta.brassbtn{background:var(--brass); color:#0A0E14}
+.iv-cta.buy{background:var(--up); color:#04130d; box-shadow:0 0 18px rgba(67,230,160,.35)} .iv-cta.sell{background:var(--down); color:#1a0508; box-shadow:0 0 18px rgba(255,92,122,.3)}
+.iv-cta.brassbtn{background:linear-gradient(180deg,var(--cyan),#16c8e6); color:#04121a; box-shadow:0 0 18px rgba(55,230,255,.4)}
 input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:4px;background:var(--line);outline:0}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;
-  background:var(--brass);cursor:pointer;box-shadow:0 0 0 4px rgba(217,178,106,.18)}
+  background:var(--cyan);cursor:pointer;box-shadow:0 0 0 4px rgba(55,230,255,.2), 0 0 10px rgba(55,230,255,.6)}
 
 .iv-book-row{position:relative; display:flex; justify-content:space-between; padding:5px 10px;
   font-family:'JetBrains Mono',monospace; font-size:12.5px; border-radius:6px}
@@ -140,31 +161,31 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
 .iv-fnrow{display:grid; grid-template-columns:160px 1fr auto; gap:14px; align-items:center; padding:9px 0}
 .iv-track{height:9px; border-radius:6px; background:var(--line2); overflow:hidden}
-.iv-fill{height:100%; border-radius:6px; background:linear-gradient(90deg,var(--brass),#8a6e3a)}
-.iv-tag{display:inline-flex; align-items:center; gap:6px; font-size:10.5px; letter-spacing:.12em;
-  text-transform:uppercase; color:var(--brass); border:1px solid rgba(217,178,106,.4);
+.iv-fill{height:100%; border-radius:6px; background:linear-gradient(90deg,var(--cyan),#1a86c0); box-shadow:0 0 10px rgba(55,230,255,.4)}
+.iv-tag{display:inline-flex; align-items:center; gap:6px; font-size:10px; letter-spacing:.16em;
+  text-transform:uppercase; font-family:'Orbitron',sans-serif; color:var(--cyan); border:1px solid rgba(55,230,255,.35);
   padding:4px 9px; border-radius:999px}
 .iv-foot{font-size:11.5px; color:var(--mute); margin-top:20px; line-height:1.6}
-.iv-foot a{color:var(--brass); text-decoration:none}
+.iv-foot a{color:var(--cyan); text-decoration:none}
 
-.iv-stat{padding:18px 20px; border-radius:16px; background:var(--frost); border:1px solid var(--line)}
-.iv-stat .k{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--mute)}
-.iv-stat .v{font-family:'Fraunces',serif; font-size:26px; margin-top:6px}
+.iv-stat{position:relative; padding:18px 20px; border-radius:14px; background:linear-gradient(180deg, rgba(120,170,255,.06), rgba(120,170,255,.02)); border:1px solid var(--line)}
+.iv-stat .k{font-family:'Orbitron',sans-serif; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute)}
+.iv-stat .v{font-family:'Rajdhani',sans-serif; font-weight:600; font-size:28px; margin-top:6px}
 
-.iv-tip{background:rgba(7,10,15,.92); border:1px solid var(--line); border-radius:11px; padding:10px 13px;
-  backdrop-filter:blur(8px)}
+.iv-tip{background:rgba(5,8,18,.94); border:1px solid rgba(55,230,255,.3); border-radius:11px; padding:10px 13px;
+  box-shadow:0 0 20px rgba(55,230,255,.15); backdrop-filter:blur(8px)}
 .iv-tip .tt{font-size:11px; color:var(--mute)} .iv-tip .tv{font-family:'JetBrains Mono',monospace; font-size:14px; margin-top:3px}
 
 /* advisor */
 .iv-mentor{display:flex; align-items:center; gap:12px; width:100%; text-align:left; cursor:pointer;
   padding:12px 14px; border-radius:14px; border:1px solid var(--line); background:var(--frost); color:var(--paper); transition:.15s}
 .iv-mentor:hover{background:var(--frost2)}
-.iv-mentor.on{border-color:var(--brass); background:rgba(217,178,106,.12)}
+.iv-mentor.on{border-color:rgba(55,230,255,.5); background:rgba(55,230,255,.1); box-shadow:0 0 16px rgba(55,230,255,.18)}
 .iv-mentor .mi{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;flex:none;
-  background:rgba(217,178,106,.14); color:var(--brass)}
+  background:rgba(55,230,255,.12); color:var(--cyan)}
 .iv-chatbox{display:flex; flex-direction:column; gap:10px; height:340px; overflow:auto; padding-right:4px}
 .iv-bub{max-width:84%; padding:10px 13px; border-radius:14px; font-size:13.5px; line-height:1.5; white-space:pre-wrap}
-.iv-bub.me{align-self:flex-end; background:rgba(217,178,106,.16); border:1px solid rgba(217,178,106,.3)}
+.iv-bub.me{align-self:flex-end; background:rgba(55,230,255,.14); border:1px solid rgba(55,230,255,.3)}
 .iv-bub.ai{align-self:flex-start; background:var(--frost); border:1px solid var(--line)}
 .iv-chatin{display:flex; gap:8px; margin-top:12px}
 .iv-chatin input{flex:1; background:var(--abyss); border:1px solid var(--line); border-radius:11px;
@@ -353,15 +374,15 @@ function Portfolio() {
               <AreaChart data={data} margin={{ top: 10, right: 6, left: -18, bottom: 0 }}>
                 <defs>
                   <linearGradient id="pArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#5BE0B0" stopOpacity={0.32} />
-                    <stop offset="100%" stopColor="#5BE0B0" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#37E6FF" stopOpacity={0.34} />
+                    <stop offset="100%" stopColor="#37E6FF" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid stroke="rgba(255,255,255,.05)" vertical={false} />
                 <XAxis dataKey="t" hide />
                 <YAxis tick={{ fill: "#8A93A3", fontSize: 11, fontFamily: "JetBrains Mono" }} axisLine={false} tickLine={false} width={56} tickFormatter={(v: number) => "$" + (v / 1000).toFixed(0) + "k"} />
                 <Tooltip content={<Tip />} cursor={{ stroke: "rgba(255,255,255,.2)" }} />
-                <Area type="monotone" dataKey="v" stroke="#5BE0B0" strokeWidth={2} fill="url(#pArea)" />
+                <Area type="monotone" dataKey="v" stroke="#37E6FF" strokeWidth={2} fill="url(#pArea)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -545,8 +566,8 @@ function Trade() {
               <ComposedChart data={merged} margin={{ top: 10, right: 6, left: -18, bottom: 0 }}>
                 <defs>
                   <linearGradient id="tArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#76B900" stopOpacity={0.30} />
-                    <stop offset="100%" stopColor="#76B900" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#37E6FF" stopOpacity={0.30} />
+                    <stop offset="100%" stopColor="#37E6FF" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid stroke="rgba(255,255,255,.05)" vertical={false} />
@@ -555,7 +576,7 @@ function Trade() {
                 <YAxis yAxisId="v" hide domain={[0, 4000]} />
                 <Tooltip content={<Tip />} cursor={{ stroke: "rgba(255,255,255,.2)" }} />
                 <Bar yAxisId="v" dataKey="vol" fill="rgba(255,255,255,.07)" radius={[2, 2, 0, 0]} />
-                <Area yAxisId="p" type="monotone" dataKey="v" stroke="#9ACD32" strokeWidth={2} fill="url(#tArea)" />
+                <Area yAxisId="p" type="monotone" dataKey="v" stroke="#37E6FF" strokeWidth={2} fill="url(#tArea)" />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
