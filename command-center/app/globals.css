@@ -24,8 +24,8 @@
   --gold-rgb: 233 196 106;
   --violet-rgb: 157 139 246;
   --danger-rgb: 251 113 133;
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Mono", ui-monospace, monospace;
+  --font-sans: "Space Mono", "JetBrains Mono", ui-monospace, monospace;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 

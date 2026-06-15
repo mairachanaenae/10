@@ -42,7 +42,7 @@ const CSS = `
     radial-gradient(100% 80% at 100% 110%, #0A0A1E, transparent 70%),
     var(--ink);
   color:var(--paper);
-  font-family:'Inter',system-ui,sans-serif; font-size:14px; line-height:1.45;
+  font-family:'Space Mono','JetBrains Mono',ui-monospace,monospace; font-size:13.5px; line-height:1.5;
   -webkit-font-smoothing:antialiased;
 }
 /* refined: ultra-faint scanline + soft vignette for depth (no busy grid) */
@@ -59,9 +59,9 @@ const CSS = `
 }
 @keyframes drift{ from{transform:translate3d(-2%,-1%,0) scale(1)} to{transform:translate3d(3%,2%,0) scale(1.08)} }
 
-.iv-display{font-family:'Rajdhani','Inter',sans-serif; font-weight:600; letter-spacing:.005em}
+.iv-display{font-family:'Space Mono',monospace; font-weight:700; letter-spacing:-.01em}
 .iv-mono{font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums}
-.iv-eyebrow{font-family:'Orbitron','Inter',sans-serif; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:#92a4c4; font-weight:500}
+.iv-eyebrow{font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:#92a4c4; font-weight:400}
 .up{color:var(--up)} .down{color:var(--down)} .brass{color:var(--cyan)}
 
 .iv-shell{position:relative; z-index:1; display:grid; grid-template-columns:84px 1fr; height:100%}
@@ -71,7 +71,7 @@ const CSS = `
 .iv-rail::-webkit-scrollbar{display:none}
 .iv-mark{width:34px; height:34px; border-radius:11px; margin-bottom:20px;
   background:linear-gradient(140deg,var(--gold),#b5791f); display:grid; place-items:center;
-  font-family:'Orbitron',sans-serif; font-weight:700; color:#0A0E14; font-size:16px;
+  font-family:'Space Mono',monospace; font-weight:700; color:#0A0E14; font-size:16px;
   box-shadow:0 0 18px rgba(244,178,62,.5), inset 0 1px 0 rgba(255,255,255,.4)}
 .iv-navbtn{position:relative; width:52px; height:52px; border:0; background:transparent; cursor:pointer;
   border-radius:14px; color:var(--mute); display:grid; place-items:center; transition:.18s}
@@ -129,7 +129,7 @@ const CSS = `
 .iv-tbl tr:hover td{background:rgba(255,255,255,.02)}
 .iv-sym{display:flex; align-items:center; gap:12px}
 .iv-badge{width:36px; height:36px; border-radius:10px; display:grid; place-items:center;
-  font-family:'Orbitron',sans-serif; font-weight:700; font-size:14px; flex:none}
+  font-family:'Space Mono',monospace; font-weight:700; font-size:15px; flex:none}
 .iv-symname{font-size:12px; color:var(--mute)}
 
 .iv-chip{border:1px solid var(--line); background:var(--frost); color:var(--mute);
@@ -173,14 +173,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .iv-track{height:9px; border-radius:6px; background:var(--line2); overflow:hidden}
 .iv-fill{height:100%; border-radius:6px; background:linear-gradient(90deg,var(--cyan),#1a86c0); box-shadow:0 0 10px rgba(55,230,255,.4)}
 .iv-tag{display:inline-flex; align-items:center; gap:6px; font-size:10px; letter-spacing:.16em;
-  text-transform:uppercase; font-family:'Orbitron',sans-serif; color:var(--cyan); border:1px solid rgba(55,230,255,.35);
+  text-transform:uppercase; font-family:'Space Mono',monospace; color:var(--cyan); border:1px solid rgba(55,230,255,.35);
   padding:4px 9px; border-radius:999px}
 .iv-foot{font-size:11.5px; color:var(--mute); margin-top:20px; line-height:1.6}
 .iv-foot a{color:var(--cyan); text-decoration:none}
 
 .iv-stat{position:relative; padding:18px 20px; border-radius:14px; background:linear-gradient(180deg, rgba(120,170,255,.06), rgba(120,170,255,.02)); border:1px solid var(--line)}
-.iv-stat .k{font-family:'Orbitron',sans-serif; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute)}
-.iv-stat .v{font-family:'Rajdhani',sans-serif; font-weight:600; font-size:28px; margin-top:6px}
+.iv-stat .k{font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute)}
+.iv-stat .v{font-family:'Space Mono',monospace; font-weight:600; font-size:28px; margin-top:6px}
 
 .iv-tip{background:rgba(5,8,18,.94); border:1px solid rgba(55,230,255,.3); border-radius:11px; padding:10px 13px;
   box-shadow:0 0 20px rgba(55,230,255,.15); backdrop-filter:blur(8px)}
@@ -887,7 +887,7 @@ function AgentOps({ holdings }: { holdings: Position[] }) {
             <div key={role} style={{ border: "1px solid var(--line)", borderRadius: 14, padding: 16, background: "var(--frost)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={{ width: 9, height: 9, borderRadius: "50%", background: meta.color, boxShadow: `0 0 10px ${meta.color}` }} />
-                <span style={{ fontWeight: 600, fontFamily: "Rajdhani, sans-serif", letterSpacing: ".02em" }}>{meta.name}</span>
+                <span style={{ fontWeight: 600, fontFamily: "'Space Mono', monospace", letterSpacing: ".02em" }}>{meta.name}</span>
               </div>
               <div style={{ fontSize: 12, color: "var(--mute)", margin: "6px 0 12px" }}>{meta.desc}</div>
               <button className="iv-chip" style={{ padding: "6px 14px" }} onClick={() => run(role)}>Run</button>

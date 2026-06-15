@@ -163,7 +163,7 @@ export function Town() {
                     fill={on ? "rgba(244,178,62,.16)" : b.kind === "district" ? "rgba(120,170,255,.06)" : "rgba(120,170,255,.1)"}
                     stroke={on ? "#F4B23E" : b.color} strokeWidth={on ? 2.2 : 1.4} opacity={0.95} filter="url(#glow)" />
                   <circle cx={b.x} cy={b.y - 2} r={4} fill={on ? "#F4B23E" : b.color} />
-                  <text x={b.x} y={b.y + 40} textAnchor="middle" fontFamily="Orbitron, sans-serif" fontSize="11" letterSpacing="1" fill={on ? "#F4B23E" : "#aebbd6"}>{b.name}</text>
+                  <text x={b.x} y={b.y + 40} textAnchor="middle" fontFamily="'Space Mono', monospace" fontSize="11" letterSpacing="1" fill={on ? "#F4B23E" : "#aebbd6"}>{b.name}</text>
                 </g>
               );
             })}
@@ -180,7 +180,7 @@ export function Town() {
                   )}
                   <circle cx={a.x} cy={a.y} r={9} fill={r.color} filter="url(#glow)" />
                   <circle cx={a.x} cy={a.y} r={9} fill="none" stroke="rgba(255,255,255,.5)" strokeWidth={1} />
-                  <text x={a.x} y={a.y - 14} textAnchor="middle" fontFamily="Rajdhani, sans-serif" fontWeight={600} fontSize="12" fill={r.color}>{r.name}</text>
+                  <text x={a.x} y={a.y - 14} textAnchor="middle" fontFamily="'Space Mono', monospace" fontWeight={600} fontSize="12" fill={r.color}>{r.name}</text>
                 </g>
               );
             })}
@@ -194,7 +194,7 @@ export function Town() {
               <div key={r.id} style={{ display: "flex", alignItems: "center", gap: 12, borderTop: "1px solid var(--line2)", paddingTop: 10 }}>
                 <span style={{ width: 10, height: 10, borderRadius: "50%", background: r.color, boxShadow: `0 0 10px ${r.color}`, flex: "none" }} />
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontWeight: 600, fontFamily: "Rajdhani, sans-serif", letterSpacing: ".02em" }}>{r.name}</div>
+                  <div style={{ fontWeight: 600, fontFamily: "'Space Mono', monospace", letterSpacing: ".02em" }}>{r.name}</div>
                   <div style={{ fontSize: 12, color: "var(--mute)" }}>{stateOf(r)}</div>
                 </div>
               </div>

@@ -182,7 +182,7 @@ export function GoalsView() {
             <div key={g.id} className="iv-panel">
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <span className="iv-badge" style={{ background: "rgba(244,178,62,.14)", color: "var(--gold)", border: "1px solid rgba(244,178,62,.3)" }}><g.icon size={18} /></span>
-                <div style={{ fontWeight: 600, fontFamily: "Rajdhani,sans-serif", fontSize: 17 }}>{g.title}</div>
+                <div style={{ fontWeight: 600, fontFamily: "'Space Mono', monospace", fontSize: 17 }}>{g.title}</div>
                 <span className="iv-display" style={{ marginLeft: "auto", fontSize: 24, color: "var(--cyan)" }}>{pc}%</span>
               </div>
               <div className="iv-track" style={{ marginTop: 14, height: 10 }}><div className="iv-fill" style={{ width: pc + "%" }} /></div>
@@ -234,7 +234,7 @@ export function AcademyView() {
       <div className="iv-grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))" }}>
         {TOPICS.map((x) => (
           <button key={x.t} className="iv-panel" style={{ textAlign: "left", cursor: "pointer" }} onClick={() => { setQ(x.t); tutor("Explain: " + x.t + " — " + x.d); }}>
-            <div style={{ fontWeight: 600, fontFamily: "Rajdhani,sans-serif", fontSize: 16 }}>{x.t}</div>
+            <div style={{ fontWeight: 600, fontFamily: "'Space Mono', monospace", fontSize: 16 }}>{x.t}</div>
             <div style={{ fontSize: 12.5, color: "var(--mute)", marginTop: 4 }}>{x.d}</div>
             <div style={{ fontSize: 12, color: "var(--cyan)", marginTop: 10 }}>Ask the tutor →</div>
           </button>
@@ -261,7 +261,7 @@ export function OpportunitiesView() {
         {OPPS.map((o) => (
           <div key={o.sym} className="iv-panel">
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontWeight: 600, fontFamily: "Rajdhani,sans-serif", fontSize: 17 }}>{o.sym}</span>
+              <span style={{ fontWeight: 600, fontFamily: "'Space Mono', monospace", fontSize: 17 }}>{o.sym}</span>
               <span className="iv-tag" style={{ marginLeft: "auto" }}>{o.kind}</span>
             </div>
             <p style={{ fontSize: 13, color: "var(--mute)", margin: "8px 0 12px" }}>{o.why}</p>
