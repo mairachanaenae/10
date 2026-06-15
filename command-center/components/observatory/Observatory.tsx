@@ -15,7 +15,7 @@ import { NewsView, HistoryView, GoalsView, AcademyView, OpportunitiesView } from
 import { MENTORS } from "@/lib/mentors";
 import { chat, ask, hasKey, getApiKey, setApiKey, clearApiKey, type Msg as AiMsg } from "@/lib/browser-ai";
 import { fetchQuotes, type Quote } from "@/lib/market-api";
-import { hasNewsKey, getNewsKey, setNewsKey, clearNewsKey } from "@/lib/news-api";
+import { hasNewsKey, getNewsKey, setNewsKey, clearNewsKey, fetchNews } from "@/lib/news-api";
 import { fetchGov, type GovData } from "@/lib/gov-api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useHoldings, upsertHolding, removeHolding, resetHoldings, type Position } from "@/lib/holdings-store";
@@ -472,15 +472,32 @@ function Portfolio() {
   );
 }
 
-/* ---------- Daily market brief (cached per calendar day) ---------- */
+/* ---------- Daily / weekly market brief (cached per period) ---------- */
+function isoWeek(d: Date): string {
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = t.getUTCDay() || 7;
+  t.setUTCDate(t.getUTCDate() + 4 - day);
+  const ys = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
+  const wk = Math.ceil(((+t - +ys) / 86400000 + 1) / 7);
+  return `${t.getUTCFullYear()}-W${wk}`;
+}
 function DailyBrief({ holdings, metrics }: { holdings: Position[]; metrics: PortfolioMetrics }) {
   const today = new Date();
-  const dayKey = "cc_daily_" + today.toISOString().slice(0, 10);
+  const [mode, setMode] = useState<"daily" | "weekly">("daily");
+  const periodKey = mode === "daily" ? "cc_daily_" + today.toISOString().slice(0, 10) : "cc_weekly_" + isoWeek(today);
   const rule = summarizer(holdings, metrics);
   const movers = [...holdings].sort((a, b) => Math.abs(b.chg ?? 0) - Math.abs(a.chg ?? 0)).slice(0, 3);
   const [ai, setAi] = useState("");
   const [busy, setBusy] = useState(false);
-  useEffect(() => { const c = localStorage.getItem(dayKey); if (c) setAi(c); }, [dayKey]);
+  const [headline, setHeadline] = useState<string>("");
+
+  useEffect(() => { setAi(localStorage.getItem(periodKey) || ""); }, [periodKey]);
+  useEffect(() => {
+    if (!hasNewsKey()) return;
+    let alive = true;
+    fetchNews("MKT").then((n) => { if (alive && n[0]) setHeadline(n[0].headline); }).catch(() => {});
+    return () => { alive = false; };
+  }, []);
 
   async function generate() {
     if (busy) return;
@@ -488,12 +505,13 @@ function DailyBrief({ holdings, metrics }: { holdings: Position[]; metrics: Port
     setBusy(true);
     try {
       const mv = movers.map((m) => `${m.sym} ${(m.chg ?? 0) >= 0 ? "+" : ""}${(m.chg ?? 0).toFixed(1)}%`).join(", ");
+      const span = mode === "daily" ? "daily" : "weekly";
       const txt = await ask(
-        "You are a calm, factual market briefer. Write a 3-4 sentence daily market update for this investor in plain English: overall direction, their notable movers, and one thing to watch today. Educational only, never advice.\n" + advisorContext(holdings),
-        `Date ${today.toDateString()}. Notable movers: ${mv}. Portfolio is ${metrics.dayChangePct >= 0 ? "up" : "down"} ${Math.abs(metrics.dayChangePct).toFixed(1)}% today.`,
-        320,
+        `You are a calm, factual market briefer. Write a 3-4 sentence ${span} market update for this investor in plain English: overall direction, their notable movers, drift/concentration posture, and one thing to watch ${mode === "daily" ? "today" : "this week"}. Educational only, never advice.\n` + advisorContext(holdings),
+        `${mode === "daily" ? "Date " + today.toDateString() : "Week of " + today.toDateString()}. Movers: ${mv}. Portfolio ${metrics.dayChangePct >= 0 ? "up" : "down"} ${Math.abs(metrics.dayChangePct).toFixed(1)}% today; concentration ${metrics.concentrationLabel}; total drift ${metrics.totalDrift.toFixed(1)}pp.${headline ? " Market headline: " + headline : ""}`,
+        340,
       );
-      setAi(txt); localStorage.setItem(dayKey, txt);
+      setAi(txt); localStorage.setItem(periodKey, txt);
     } catch (e) { setAi(`Unavailable: ${e instanceof Error ? e.message.slice(0, 60) : "error"}`); }
     finally { setBusy(false); }
   }
@@ -501,14 +519,26 @@ function DailyBrief({ holdings, metrics }: { holdings: Position[]; metrics: Port
   return (
     <div className="iv-panel" style={{ marginBottom: 18 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-        <span className="iv-eyebrow">Daily Brief</span>
-        <span className="iv-mono" style={{ fontSize: 11.5, color: "var(--mute)" }}>{today.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" })}</span>
+        <span className="iv-eyebrow">Market Brief</span>
+        <div className="iv-tabs" style={{ marginLeft: 4 }}>
+          {(["daily", "weekly"] as const).map((m) => (
+            <button key={m} className={"iv-tab" + (mode === m ? " on" : "")} style={{ textTransform: "capitalize" }} onClick={() => setMode(m)}>{m}</button>
+          ))}
+        </div>
+        <span className="iv-mono" style={{ fontSize: 11.5, color: "var(--mute)" }}>
+          {mode === "daily" ? today.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }) : "Week of " + today.toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+        </span>
         <span className="iv-tag" style={{ marginLeft: "auto", color: metrics.dayChangePct >= 0 ? "var(--up)" : "var(--down)", borderColor: metrics.dayChangePct >= 0 ? "var(--up)" : "var(--down)" }}>
           <Circle size={8} /> {metrics.dayChangePct >= 0 ? "+" : ""}{metrics.dayChangePct.toFixed(2)}% today
         </span>
       </div>
       <div className="iv-display" style={{ fontSize: 18, marginTop: 10 }}>{rule.summary}</div>
       <p style={{ color: "var(--mute)", fontSize: 13.5, marginTop: 6 }}>{rule.detail}</p>
+      {headline && (
+        <div style={{ marginTop: 10, fontSize: 12.5, color: "var(--mute)" }}>
+          <span className="iv-eyebrow" style={{ marginRight: 8 }}>Headline</span>{headline}
+        </div>
+      )}
       <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
         {movers.map((m) => (
           <span key={m.sym} className="iv-mono" style={{ fontSize: 12, border: "1px solid var(--line2)", borderRadius: 7, padding: "3px 9px", color: (m.chg ?? 0) >= 0 ? "var(--up)" : "var(--down)" }}>
@@ -518,7 +548,7 @@ function DailyBrief({ holdings, metrics }: { holdings: Position[]; metrics: Port
       </div>
       {ai && <div style={{ marginTop: 12, border: "1px solid var(--line)", borderRadius: 10, padding: 13, fontSize: 13.5, lineHeight: 1.6, background: "var(--frost)" }}>{ai}</div>}
       <button className="iv-cta brassbtn" style={{ width: "auto", margin: "12px 0 0", padding: "8px 16px", fontSize: 12.5 }} disabled={busy} onClick={generate}>
-        <Sparkles size={13} style={{ marginRight: 5, verticalAlign: "-2px" }} />{busy ? "Writing…" : ai ? "Regenerate AI update" : "Generate AI market update"}
+        <Sparkles size={13} style={{ marginRight: 5, verticalAlign: "-2px" }} />{busy ? "Writing…" : ai ? `Regenerate ${mode} update` : `Generate AI ${mode} update`}
       </button>
     </div>
   );
