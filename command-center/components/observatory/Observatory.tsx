@@ -213,6 +213,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .iv-kpi .val{font-family:'Space Mono',monospace; font-weight:700; font-size:26px; margin-top:9px; letter-spacing:-.01em; line-height:1}
 .iv-kpi .meta{font-size:12px; color:var(--mute); margin-top:6px}
 .iv-kpi.feature{background:linear-gradient(150deg, rgba(98,200,216,.10), rgba(255,255,255,.015) 60%)}
+.iv-kpi{transition:transform .2s cubic-bezier(.16,1,.3,1), border-color .2s ease}
+.iv-kpi:hover{transform:translateY(-2px); border-color:rgba(170,195,230,.2)}
+.iv-mover{transition:transform .2s cubic-bezier(.16,1,.3,1)}
+.iv-mover:hover{transform:translateY(-2px)}
 
 /* product wordmark in the topbar */
 .iv-word{font-family:'Space Mono',monospace; font-weight:700; letter-spacing:.06em; font-size:13px; white-space:nowrap}
@@ -453,7 +457,7 @@ function Portfolio() {
                 </defs>
                 <CartesianGrid stroke="rgba(255,255,255,.05)" vertical={false} />
                 <XAxis dataKey="t" hide />
-                <YAxis tick={{ fill: "#8A93A3", fontSize: 11, fontFamily: "JetBrains Mono" }} axisLine={false} tickLine={false} width={56} tickFormatter={(v: number) => "$" + (v / 1000).toFixed(0) + "k"} />
+                <YAxis tick={{ fill: "#8A97AD", fontSize: 11, fontFamily: "JetBrains Mono" }} axisLine={false} tickLine={false} width={56} tickFormatter={(v: number) => "$" + (v / 1000).toFixed(0) + "k"} />
                 <Tooltip content={<Tip />} cursor={{ stroke: "rgba(255,255,255,.2)" }} />
                 <Area type="monotone" dataKey="v" stroke="#62C8D8" strokeWidth={2} fill="url(#pArea)" />
               </AreaChart>
@@ -465,19 +469,25 @@ function Portfolio() {
       <div className="iv-grid" style={{ gridTemplateColumns: "minmax(280px,1fr) 1.6fr" }}>
         <div className="iv-panel">
           <span className="iv-eyebrow">Allocation</span>
-          <div style={{ height: 200, marginTop: 10 }}>
+          <div style={{ height: 200, marginTop: 10, position: "relative" }}>
             <ResponsiveContainer>
               <PieChart>
-                <Pie data={donut} dataKey="value" innerRadius={56} outerRadius={86} paddingAngle={2} stroke="none">
+                <Pie data={donut} dataKey="value" innerRadius={58} outerRadius={86} paddingAngle={2} stroke="none">
                   {donut.map((d, i) => <Cell key={i} fill={d.tone} />)}
                 </Pie>
                 <Tooltip content={<Tip prefix="$" />} />
               </PieChart>
             </ResponsiveContainer>
+            <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", pointerEvents: "none" }}>
+              <div style={{ textAlign: "center" }}>
+                <div className="iv-mono" style={{ fontWeight: 700, fontSize: 18 }}>{usd(metrics.total, 0)}</div>
+                <div className="lab" style={{ fontSize: 9, letterSpacing: ".16em", textTransform: "uppercase", color: "var(--mute)", marginTop: 2 }}>invested</div>
+              </div>
+            </div>
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 6 }}>
             {donut.map((d) => (
-              <span key={d.name} className="iv-mono" style={{ fontSize: 11.5, color: "#8A93A3", display: "flex", alignItems: "center", gap: 6 }}>
+              <span key={d.name} className="iv-mono" style={{ fontSize: 11.5, color: "#8A97AD", display: "flex", alignItems: "center", gap: 6 }}>
                 <i style={{ width: 8, height: 8, borderRadius: 2, background: d.tone, display: "inline-block" }} />{d.name}
               </span>
             ))}
@@ -922,7 +932,7 @@ function Trade() {
                 </defs>
                 <CartesianGrid stroke="rgba(255,255,255,.05)" vertical={false} />
                 <XAxis dataKey="t" hide />
-                <YAxis yAxisId="p" tick={{ fill: "#8A93A3", fontSize: 11, fontFamily: "JetBrains Mono" }} axisLine={false} tickLine={false} width={52} domain={["dataMin - 1", "dataMax + 1"]} tickFormatter={(v: number) => "$" + v.toFixed(0)} />
+                <YAxis yAxisId="p" tick={{ fill: "#8A97AD", fontSize: 11, fontFamily: "JetBrains Mono" }} axisLine={false} tickLine={false} width={52} domain={["dataMin - 1", "dataMax + 1"]} tickFormatter={(v: number) => "$" + v.toFixed(0)} />
                 <YAxis yAxisId="v" hide domain={[0, 4000]} />
                 <Tooltip content={<Tip />} cursor={{ stroke: "rgba(255,255,255,.2)" }} />
                 <Bar yAxisId="v" dataKey="vol" fill="rgba(255,255,255,.07)" radius={[2, 2, 0, 0]} />
@@ -954,15 +964,15 @@ function Trade() {
             </div>
             {type === "limit" && (
               <div className="iv-field"><label>Limit price</label>
-                <div className="iv-input"><span className="iv-mono" style={{ color: "#8A93A3" }}>$</span>
+                <div className="iv-input"><span className="iv-mono" style={{ color: "#8A97AD" }}>$</span>
                   <input type="text" defaultValue={limit} /></div></div>
             )}
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18, color: "#8A93A3", fontSize: 13 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18, color: "#8A97AD", fontSize: 13 }}>
               <span>Estimated {side === "buy" ? "cost" : "credit"}</span>
-              <span className="iv-mono" style={{ color: "#ECEAE3", fontSize: 16 }}>{usd(qty * px)}</span>
+              <span className="iv-mono" style={{ color: "#E6ECF5", fontSize: 16 }}>{usd(qty * px)}</span>
             </div>
             <button className={"iv-cta " + side}>{side === "buy" ? "Review buy order" : "Review sell order"}</button>
-            <p style={{ fontSize: 11, color: "#8A93A3", marginTop: 10, textAlign: "center" }}>Paper trade · demo only, no order is placed.</p>
+            <p style={{ fontSize: 11, color: "#8A97AD", marginTop: 10, textAlign: "center" }}>Paper trade · demo only, no order is placed.</p>
           </div>
 
           <div className="iv-panel">
@@ -970,14 +980,14 @@ function Trade() {
             <div style={{ marginTop: 12 }}>
               {book.map((b, i) => (
                 <div className="iv-book-row" key={"a" + i}>
-                  <span className="down">{b.px.toFixed(2)}</span><span style={{ color: "#8A93A3" }}>{b.sz}</span>
+                  <span className="down">{b.px.toFixed(2)}</span><span style={{ color: "#8A97AD" }}>{b.sz}</span>
                   <div className="iv-depth" style={{ width: (b.sz / maxSz) * 100 + "%", background: "rgba(255,107,122,.12)" }} />
                 </div>
               ))}
               <div className="iv-spread"><span>spread</span><span>{(0.12).toFixed(2)} · 0.07%</span></div>
               {bids.map((b, i) => (
                 <div className="iv-book-row" key={"b" + i}>
-                  <span className="up">{b.px.toFixed(2)}</span><span style={{ color: "#8A93A3" }}>{b.sz}</span>
+                  <span className="up">{b.px.toFixed(2)}</span><span style={{ color: "#8A97AD" }}>{b.sz}</span>
                   <div className="iv-depth" style={{ width: (b.sz / maxSz) * 100 + "%", background: "rgba(86,197,150,.12)" }} />
                 </div>
               ))}
@@ -1120,7 +1130,7 @@ function Advisor() {
             <span className="iv-badge" style={{ background: "rgba(98,200,216,.14)", color: "var(--cyan)" }}><KeyRound size={16} /></span>
             <div style={{ flex: 1, minWidth: 200 }}>
               <div style={{ fontWeight: 600 }}>Connect Claude</div>
-              <div style={{ fontSize: 12.5, color: "#8A93A3" }}>Paste your Anthropic key (stored only in this browser) to make the council reason live.</div>
+              <div style={{ fontSize: 12.5, color: "#8A97AD" }}>Paste your Anthropic key (stored only in this browser) to make the council reason live.</div>
             </div>
           </div>
           <div className="iv-chatin">
@@ -1137,7 +1147,7 @@ function Advisor() {
               <span className="mi"><m.Icon size={20} strokeWidth={1.75} /></span>
               <span>
                 <span style={{ display: "block", fontWeight: 600, fontSize: 14 }}>{m.name}</span>
-                <span style={{ fontSize: 11.5, color: "#8A93A3" }}>{m.focus}</span>
+                <span style={{ fontSize: 11.5, color: "#8A97AD" }}>{m.focus}</span>
               </span>
             </button>
           ))}
@@ -1154,13 +1164,13 @@ function Advisor() {
             {threads[activeId].map((m, i) => (
               <div key={i} className={"iv-bub " + m.who}>{m.text}</div>
             ))}
-            {busy && <div className="iv-bub ai" style={{ color: "#8A93A3" }}>thinking…</div>}
+            {busy && <div className="iv-bub ai" style={{ color: "#8A97AD" }}>thinking…</div>}
           </div>
           <div className="iv-chatin">
             <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="Ask about a holding, risk, dividends…" />
             <button className="iv-cta brassbtn" style={{ width: "auto", margin: 0, padding: "0 16px", display: "grid", placeItems: "center" }} onClick={send} disabled={busy} aria-label="Send"><Send size={16} /></button>
           </div>
-          <p style={{ fontSize: 11, color: "#8A93A3", marginTop: 10 }}>Educational only, not financial advice.</p>
+          <p style={{ fontSize: 11, color: "#8A97AD", marginTop: 10 }}>Educational only, not financial advice.</p>
         </div>
       </div>
     </div>
@@ -1222,7 +1232,7 @@ function Government() {
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 6 }}>
             {GOV_SPLIT.map((d) => (
-              <span key={d.k} className="iv-mono" style={{ fontSize: 11.5, color: "#8A93A3", display: "flex", alignItems: "center", gap: 6 }}>
+              <span key={d.k} className="iv-mono" style={{ fontSize: 11.5, color: "#8A97AD", display: "flex", alignItems: "center", gap: 6 }}>
                 <i style={{ width: 8, height: 8, borderRadius: 2, background: d.tone, display: "inline-block" }} />{d.k} {d.v}%
               </span>
             ))}
@@ -1244,7 +1254,7 @@ function Government() {
                   <div className="iv-fnrow" key={f.k}>
                     <span style={{ fontSize: 13.5 }}>{f.k}</span>
                     <div className="iv-track"><div className="iv-fill" style={{ width: (f.v / maxF) * 100 + "%" }} /></div>
-                    <span className="iv-mono" style={{ fontSize: 13, color: "#ECEAE3", minWidth: 64, textAlign: "right" }}>${fmt(f.v / 1000, 2)}T</span>
+                    <span className="iv-mono" style={{ fontSize: 13, color: "#E6ECF5", minWidth: 64, textAlign: "right" }}>${fmt(f.v / 1000, 2)}T</span>
                   </div>
                 ))}
           </div>

@@ -12,7 +12,7 @@ import { SAMPLE_GOALS } from "@/lib/sample-data";
 import { ask, hasKey } from "@/lib/browser-ai";
 import { useHoldings, type Position } from "@/lib/holdings-store";
 
-const tip = { background: "rgba(5,8,18,.94)", border: "1px solid rgba(98,200,216,.3)", borderRadius: 11, fontSize: 12, color: "#E8F0FF" };
+const tip = { background: "rgba(5,8,18,.94)", border: "1px solid rgba(98,200,216,.3)", borderRadius: 11, fontSize: 12, color: "#E6ECF5" };
 
 function ctx(holdings: Position[]): string {
   const v = holdings.reduce((a, h) => a + h.sh * h.px, 0) || 1;
