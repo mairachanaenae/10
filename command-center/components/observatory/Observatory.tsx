@@ -61,7 +61,9 @@ const CSS = `
   border-radius:12px; color:var(--mute); display:grid; place-items:center; transition:.18s}
 .iv-navbtn:hover{color:var(--paper); background:rgba(39,35,32,.05)}
 .iv-navbtn.on{color:var(--paper); background:rgba(39,35,32,.07)}
-.iv-navbtn.on::before{content:""; position:absolute; left:-1px; top:14px; bottom:14px; width:3px; border-radius:3px; background:var(--cyan)}
+.iv-navbtn svg{transition:transform .2s cubic-bezier(.16,1,.3,1)}
+.iv-navbtn:hover svg{transform:scale(1.12)}
+.iv-navbtn.on::before{content:""; position:absolute; left:-1px; top:13px; bottom:13px; width:3px; border-radius:3px; background:var(--cyan); transition:top .2s ease, bottom .2s ease}
 .iv-navlbl{font-size:9.5px; letter-spacing:.04em; margin-top:2px}
 .iv-railsep{width:28px; height:1px; background:var(--line); margin:8px 0; flex:none}
 
@@ -90,7 +92,7 @@ const CSS = `
 .iv-rule{height:2px; width:38px; margin-top:18px; background:var(--cyan)}
 
 .iv-tabs{display:inline-flex; gap:2px; padding:3px; border-radius:9px; background:rgba(39,35,32,.05); border:1px solid var(--line)}
-.iv-tab{border:0; background:transparent; color:var(--mute); padding:6px 13px; border-radius:7px; cursor:pointer; font-size:12.5px; font-weight:500}
+.iv-tab{border:0; background:transparent; color:var(--mute); padding:6px 13px; border-radius:7px; cursor:pointer; font-size:12.5px; font-weight:500; transition:background .2s ease, color .2s ease, box-shadow .2s ease}
 .iv-tab.on{background:var(--surface); color:var(--paper); box-shadow:0 1px 2px rgba(39,35,32,.12)}
 
 .iv-tbl{width:100%; border-collapse:collapse}
@@ -102,7 +104,8 @@ const CSS = `
 .iv-badge{width:36px; height:36px; border-radius:9px; display:grid; place-items:center; font-family:'Newsreader',serif; font-weight:600; font-size:15px; flex:none}
 .iv-symname{font-size:12px; color:var(--mute)}
 
-.iv-chip{border:1px solid var(--line); background:var(--surface); color:var(--mute); padding:7px 14px; border-radius:999px; cursor:pointer; font-size:12.5px; font-weight:500}
+.iv-chip{border:1px solid var(--line); background:var(--surface); color:var(--mute); padding:7px 14px; border-radius:999px; cursor:pointer; font-size:12.5px; font-weight:500; transition:background .18s ease, color .18s ease, border-color .18s ease, transform .15s ease}
+.iv-chip:hover{color:var(--paper); border-color:rgba(39,35,32,.24)} .iv-chip:active{transform:translateY(1px)}
 .iv-chip.on{background:var(--cyan); border-color:var(--cyan); color:#FBF9F3; font-weight:600}
 
 .iv-mover{flex:none; min-width:150px; padding:14px 16px; border-radius:12px; background:var(--surface); border:1px solid var(--line); transition:transform .2s cubic-bezier(.16,1,.3,1)}
@@ -133,7 +136,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
 .iv-fnrow{display:grid; grid-template-columns:160px 1fr auto; gap:14px; align-items:center; padding:9px 0}
 .iv-track{height:9px; border-radius:6px; background:rgba(39,35,32,.08); overflow:hidden}
-.iv-fill{height:100%; border-radius:6px; background:var(--cyan)}
+.iv-fill{height:100%; border-radius:6px; background:var(--cyan); transition:width .7s cubic-bezier(.16,1,.3,1)}
 .iv-tag{display:inline-flex; align-items:center; gap:6px; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-family:'Inter',sans-serif; color:var(--mute); border:1px solid var(--line); padding:4px 9px; border-radius:999px}
 .iv-foot{font-size:11.5px; color:var(--mute); margin-top:20px; line-height:1.6}
 .iv-foot a{color:var(--cyan); text-decoration:underline}
