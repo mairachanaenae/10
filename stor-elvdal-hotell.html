@@ -7,7 +7,7 @@
 <meta name="description" content="Et lite hotell med særpreg midt mellom Oslo og Trondheim: ni fredede tømmerhus, et eget kunst- og kultursenter, hjemmelaget tradisjonsmat og Storelgen Aquavit. Et galleri du kan sove i." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --night:#0E1E3A;        /* deep Sohlberg winter sky */
@@ -27,7 +27,7 @@
     --paper-on-dark-soft:#B9BFD0;
     --maxw:1240px;
     --gut:clamp(20px,5vw,72px);
-    --serif:'Fraunces',Georgia,'Times New Roman',serif;
+    --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
     --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   }
 
@@ -199,8 +199,8 @@
   .duo .grain{position:absolute;inset:0;opacity:.5;mix-blend-mode:overlay;background-image:radial-gradient(rgba(255,255,255,.10) 1px,transparent 1px);background-size:4px 4px}
 
   /* ---------- gallery (art) ---------- */
-  .gallery-head{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:end;margin-bottom:54px}
-  .gallery-head h2{font-size:clamp(2rem,4.4vw,3.6rem);max-width:13ch}
+  .gallery-head{display:flex;flex-direction:column;gap:18px;margin-bottom:54px;max-width:760px}
+  .gallery-head h2{font-size:clamp(2.2rem,4.8vw,4rem);max-width:20ch}
   .frames{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(16px,2vw,26px)}
   .frame{position:relative;border:1px solid var(--line-night);background:#0a1730;padding:14px;border-radius:3px;cursor:pointer;transition:transform .4s,box-shadow .4s}
   .frame:hover{transform:translateY(-5px);box-shadow:0 24px 50px -28px rgba(0,0,0,.8)}
@@ -380,14 +380,13 @@
     .nav-links,.nav-right .btn,.nav-right{display:none}
     .nav-toggle{display:block}
     .nav .lang{display:none}
-    .intro-grid,.split,.split.flip,.gallery-head,.menu-cols,.conf-grid,.loc-grid{grid-template-columns:1fr}
+    .intro-grid,.split,.split.flip,.menu-cols,.conf-grid,.loc-grid{grid-template-columns:1fr}
     .split.flip .ed-media{order:0}
     .ed-media{min-height:clamp(260px,50vw,420px)}
     .packs{grid-template-columns:1fr}
     section{padding-block:clamp(52px,8vw,96px)}
     .wayfind ul{gap:6px 28px}
-    .gallery-head{gap:18px}
-    .gallery-head h2{font-size:clamp(1.75rem,5.5vw,2.8rem)}
+    .gallery-head h2{font-size:clamp(1.9rem,5.5vw,3rem)}
     .hero h1{text-wrap:balance}
     .book-band h2{font-size:clamp(1.8rem,5.5vw,3rem)}
   }
@@ -630,34 +629,42 @@
 
   /* ===== TESTIMONIALS ===== */
   .testimonials{
-    display:grid;grid-template-columns:repeat(3,1fr);
+    display:grid;grid-template-columns:1fr 1fr;
     gap:clamp(14px,2.5vw,26px);margin-top:50px;
   }
   .tcard{
-    background:var(--paper-2);border:1px solid var(--line);border-radius:14px;
-    padding:clamp(22px,3vw,34px);display:flex;flex-direction:column;gap:16px;
-    transition:transform .35s,box-shadow .35s;
-    box-shadow:0 2px 18px rgba(27,35,30,.05);
+    background:var(--paper-2);border:1px solid var(--line);border-radius:4px;
+    padding:clamp(28px,4vw,44px);display:flex;flex-direction:column;gap:20px;
+    transition:box-shadow .35s;
+    box-shadow:0 2px 18px rgba(27,35,30,.04);
   }
-  .tcard:hover{
-    transform:translateY(-5px);
-    box-shadow:0 22px 48px -20px rgba(27,35,30,.3),0 0 0 1px rgba(190,145,79,.15);
+  .tcard:hover{box-shadow:0 18px 44px -16px rgba(27,35,30,.18),0 0 0 1px rgba(190,145,79,.12)}
+  .tcard:first-child{
+    grid-column:1/-1;flex-direction:row;align-items:flex-start;
+    gap:clamp(28px,5vw,64px);background:var(--paper);
+    border-color:rgba(190,145,79,.22);
   }
-  .tcard-stars{color:var(--gilt);font-size:.82rem;letter-spacing:.14em}
+  .tcard-stars{color:var(--gilt);font-size:.78rem;letter-spacing:.2em}
   .tcard-q{
     font-family:var(--serif);font-style:italic;
-    font-size:clamp(.96rem,1.6vw,1.12rem);color:var(--ink);line-height:1.58;flex:1;
+    font-size:clamp(1rem,1.6vw,1.18rem);color:var(--ink);line-height:1.6;flex:1;
   }
-  .tcard-who{display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;margin-top:4px}
+  .tcard:first-child .tcard-q{font-size:clamp(1.18rem,2.2vw,1.52rem);line-height:1.52}
+  .tcard-who{display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);padding-top:18px;margin-top:auto}
+  .tcard:first-child .tcard-who{flex-direction:column;align-items:flex-start;border-top:none;padding-top:0;min-width:180px;justify-content:flex-end}
   .tcard-avatar{
-    width:40px;height:40px;border-radius:50%;flex:none;
+    width:44px;height:44px;border-radius:50%;flex:none;
     background:var(--night);color:var(--gilt-2);
     display:flex;align-items:center;justify-content:center;
-    font-family:var(--serif);font-size:1rem;letter-spacing:.01em;
+    font-family:var(--serif);font-size:1.1rem;letter-spacing:.01em;
   }
-  .tcard-name{font-size:.86rem;font-weight:600;color:var(--ink)}
+  .tcard:first-child .tcard-avatar{width:54px;height:54px;font-size:1.3rem}
+  .tcard-name{font-size:.88rem;font-weight:600;color:var(--ink)}
   .tcard-from{font-size:.72rem;color:var(--ink-soft);margin-top:2px;letter-spacing:.04em}
-  @media(max-width:1000px){.testimonials{grid-template-columns:1fr 1fr}}
+  @media(max-width:700px){
+    .tcard:first-child{flex-direction:column}
+    .tcard:first-child .tcard-who{border-top:1px solid var(--line);padding-top:18px;flex-direction:row;align-items:center;min-width:auto}
+  }
   @media(max-width:560px){.testimonials{grid-template-columns:1fr}}
 
   /* ===== BOOKING MODAL ===== */
@@ -926,7 +933,6 @@
       </div>
     </div>
     <div class="ed-text">
-      <span class="eyebrow" data-i18n="her.ey">Et levende museum</span>
       <h2 data-i18n="her.h">Hus som har stått siden før Norge var et fotografi.</h2>
       <p class="lede" data-i18n="her.p1">Tunet er satt sammen av tømmerhus flyttet hit og reist på nytt — et stykke Østerdalen samlet på én tomt.</p>
       <p data-i18n="her.p2">Hjørnesteinen er Barfrøstua, et av de aller første husene i Norge som ble fredet. Å bo her er å sove inne i kulturhistorien, med moderne komfort lagt varsomt innimellom det gamle.</p>
@@ -1006,7 +1012,6 @@
 <!-- ===================== CAFÉ ===================== -->
 <section class="sec-paper-2" id="kafe">
   <div class="wrap">
-    <span class="eyebrow rv" data-i18n="cafe.ey">Tunet Kafé</span>
     <div class="gallery-head" style="margin-top:18px">
       <h2 class="rv" data-i18n="cafe.h">Smaken av dalen — bakt og kokt på huset.</h2>
       <p class="lede rv" data-i18n="cafe.p">Kortreist tradisjonsmat, et nyåpnet bakeri og kaffe verdt en omvei. Stopp innom på vegen, eller bli sittende.</p>
@@ -1034,7 +1039,6 @@
 <!-- ===================== ROOMS ===================== -->
 <section class="sec-paper" id="opphold">
   <div class="wrap">
-    <span class="eyebrow rv" data-i18n="rooms.ey">Bo hos oss</span>
     <div class="gallery-head" style="margin-top:18px">
       <h2 class="rv" data-i18n="rooms.h">Sov i det gamle tunet — eller helt nytt ved sida av.</h2>
       <p class="lede rv" data-i18n="rooms.p">Rom i de historiske husene for deg som vil bo i historien, og moderne rom for deg som vil ha alt nytt. Begge deler med samme ro rundt seg.</p>
@@ -1072,7 +1076,6 @@
 <!-- ===================== EXPERIENCES / PACKAGES ===================== -->
 <section class="sec-night" id="opplevelser">
   <div class="wrap">
-    <span class="eyebrow rv" data-i18n="exp.ey">Opplevelser &amp; pakker</span>
     <div class="gallery-head" style="margin-top:18px">
       <h2 class="rv" data-i18n="exp.h">Gode grunner til å svinge av vegen.</h2>
       <p class="lede rv" data-i18n="exp.p">Bygg oppholdet rundt det du kommer for — elgen, fjellet, fisket eller toget. Vi setter sammen pakken.</p>
@@ -1168,7 +1171,6 @@
 <section class="sec-tar" style="padding:0" id="selskap">
   <div class="conf-grid">
     <div class="ed-text">
-      <span class="eyebrow" data-i18n="conf.ey">Kurs, konferanse &amp; selskap</span>
       <h2 data-i18n="conf.h">Møter, julebord og bryllup — i en ramme ingen glemmer.</h2>
       <p class="lede" data-i18n="conf.p1">Samle laget et sted med sjel. Møterom for små og store grupper, hjemmelaget mat, og en kunstomvisning eller dram som det sosiale innslaget.</p>
       <p data-i18n="conf.p2">Perfekt for kick-off, fagdager, julebord og feiringer langt fra det vanlige konferansehotellet.</p>
@@ -1203,7 +1205,6 @@
       </div>
     </div>
     <div class="rv">
-      <span class="eyebrow" data-i18n="loc.ey">Finn fram</span>
       <h2 style="margin:16px 0 18px;font-size:clamp(1.9rem,3.6vw,3rem)" data-i18n="loc.h">Lett å finne. Verdt å stoppe for.</h2>
       <p class="lede" data-i18n="loc.p">Vi ligger midt i Koppang sentrum, rett ved den korteste vegen mellom Oslo og Trondheim — og bare 350 meter fra togstasjonen.</p>
       <ul class="contact-lines">
@@ -1284,7 +1285,6 @@
   <div class="book-panel">
     <button class="book-close" id="bookClose" aria-label="Lukk">✕</button>
     <div class="book-panel-inner">
-      <span class="eyebrow" style="color:var(--gilt)">Book direkte</span>
       <h2 style="font-size:clamp(1.5rem,3vw,2.2rem);margin:14px 0 4px;color:var(--ink)" data-i18n="bm.h">Sjekk ledige rom</h2>
       <p style="font-size:.9rem;color:var(--ink-soft);margin-bottom:4px" data-i18n="bm.sub">Beste pris direkte — vi svarer innen 24 timer.</p>
       <form class="book-form" id="bookForm" novalidate>
