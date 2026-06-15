@@ -7,8 +7,9 @@ import {
 } from "recharts";
 import {
   Wallet, Radar, Activity, Landmark, Search, Plus, Minus, Clock, Circle,
-  ArrowUpRight, ArrowDownRight, Sparkles, KeyRound, Send, X,
+  ArrowUpRight, ArrowDownRight, Sparkles, KeyRound, Send, X, Map as MapIcon,
 } from "lucide-react";
+import { Town } from "./Town";
 import { MENTORS } from "@/lib/mentors";
 import { chat, hasKey, getApiKey, setApiKey, clearApiKey, type Msg as AiMsg } from "@/lib/browser-ai";
 import { fetchQuotes, type Quote } from "@/lib/market-api";
@@ -1123,6 +1124,7 @@ const NAV = [
   { id: "markets", label: "Markets", Icon: Radar, View: Markets },
   { id: "trade", label: "Trade", Icon: Activity, View: Trade },
   { id: "advisor", label: "Advisor", Icon: Sparkles, View: Advisor },
+  { id: "town", label: "Town", Icon: MapIcon, View: Town },
   { id: "gov", label: "Gov", Icon: Landmark, View: Government },
 ];
 
