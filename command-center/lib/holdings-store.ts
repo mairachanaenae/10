@@ -19,11 +19,11 @@ export interface Position {
 const KEY = "cc_holdings_v1";
 
 export const SEED: Position[] = [
-  { sym: "VUAG", name: "Vanguard S&P 500 UCITS", sh: 12, px: 266.67, cost: 232.0, chg: 1.30, tone: "#37E6FF", quoteSym: "VUAG.L", target: 40 },
-  { sym: "JNJ", name: "Johnson & Johnson", sh: 14, px: 172.14, cost: 158.0, chg: 0.75, tone: "#43E6A0", target: 15 },
-  { sym: "KO", name: "Coca-Cola", sh: 22, px: 82.50, cost: 70.0, chg: 1.25, tone: "#F4B23E", target: 15 },
-  { sym: "NVDA", name: "NVIDIA", sh: 9, px: 180.00, cost: 95.0, chg: 1.95, tone: "#E26DF0", target: 20 },
-  { sym: "O", name: "Realty Income", sh: 20, px: 59.00, cost: 62.0, chg: -0.50, tone: "#FF5C7A", target: 10 },
+  { sym: "VUAG", name: "Vanguard S&P 500 UCITS", sh: 12, px: 266.67, cost: 232.0, chg: 1.30, tone: "#3E6B52", quoteSym: "VUAG.L", target: 40 },
+  { sym: "JNJ", name: "Johnson & Johnson", sh: 14, px: 172.14, cost: 158.0, chg: 0.75, tone: "#5C7A8A", target: 15 },
+  { sym: "KO", name: "Coca-Cola", sh: 22, px: 82.50, cost: 70.0, chg: 1.25, tone: "#9A6B2E", target: 15 },
+  { sym: "NVDA", name: "NVIDIA", sh: 9, px: 180.00, cost: 95.0, chg: 1.95, tone: "#7A5C86", target: 20 },
+  { sym: "O", name: "Realty Income", sh: 20, px: 59.00, cost: 62.0, chg: -0.50, tone: "#B0463F", target: 10 },
 ];
 
 function read(): Position[] {

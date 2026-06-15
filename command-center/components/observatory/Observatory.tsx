@@ -385,11 +385,11 @@ function Portfolio() {
               <AreaChart data={data} margin={{ top: 10, right: 6, left: -18, bottom: 0 }}>
                 <defs>
                   <linearGradient id="pArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3E6B52" stopOpacity={0.34} />
+                    <stop offset="0%" stopColor="#3E6B52" stopOpacity={0.16} />
                     <stop offset="100%" stopColor="#3E6B52" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="rgba(39,35,32,.05)" vertical={false} />
+                <CartesianGrid stroke="rgba(39,35,32,.07)" strokeDasharray="2 5" vertical={false} />
                 <XAxis dataKey="t" hide />
                 <YAxis tick={{ fill: "#6B6358", fontSize: 11, fontFamily: "JetBrains Mono" }} axisLine={false} tickLine={false} width={56} tickFormatter={(v: number) => "$" + (v / 1000).toFixed(0) + "k"} />
                 <Tooltip content={<Tip />} cursor={{ stroke: "rgba(39,35,32,.2)" }} />
@@ -863,11 +863,11 @@ function Trade() {
               <ComposedChart data={merged} margin={{ top: 10, right: 6, left: -18, bottom: 0 }}>
                 <defs>
                   <linearGradient id="tArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3E6B52" stopOpacity={0.30} />
+                    <stop offset="0%" stopColor="#3E6B52" stopOpacity={0.16} />
                     <stop offset="100%" stopColor="#3E6B52" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="rgba(39,35,32,.05)" vertical={false} />
+                <CartesianGrid stroke="rgba(39,35,32,.07)" strokeDasharray="2 5" vertical={false} />
                 <XAxis dataKey="t" hide />
                 <YAxis yAxisId="p" tick={{ fill: "#6B6358", fontSize: 11, fontFamily: "JetBrains Mono" }} axisLine={false} tickLine={false} width={52} domain={["dataMin - 1", "dataMax + 1"]} tickFormatter={(v: number) => "$" + v.toFixed(0)} />
                 <YAxis yAxisId="v" hide domain={[0, 4000]} />
