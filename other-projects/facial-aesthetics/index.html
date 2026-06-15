@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Facial Aesthetics Report</title>
+<style>
+  :root{
+    --ink:#0b0b0b; --paper:#fafafa; --card:#ffffff; --line:#e7e7e7;
+    --muted:#8a8a8a; --soft:#f1f1f1; --shadow:0 10px 30px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+       font-family:"Helvetica Neue",-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+       -webkit-font-smoothing:antialiased; line-height:1.55;}
+  .wrap{max-width:920px;margin:0 auto;padding:56px 24px 96px;}
+  .note{border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px 16px;
+        font-size:12.5px;color:var(--muted);letter-spacing:.02em;margin-bottom:34px;}
+  .kicker{font-size:11px;letter-spacing:.42em;text-transform:uppercase;color:var(--muted);}
+  h1{font-weight:300;font-size:42px;letter-spacing:.01em;margin:10px 0 6px;}
+  .lede{color:var(--muted);font-size:14.5px;max-width:560px;}
+  .rule{height:1px;background:var(--line);border:0;margin:38px 0;}
+  .grid{display:grid;gap:20px;}
+  .g2{grid-template-columns:1fr 1fr;}
+  .g3{grid-template-columns:repeat(3,1fr);}
+  @media(max-width:720px){.g2,.g3{grid-template-columns:1fr;}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;
+        padding:24px;box-shadow:var(--shadow);}
+  .card h2{font-weight:500;font-size:12px;letter-spacing:.28em;text-transform:uppercase;
+           color:var(--muted);margin:0 0 16px;}
+  .big{font-weight:300;font-size:30px;letter-spacing:.01em;}
+  .sub{color:var(--muted);font-size:13px;}
+  .ph{color:#b4b4b4;font-style:italic;}
+
+  /* meters */
+  .meter{height:6px;background:var(--soft);border-radius:99px;overflow:hidden;margin:8px 0 4px;}
+  .meter>i{display:block;height:100%;background:var(--ink);border-radius:99px;}
+  .mrow{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.04em;margin-top:14px;}
+  .mrow .v{color:var(--muted);}
+
+  /* circular gauges */
+  .gauges{display:flex;gap:28px;flex-wrap:wrap;justify-content:center;}
+  .gauge{text-align:center;}
+  .gauge svg{transform:rotate(-90deg);}
+  .gauge .num{font-weight:300;font-size:26px;margin-top:10px;}
+  .gauge .cap{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+
+  ul.clean{list-style:none;padding:0;margin:0;}
+  ul.clean li{padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;display:flex;gap:12px;}
+  ul.clean li:last-child{border-bottom:0;}
+  ul.clean li .t{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+                 min-width:96px;}
+  .tag{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:5px 12px;
+       font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:4px 6px 0 0;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px 28px;}
+  @media(max-width:720px){.two-col{grid-template-columns:1fr;}}
+  .scol h3{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;}
+  .foot{margin-top:54px;color:#b4b4b4;font-size:11px;letter-spacing:.06em;text-align:center;}
+  .dot{display:inline-block;width:5px;height:5px;border-radius:99px;background:var(--ink);margin:0 8px;vertical-align:middle;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="note">TEMPLATE PREVIEW — no portrait analyzed yet. All figures and notes below are
+     <b>illustrative samples</b> to show the layout. Share a photo to generate the real report.
+     AI facial assessment is subjective and cultural, not a medical or definitive judgement.</div>
+
+  <div class="kicker">Facial Aesthetics Analysis</div>
+  <h1>Aesthetic Report</h1>
+  <p class="lede">A data-driven, editorial read of facial structure, proportion and grooming —
+     measured, balanced, and free of flattery.</p>
+
+  <hr class="rule">
+
+  <!-- SUBJECT + CONTOUR -->
+  <div class="grid g2">
+    <div class="card">
+      <h2>Subject — Contour Study</h2>
+      <svg viewBox="0 0 240 300" width="100%" height="320" fill="none"
+           stroke="#111" stroke-width="1.4" stroke-linecap="round">
+        <!-- minimal line-art face contour (placeholder; redrawn from the photo) -->
+        <path d="M120 24 C168 24 188 64 188 110 C188 150 180 184 158 214
+                 C144 232 134 250 120 250 C106 250 96 232 82 214
+                 C60 184 52 150 52 110 C52 64 72 24 120 24 Z"/>
+        <path d="M70 104 C82 96 98 96 108 104"/>
+        <path d="M132 104 C142 96 158 96 170 104"/>
+        <ellipse cx="89" cy="116" rx="9" ry="6"/>
+        <ellipse cx="151" cy="116" rx="9" ry="6"/>
+        <path d="M120 120 L112 162 C112 170 128 170 128 162 Z"/>
+        <path d="M104 196 C112 204 128 204 136 196"/>
+        <path d="M120 24 C120 70 120 120 120 120" stroke-dasharray="3 6" stroke="#cfcfcf"/>
+        <path d="M52 110 L188 110" stroke-dasharray="3 6" stroke="#cfcfcf"/>
+        <path d="M52 162 L188 162" stroke-dasharray="3 6" stroke="#cfcfcf"/>
+      </svg>
+      <p class="sub" style="text-align:center">Vertical axis &amp; thirds overlay <span class="ph">(generated from portrait)</span></p>
+    </div>
+
+    <div class="card">
+      <h2>Headline Scores</h2>
+      <div class="gauges" style="margin-top:8px">
+        <div class="gauge">
+          <svg width="120" height="120">
+            <circle cx="60" cy="60" r="52" stroke="#eee" stroke-width="8" fill="none"/>
+            <circle cx="60" cy="60" r="52" stroke="#111" stroke-width="8" fill="none"
+                    stroke-linecap="round" stroke-dasharray="327" stroke-dashoffset="98"/>
+          </svg>
+          <div class="num">7.0<span class="sub">/10</span></div>
+          <div class="cap">Facial Harmony</div>
+        </div>
+        <div class="gauge">
+          <svg width="120" height="120">
+            <circle cx="60" cy="60" r="52" stroke="#eee" stroke-width="8" fill="none"/>
+            <circle cx="60" cy="60" r="52" stroke="#111" stroke-width="8" fill="none"
+                    stroke-linecap="round" stroke-dasharray="327" stroke-dashoffset="131"/>
+          </svg>
+          <div class="num">60<span class="sub">/100</span></div>
+          <div class="cap">Confidence</div>
+        </div>
+      </div>
+      <p class="sub" style="margin-top:18px;text-align:center"><span class="ph">Sample values — replaced after analysis.</span></p>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- SYMMETRY + FACE SHAPE -->
+  <div class="grid g2">
+    <div class="card">
+      <h2>Facial Symmetry</h2>
+      <div class="big">Balanced <span class="sub">· minor R/L variance</span></div>
+      <div class="meter"><i style="width:78%"></i></div>
+      <div class="mrow"><span>Left / Right alignment</span><span class="v">78% <span class="ph">(sample)</span></span></div>
+      <p class="sub" style="margin-top:14px"><span class="ph">Notes on brow, eye line, and jaw-angle symmetry appear here.</span></p>
+    </div>
+    <div class="card">
+      <h2>Face Shape</h2>
+      <div class="big"><span class="ph">— identified from contour —</span></div>
+      <div style="margin-top:10px">
+        <span class="tag">Oval</span><span class="tag">Square</span><span class="tag">Oblong</span>
+        <span class="tag">Round</span><span class="tag">Heart</span><span class="tag">Diamond</span>
+      </div>
+      <p class="sub" style="margin-top:14px">The matched shape is highlighted; the rest are excluded by ratio.</p>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- PROPORTIONS -->
+  <div class="card">
+    <h2>Proportional Analysis</h2>
+    <div class="grid g2" style="margin-top:4px">
+      <div>
+        <div class="mrow"><span>Eyes — spacing &amp; tilt</span><span class="v">sample</span></div>
+        <div class="meter"><i style="width:72%"></i></div>
+        <div class="mrow"><span>Nose — length &amp; width</span><span class="v">sample</span></div>
+        <div class="meter"><i style="width:65%"></i></div>
+        <div class="mrow"><span>Lips — fullness &amp; ratio</span><span class="v">sample</span></div>
+        <div class="meter"><i style="width:58%"></i></div>
+      </div>
+      <div>
+        <div class="mrow"><span>Jawline — definition</span><span class="v">sample</span></div>
+        <div class="meter"><i style="width:69%"></i></div>
+        <div class="mrow"><span>Forehead — height</span><span class="v">sample</span></div>
+        <div class="meter"><i style="width:54%"></i></div>
+        <div class="mrow"><span>Facial thirds — evenness</span><span class="v">sample</span></div>
+        <div class="meter"><i style="width:74%"></i></div>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:16px"><span class="ph">Each metric is read from measured ratios on the portrait, with a one-line interpretation.</span></p>
+  </div>
+
+  <hr class="rule">
+
+  <!-- SKIN + STRENGTHS/WEAK -->
+  <div class="grid g2">
+    <div class="card">
+      <h2>Skin Texture</h2>
+      <ul class="clean">
+        <li><span class="t">Tone</span><span class="ph">even / uneven, undertone</span></li>
+        <li><span class="t">Texture</span><span class="ph">smooth / pores / texture zones</span></li>
+        <li><span class="t">Concerns</span><span class="ph">shine, dryness, marks</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Strengths &amp; Weaker Areas</h2>
+      <div class="two-col">
+        <div class="scol"><h3>Strengths</h3>
+          <ul class="clean"><li><span class="ph">— top assets —</span></li></ul></div>
+        <div class="scol"><h3>Weaker areas</h3>
+          <ul class="clean"><li><span class="ph">— honest, fixable —</span></li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- RECOMMENDATIONS -->
+  <div class="grid g3">
+    <div class="card">
+      <h2>Hairstyle Fit</h2>
+      <ul class="clean">
+        <li><span class="ph">styles that suit the shape</span></li>
+        <li><span class="ph">styles to avoid</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Grooming &amp; Fashion</h2>
+      <ul class="clean">
+        <li><span class="ph">brows / facial hair</span></li>
+        <li><span class="ph">necklines / collars</span></li>
+        <li><span class="ph">palette guidance</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Glow-Up Actions</h2>
+      <ul class="clean">
+        <li><span class="ph">skincare basics</span></li>
+        <li><span class="ph">structure &amp; habits</span></li>
+        <li><span class="ph">photo / posture</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- EVALUATION -->
+  <div class="card">
+    <h2>Overall Evaluation — Balanced</h2>
+    <p style="font-size:15px;max-width:680px"><span class="ph">A measured paragraph: what works, what is
+       average, and what is genuinely improvable — written plainly, without exaggerated praise.
+       Generated once a portrait is provided.</span></p>
+  </div>
+
+  <div class="foot">Aesthetic Report <span class="dot"></span> Editorial Monochrome <span class="dot"></span> Subjective &amp; non-medical</div>
+</div>
+</body>
+</html>
