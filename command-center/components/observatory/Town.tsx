@@ -172,26 +172,41 @@ export function Town() {
         <div className="iv-panel" style={{ padding: 14 }}>
           <svg viewBox="0 0 1000 620" style={{ width: "100%", height: "auto", display: "block" }} role="img" aria-label="Investment town map">
             <defs>
-              <radialGradient id="ground" cx="50%" cy="40%" r="75%">
-                <stop offset="0%" stopColor="#F2EEE2" /><stop offset="100%" stopColor="#E7E1D3" />
+              <radialGradient id="ground" cx="50%" cy="38%" r="78%">
+                <stop offset="0%" stopColor="#FAF7EF" /><stop offset="100%" stopColor="#EBE5D7" />
               </radialGradient>
-              <filter id="glow"><feGaussianBlur stdDeviation="2" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+              <filter id="softsh" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#272320" floodOpacity="0.16" /></filter>
             </defs>
-            <rect x="0" y="0" width="1000" height="620" rx="14" fill="url(#ground)" />
+            <rect x="1" y="1" width="998" height="618" rx="16" fill="url(#ground)" stroke="rgba(39,35,32,.1)" />
+            {/* roads: a warm path network */}
             {ROADS.map(([a, b], i) => {
               const p = byId(a), q = byId(b);
-              return <line key={i} x1={p.x} y1={p.y} x2={q.x} y2={q.y} stroke="rgba(39,35,32,.14)" strokeWidth={2} strokeDasharray="2 6" strokeLinecap="round" />;
+              return <line key={i} x1={p.x} y1={p.y} x2={q.x} y2={q.y} stroke="rgba(39,35,32,.1)" strokeWidth={5} strokeLinecap="round" />;
+            })}
+            {/* agent route-trails (where each is heading) */}
+            {ROLES.map((r) => {
+              const a = rt.current[r.id];
+              if (!a.moving) return null;
+              const rest = a.path.slice(a.pi + 1).map((id) => byId(id));
+              const pts = [`${a.x},${a.y}`, ...rest.map((n) => `${n.x},${n.y}`)].join(" ");
+              return <polyline key={"trail" + r.id} points={pts} fill="none" stroke={r.color} strokeWidth={2} strokeOpacity={0.28} strokeDasharray="1 7" strokeLinecap="round" />;
             })}
             {B.map((b) => {
               const on = selected === b.id;
+              const c = on ? "#9A6B2E" : b.color;
               return (
                 <g key={b.id} style={{ cursor: "pointer" }} onClick={() => setSelected(on ? null : b.id)}>
-                  <ellipse cx={b.x} cy={b.y + 26} rx={34} ry={8} fill="rgba(39,35,32,.14)" />
-                  <rect x={b.x - 30} y={b.y - 22} width={60} height={44} rx={11}
-                    fill={on ? "rgba(154,107,46,.16)" : b.kind === "district" ? "rgba(62,107,82,.06)" : "rgba(62,107,82,.1)"}
-                    stroke={on ? "#9A6B2E" : b.color} strokeWidth={on ? 2.2 : 1.4} opacity={0.95} filter="url(#glow)" />
-                  <circle cx={b.x} cy={b.y - 2} r={4} fill={on ? "#9A6B2E" : b.color} />
-                  <text x={b.x} y={b.y + 40} textAnchor="middle" fontFamily="'Space Mono', monospace" fontSize="11" letterSpacing="1" fill={on ? "#9A6B2E" : "#6B6358"}>{b.name}</text>
+                  <ellipse cx={b.x} cy={b.y + 25} rx={32} ry={7} fill="rgba(39,35,32,.12)" />
+                  <g filter="url(#softsh)">
+                    {/* body */}
+                    <rect x={b.x - 30} y={b.y - 14} width={60} height={36} rx={9}
+                      fill={on ? "rgba(154,107,46,.14)" : b.kind === "district" ? "#FCFAF4" : "#FFFFFF"}
+                      stroke={c} strokeWidth={on ? 2.2 : 1.4} />
+                    {/* roof accent */}
+                    <path d={`M ${b.x - 30} ${b.y - 12} Q ${b.x} ${b.y - 30} ${b.x + 30} ${b.y - 12}`} fill="none" stroke={c} strokeWidth={on ? 2.4 : 1.8} strokeLinecap="round" />
+                  </g>
+                  <circle cx={b.x} cy={b.y + 4} r={3.5} fill={c} />
+                  <text x={b.x} y={b.y + 42} textAnchor="middle" fontFamily="'Newsreader',serif" fontStyle="italic" fontSize="12.5" fill={on ? "#9A6B2E" : "#6B6358"}>{b.name}</text>
                 </g>
               );
             })}
@@ -199,16 +214,15 @@ export function Town() {
               const a = rt.current[r.id];
               return (
                 <g key={r.id}>
-                  <ellipse cx={a.x} cy={a.y + 11} rx={11} ry={3.4} fill="rgba(39,35,32,.16)" />
+                  <ellipse cx={a.x} cy={a.y + 11} rx={10} ry={3.2} fill="rgba(39,35,32,.18)" />
                   {!a.moving && (
-                    <circle cx={a.x} cy={a.y} r={9} fill="none" stroke={r.color} strokeWidth={1.4} opacity={0.6}>
-                      <animate attributeName="r" values="9;18;9" dur="2.4s" repeatCount="indefinite" />
-                      <animate attributeName="opacity" values="0.6;0;0.6" dur="2.4s" repeatCount="indefinite" />
+                    <circle cx={a.x} cy={a.y} r={9} fill="none" stroke={r.color} strokeWidth={1.6} opacity={0.6}>
+                      <animate attributeName="r" values="9;17;9" dur="2.6s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.55;0;0.55" dur="2.6s" repeatCount="indefinite" />
                     </circle>
                   )}
-                  <circle cx={a.x} cy={a.y} r={9} fill={r.color} filter="url(#glow)" />
-                  <circle cx={a.x} cy={a.y} r={9} fill="none" stroke="rgba(39,35,32,.5)" strokeWidth={1} />
-                  <text x={a.x} y={a.y - 14} textAnchor="middle" fontFamily="'Space Mono', monospace" fontWeight={600} fontSize="12" fill={r.color}>{r.name}</text>
+                  <circle cx={a.x} cy={a.y} r={8.5} fill={r.color} stroke="#FBF9F3" strokeWidth={2} filter="url(#softsh)" />
+                  <text x={a.x} y={a.y - 14} textAnchor="middle" fontFamily="'Newsreader',serif" fontWeight={500} fontSize="12.5" fill={r.color}>{r.name}</text>
                 </g>
               );
             })}

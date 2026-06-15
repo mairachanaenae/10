@@ -2,15 +2,16 @@
 
 // The previously-built surfaces, rebuilt as HUD workspaces over the existing
 // data libs: News, Market History, Goals, Academy, Opportunities.
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Sparkles, TrendingDown, TrendingUp, Minus, GraduationCap, ExternalLink } from "lucide-react";
+import { Sparkles, TrendingDown, TrendingUp, Minus, GraduationCap, ExternalLink, Target } from "lucide-react";
 import { NEWS, NEWS_SYMBOLS, type NewsItem, type NewsTone } from "@/lib/news";
 import { fetchNews, hasNewsKey } from "@/lib/news-api";
 import { MARKET_EVENTS } from "@/lib/market-history";
-import { SAMPLE_GOALS } from "@/lib/sample-data";
 import { ask, hasKey } from "@/lib/browser-ai";
 import { useHoldings, type Position } from "@/lib/holdings-store";
+import { useGoals, upsertGoal, removeGoal } from "@/lib/goals-store";
+import { computeMetrics } from "@/lib/analytics";
 
 const tip = { background: "#FCFAF4", border: "1px solid rgba(39,35,32,.14)", borderRadius: 11, fontSize: 12, color: "#272320" };
 
@@ -169,39 +170,73 @@ export function HistoryView() {
   );
 }
 
-/* ============================== GOALS ============================== */
+/* ============================== GOALS (editable) ============================== */
 export function GoalsView() {
+  const goals = useGoals();
+  const [editing, setEditing] = useState(false);
+  const avg = goals.length ? Math.round(goals.reduce((a, g) => a + Math.min(100, (g.current / g.target) * 100), 0) / goals.length) : 0;
+  function add() {
+    upsertGoal({ id: "g" + Date.now(), title: "New goal", current: 0, target: 10000, forecast: String(new Date().getFullYear() + 5), unit: "currency" });
+    setEditing(true);
+  }
   return (
     <div className="iv-page">
-      <Head eyebrow="Wealth Goals" title="Roadmap" sub="Progress toward the milestones that matter." />
-      {(() => {
-        const avg = Math.round(SAMPLE_GOALS.reduce((a, g) => a + Math.min(100, (g.current / g.target) * 100), 0) / SAMPLE_GOALS.length);
-        return (
-          <div className="iv-kpi feature" style={{ marginBottom: 18, display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
-            <div>
-              <div className="lab">Overall progress</div>
-              <div className="val" style={{ color: "var(--cyan)" }}>{avg}%</div>
-            </div>
-            <div style={{ flex: 1, minWidth: 200 }}>
-              <div className="iv-track" style={{ height: 10 }}><div className="iv-fill" style={{ width: avg + "%" }} /></div>
-              <div className="meta" style={{ marginTop: 8 }}>{SAMPLE_GOALS.length} active goals - keep contributing to move every bar right.</div>
-            </div>
-          </div>
-        );
-      })()}
+      <div className="iv-pagehead">
+        <div>
+          <span className="iv-eyebrow">Wealth Goals</span>
+          <div className="iv-display" style={{ fontSize: 40, marginTop: 6 }}>Roadmap</div>
+          <div className="iv-rule" />
+        </div>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button className="iv-chip" onClick={add}>Add goal</button>
+          <button className="iv-chip" onClick={() => setEditing((e) => !e)}>{editing ? "Done" : "Edit"}</button>
+        </div>
+      </div>
+      <div className="iv-kpi feature" style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
+        <div>
+          <div className="lab">Overall progress</div>
+          <div className="val" style={{ color: "var(--cyan)" }}>{avg}%</div>
+        </div>
+        <div style={{ flex: 1, minWidth: 200 }}>
+          <div className="iv-track" style={{ height: 10 }}><div className="iv-fill" style={{ width: avg + "%" }} /></div>
+          <div className="meta" style={{ marginTop: 8 }}>{goals.length} active goal{goals.length === 1 ? "" : "s"}, saved in your browser.</div>
+        </div>
+      </div>
       <div className="iv-grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))" }}>
-        {SAMPLE_GOALS.map((g) => {
+        {goals.map((g) => {
           const pc = Math.min(100, Math.round((g.current / g.target) * 100));
           const cur = g.unit === "score" ? `${g.current} / ${g.target}` : "$" + g.current.toLocaleString();
+          const num = (k: "current" | "target", v: number) => upsertGoal({ ...g, [k]: Math.max(0, v) });
           return (
             <div key={g.id} className="iv-panel">
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span className="iv-badge" style={{ background: "rgba(154,107,46,.14)", color: "var(--gold)", border: "1px solid rgba(154,107,46,.3)" }}><g.icon size={18} /></span>
-                <div style={{ fontWeight: 600, fontFamily: "'Space Mono', monospace", fontSize: 17 }}>{g.title}</div>
-                <span className="iv-display" style={{ marginLeft: "auto", fontSize: 24, color: "var(--cyan)" }}>{pc}%</span>
-              </div>
-              <div className="iv-track" style={{ marginTop: 14, height: 10 }}><div className="iv-fill" style={{ width: pc + "%" }} /></div>
-              <div style={{ marginTop: 10, fontSize: 12.5, color: "var(--mute)" }}>{cur}{g.unit !== "score" && ` of $${g.target.toLocaleString()}`} · forecast {g.forecast}</div>
+              {editing ? (
+                <div style={{ display: "grid", gap: 8 }}>
+                  <input value={g.title} onChange={(e) => upsertGoal({ ...g, title: e.target.value })} style={goalInput} />
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <label style={goalLab}>Now<input type="number" defaultValue={g.current} onChange={(e) => num("current", +e.target.value || 0)} style={goalInput} /></label>
+                    <label style={goalLab}>Target<input type="number" defaultValue={g.target} onChange={(e) => num("target", +e.target.value || 1)} style={goalInput} /></label>
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <label style={goalLab}>By<input defaultValue={g.forecast} onChange={(e) => upsertGoal({ ...g, forecast: e.target.value })} style={goalInput} /></label>
+                    <label style={goalLab}>Unit
+                      <select value={g.unit} onChange={(e) => upsertGoal({ ...g, unit: e.target.value as "currency" | "score" })} style={goalInput}>
+                        <option value="currency">currency</option><option value="score">score</option>
+                      </select>
+                    </label>
+                  </div>
+                  <button className="iv-chip" style={{ color: "var(--down)", justifySelf: "start" }} onClick={() => removeGoal(g.id)}>Remove</button>
+                </div>
+              ) : (
+                <>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <span className="iv-badge" style={{ background: "rgba(62,107,82,.1)", color: "var(--cyan)", border: "1px solid rgba(62,107,82,.25)" }}><Target size={18} /></span>
+                    <div style={{ fontWeight: 600, fontSize: 16 }}>{g.title}</div>
+                    <span className="iv-display" style={{ marginLeft: "auto", fontSize: 26, color: "var(--cyan)" }}>{pc}%</span>
+                  </div>
+                  <div className="iv-track" style={{ marginTop: 14, height: 10 }}><div className="iv-fill" style={{ width: pc + "%" }} /></div>
+                  <div style={{ marginTop: 10, fontSize: 12.5, color: "var(--mute)" }}>{cur}{g.unit !== "score" && ` of $${g.target.toLocaleString()}`} · by {g.forecast}</div>
+                </>
+              )}
             </div>
           );
         })}
@@ -209,6 +244,8 @@ export function GoalsView() {
     </div>
   );
 }
+const goalInput: CSSProperties = { background: "#FFFFFF", border: "1px solid var(--line)", borderRadius: 8, color: "var(--paper)", padding: "8px 10px", fontSize: 13, width: "100%" };
+const goalLab: CSSProperties = { flex: 1, fontSize: 10.5, letterSpacing: ".06em", textTransform: "uppercase", color: "var(--mute)", display: "grid", gap: 5 };
 
 /* ============================== ACADEMY ============================== */
 const TOPICS = [
@@ -268,10 +305,44 @@ const OPPS = [
   { sym: "AI infrastructure", kind: "Growth", risk: 4, ret: 5, why: "Higher-beta growth; size small given NVDA concentration already." },
 ];
 export function OpportunitiesView() {
+  const holdings = useHoldings();
+  const [ai, setAi] = useState("");
+  const [busy, setBusy] = useState(false);
   const riskColor = (r: number) => (r >= 4 ? "var(--down)" : r >= 3 ? "var(--gold)" : "var(--up)");
+
+  async function scout() {
+    if (busy) return;
+    if (!hasKey()) { setAi("Add your Anthropic key (top-right) to scout ideas from your real portfolio gaps."); return; }
+    setBusy(true); setAi("");
+    try {
+      const m = computeMetrics(holdings);
+      const gaps = `Top weight ${m.topWeight.toFixed(0)}% (${m.concentrationLabel}); total drift ${m.totalDrift.toFixed(1)}pp.`;
+      const r = await ask(
+        "You are an opportunity scout for a personal investor. Given the portfolio and its gaps, suggest 3 category-level ideas (NOT individual hot tips) that would diversify or strengthen it. For each: a short name, one sentence why, and a risk note. Plain English, educational only, never advice.\n" + ctx(holdings) + "\nGaps: " + gaps,
+        "Scout 3 ideas for my gaps.", 360,
+      );
+      setAi(r || "No ideas returned.");
+    } catch (e) { setAi(`Unavailable: ${e instanceof Error ? e.message.slice(0, 60) : "error"}`); }
+    finally { setBusy(false); }
+  }
+
   return (
     <div className="iv-page">
-      <Head eyebrow="Opportunity Radar" title="Opportunities" sub="Ideas that would diversify or strengthen your book - categories, not hot tips." />
+      <div className="iv-pagehead">
+        <div>
+          <span className="iv-eyebrow">Opportunity Radar</span>
+          <div className="iv-display" style={{ fontSize: 40, marginTop: 6 }}>Scout</div>
+          <div className="iv-rule" />
+        </div>
+        <button className="iv-cta brassbtn" style={{ width: "auto", margin: 0, padding: "10px 18px" }} disabled={busy} onClick={scout}>
+          <Sparkles size={14} style={{ marginRight: 6, verticalAlign: "-2px" }} />{busy ? "Scouting…" : "Scout my gaps with AI"}
+        </button>
+      </div>
+      {ai && (
+        <div className="iv-panel" style={{ marginBottom: 24, whiteSpace: "pre-wrap", fontSize: 13.5, lineHeight: 1.6 }}>
+          <div className="iv-eyebrow" style={{ marginBottom: 8 }}>AI ideas for your portfolio</div>{ai}
+        </div>
+      )}
       <div className="iv-grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))" }}>
         {OPPS.map((o) => (
           <div key={o.sym} className="iv-panel">

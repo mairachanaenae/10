@@ -8,7 +8,7 @@ import {
 import {
   Wallet, Radar, Activity, Landmark, Search, Plus, Minus, Clock, Circle,
   ArrowUpRight, ArrowDownRight, Sparkles, KeyRound, Send, X, Map as MapIcon,
-  Newspaper, History, Target, GraduationCap, Compass,
+  Newspaper, History, Target, GraduationCap, Compass, Star,
 } from "lucide-react";
 import { Town } from "./Town";
 import { NewsView, HistoryView, GoalsView, AcademyView, OpportunitiesView } from "./Workspaces";
@@ -19,6 +19,7 @@ import { hasNewsKey, getNewsKey, setNewsKey, clearNewsKey, fetchNews } from "@/l
 import { fetchGov, type GovData } from "@/lib/gov-api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useHoldings, upsertHolding, removeHolding, resetHoldings, type Position } from "@/lib/holdings-store";
+import { useWatchlist, addWatch, removeWatch } from "@/lib/watchlist-store";
 import { computeMetrics, needsRebalance, type PortfolioMetrics } from "@/lib/analytics";
 import { summarizer, anomalyFlagger, stewardReport, type AgentResult } from "@/lib/agents";
 import { propose, approve, dismiss, usePendingApprovals } from "@/lib/approvals";
@@ -813,6 +814,54 @@ function Markets() {
 }
 
 /* ============================== TRADE ============================== */
+/* ============================== WATCHLIST ============================== */
+function Watchlist() {
+  const items = useWatchlist();
+  const { q, status } = useLiveQuotes(items.map((i) => i.sym));
+  const qb = quoteBadge(status, "Live · Finnhub");
+  const [sym, setSym] = useState("");
+  const rows = items.map((i) => ({ ...i, last: q[i.sym]?.last, chg: q[i.sym]?.chg }));
+  const alerts = rows.filter((r) => Math.abs(r.chg ?? 0) >= 3).length;
+
+  return (
+    <div className="iv-page">
+      <div className="iv-pagehead">
+        <div>
+          <span className="iv-eyebrow">Tracking</span>
+          <div className="iv-display" style={{ fontSize: 40, marginTop: 6 }}>Watchlist</div>
+          <div className="iv-hero-sub" style={{ marginTop: 8 }}>
+            <span className="iv-tag" style={qb.c ? { color: qb.c, borderColor: qb.c } : undefined}><Circle size={8} /> {qb.t}</span>
+            {alerts > 0 && <span className="iv-tag" style={{ color: "var(--warn)", borderColor: "var(--warn)" }}>{alerts} moving 3%+ today</span>}
+          </div>
+          <div className="iv-rule" />
+        </div>
+        <div style={{ display: "flex", gap: 8 }}>
+          <input value={sym} onChange={(e) => setSym(e.target.value.toUpperCase())} onKeyDown={(e) => { if (e.key === "Enter") { addWatch(sym); setSym(""); } }}
+            placeholder="Add ticker" style={{ background: "#FFFFFF", border: "1px solid var(--line)", borderRadius: 10, color: "var(--paper)", padding: "9px 12px", fontFamily: "JetBrains Mono", width: 130 }} />
+          <button className="iv-cta brassbtn" style={{ width: "auto", margin: 0, padding: "9px 16px" }} onClick={() => { addWatch(sym); setSym(""); }}>Add</button>
+        </div>
+      </div>
+      <div className="iv-panel">
+        <table className="iv-tbl">
+          <thead><tr><th>Ticker</th><th>Last</th><th>Today</th><th></th></tr></thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.sym}>
+                <td><div className="iv-sym"><Badge sym={r.sym} tone="#3E6B52" />
+                  <div><div style={{ fontWeight: 600 }}>{r.sym}</div>{r.name && <div className="iv-symname iv-mob-hide">{r.name}</div>}</div></div></td>
+                <td className="iv-mono">{r.last != null ? usd(r.last) : "—"}</td>
+                <td style={{ textAlign: "right" }}>{r.chg != null ? <ChgTag v={r.chg} /> : <span style={{ color: "var(--mute)" }}>—</span>}</td>
+                <td style={{ textAlign: "right" }}><button className="iv-chip" style={{ padding: "4px 10px", color: "var(--down)" }} onClick={() => removeWatch(r.sym)}>Remove</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className="iv-foot">Live prices need a Finnhub key (top-right). Rows moving 3% or more today are flagged. US tickers are best covered on the free tier.</p>
+      </div>
+    </div>
+  );
+}
+
 function Trade() {
   const [tf, setTf] = useState("1D");
   const [side, setSide] = useState<"buy" | "sell">("buy");
@@ -1227,7 +1276,7 @@ function Government() {
 const NAV_GROUPS = [
   { label: "Money", items: [
     { id: "portfolio", label: "Folio", Icon: Wallet, View: Portfolio },
-    { id: "trade", label: "Trade", Icon: Activity, View: Trade },
+    { id: "watchlist", label: "Watch", Icon: Star, View: Watchlist },
     { id: "goals", label: "Goals", Icon: Target, View: GoalsView },
   ] },
   { label: "Markets", items: [
@@ -1239,10 +1288,7 @@ const NAV_GROUPS = [
   { label: "Intelligence", items: [
     { id: "advisor", label: "Advisor", Icon: Sparkles, View: Advisor },
     { id: "town", label: "Town", Icon: MapIcon, View: Town },
-  ] },
-  { label: "Learn", items: [
     { id: "academy", label: "Academy", Icon: GraduationCap, View: AcademyView },
-    { id: "gov", label: "Gov", Icon: Landmark, View: Government },
   ] },
 ];
 const NAV = NAV_GROUPS.flatMap((g) => g.items);
