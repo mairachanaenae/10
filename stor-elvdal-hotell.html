@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stor-Elvdal Hotell — Kunst, mat og historie i Koppang, Østerdalen</title>
+<meta name="description" content="Et lite hotell med særpreg midt mellom Oslo og Trondheim: ni fredede tømmerhus, et eget kunst- og kultursenter, hjemmelaget tradisjonsmat og Storelgen Aquavit. Et galleri du kan sove i." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#0E1E3A;        /* deep Sohlberg winter sky */
+    --night-2:#16306B;      /* mid blue */
+    --night-3:#23477F;      /* lifted blue */
+    --tar:#15191A;          /* tarred timber near-black */
+    --gilt:#BE914F;         /* gilt-frame brass (art accent) */
+    --gilt-2:#D6B473;       /* lighter brass */
+    --paper:#F2ECDF;        /* warm aged daylight paper */
+    --paper-2:#FAF5EA;      /* lighter paper */
+    --ink:#1B231E;          /* near-black ink on paper */
+    --ink-soft:#535B51;     /* muted ink */
+    --barn:#9E3B28;         /* the red bell-tower building (used sparingly) */
+    --line:rgba(27,35,30,.14);
+    --line-night:rgba(214,180,115,.22);
+    --paper-on-dark:#ECE6D7;
+    --paper-on-dark-soft:#B9BFD0;
+    --maxw:1240px;
+    --gut:clamp(20px,5vw,72px);
+    --serif:'Fraunces',Georgia,'Times New Roman',serif;
+    --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  }
+
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    font-family:var(--sans);
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+    font-size:17px;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--gilt);color:var(--night)}
+  :focus-visible{outline:2px solid var(--gilt);outline-offset:3px;border-radius:2px}
+
+  /* ---------- type ---------- */
+  h1,h2,h3,h4{font-family:var(--serif);font-weight:400;line-height:1.04;letter-spacing:-.01em}
+  .eyebrow{
+    font-family:var(--sans);font-size:.72rem;font-weight:600;
+    letter-spacing:.24em;text-transform:uppercase;color:var(--gilt);
+    display:inline-flex;align-items:center;gap:.7em;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--gilt);display:inline-block;opacity:.7}
+  .eyebrow.center::after{content:"";width:26px;height:1px;background:var(--gilt);display:inline-block;opacity:.7}
+  .lede{font-size:clamp(1.08rem,1.6vw,1.32rem);color:var(--ink-soft);line-height:1.62}
+  .serif-quote{font-family:var(--serif);font-style:italic;font-weight:400}
+
+  /* ---------- layout helpers ---------- */
+  .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gut)}
+  section{padding-block:clamp(72px,10vw,140px)}
+  .sec-paper{background:var(--paper)}
+  .sec-paper-2{background:var(--paper-2)}
+  .sec-night{background:var(--night);color:var(--paper-on-dark)}
+  .sec-night .lede{color:var(--paper-on-dark-soft)}
+  .sec-tar{background:var(--tar);color:var(--paper-on-dark)}
+
+  /* ---------- top nav ---------- */
+  .nav{
+    position:fixed;top:0;left:0;right:0;z-index:60;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px var(--gut);
+    transition:background .4s ease,padding .4s ease,box-shadow .4s ease,border-color .4s;
+    border-bottom:1px solid transparent;
+  }
+  .nav.scrolled{
+    background:rgba(14,30,58,.92);
+    backdrop-filter:saturate(140%) blur(10px);
+    padding-top:14px;padding-bottom:14px;
+    border-bottom:1px solid var(--line-night);
+  }
+  .brand{display:flex;flex-direction:column;line-height:1;color:#fff;z-index:62}
+  .brand b{font-family:var(--serif);font-weight:500;font-size:1.12rem;letter-spacing:.02em}
+  .brand small{font-family:var(--sans);font-size:.58rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gilt-2);margin-top:5px}
+  .nav-links{display:flex;align-items:center;gap:30px;list-style:none}
+  .nav-links a{
+    font-size:.82rem;font-weight:500;letter-spacing:.02em;color:rgba(255,255,255,.86);
+    position:relative;padding-block:6px;transition:color .25s;
+  }
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--gilt);transition:width .3s ease}
+  .nav-links a:hover{color:#fff}
+  .nav-links a:hover::after{width:100%}
+  .nav-right{display:flex;align-items:center;gap:18px;z-index:62}
+  .lang{display:flex;gap:2px;align-items:center;font-size:.72rem;font-weight:600;letter-spacing:.08em}
+  .lang button{
+    background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;
+    font:inherit;padding:4px 6px;border-radius:3px;transition:color .2s;
+  }
+  .lang button:hover{color:#fff}
+  .lang button.active{color:var(--gilt-2)}
+  .lang span{color:rgba(255,255,255,.3)}
+  .btn{
+    display:inline-flex;align-items:center;gap:.6em;cursor:pointer;
+    font-family:var(--sans);font-size:.82rem;font-weight:600;letter-spacing:.04em;
+    padding:13px 22px;border-radius:999px;border:1px solid var(--gilt);
+    background:var(--gilt);color:var(--night);transition:transform .25s,background .25s,color .25s,box-shadow .25s;
+    white-space:nowrap;
+  }
+  .btn:hover{background:var(--gilt-2);transform:translateY(-2px);box-shadow:0 10px 26px -12px rgba(190,145,79,.8)}
+  .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.45)}
+  .btn-ghost:hover{background:rgba(255,255,255,.08);border-color:#fff;box-shadow:none}
+  .btn-ink{background:var(--night);color:#fff;border-color:var(--night)}
+  .btn-ink:hover{background:var(--night-2);color:#fff;box-shadow:0 12px 28px -14px rgba(14,30,58,.7)}
+  .nav-toggle{display:none;background:none;border:none;cursor:pointer;width:30px;height:24px;position:relative;z-index:62}
+  .nav-toggle span{position:absolute;left:0;height:2px;width:100%;background:#fff;transition:.3s;border-radius:2px}
+  .nav-toggle span:nth-child(1){top:2px}.nav-toggle span:nth-child(2){top:11px}.nav-toggle span:nth-child(3){top:20px}
+  body.menu-open .nav-toggle span:nth-child(1){top:11px;transform:rotate(45deg)}
+  body.menu-open .nav-toggle span:nth-child(2){opacity:0}
+  body.menu-open .nav-toggle span:nth-child(3){top:11px;transform:rotate(-45deg)}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:var(--night)}
+  .hero-sky{position:absolute;inset:0;z-index:0}
+  .hero-sky svg{width:100%;height:100%;display:block}
+  .hero-veil{position:absolute;inset:0;z-index:1;background:
+    radial-gradient(120% 80% at 78% 18%,rgba(35,71,127,.35),transparent 55%),
+    linear-gradient(to top,rgba(8,16,32,.92) 0%,rgba(8,16,32,.45) 38%,rgba(8,16,32,.12) 70%);}
+  .hero-inner{position:relative;z-index:3;width:100%;max-width:var(--maxw);margin-inline:auto;padding:0 var(--gut) clamp(48px,8vw,96px)}
+  .hero h1{
+    font-size:clamp(2.6rem,7.2vw,6.1rem);font-weight:400;letter-spacing:-.02em;
+    max-width:16ch;text-wrap:balance;
+  }
+  .hero h1 em{font-style:italic;color:var(--gilt-2)}
+  .hero-rule{width:64px;height:1px;background:var(--gilt);margin:30px 0 24px}
+  .hero p.sub{font-size:clamp(1.02rem,1.7vw,1.3rem);max-width:46ch;color:rgba(255,255,255,.88);font-weight:400}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:36px}
+  .hero-badge{
+    position:absolute;top:clamp(96px,14vw,150px);left:var(--gut);z-index:3;
+    font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gilt-2);
+    display:flex;align-items:center;gap:.7em;opacity:.92;max-width:80vw;
+  }
+  .hero-badge .dot{width:5px;height:5px;border-radius:50%;background:var(--gilt-2);box-shadow:0 0 12px 2px rgba(214,180,115,.7);flex:none}
+  /* wayfinding strip */
+  .wayfind{position:relative;z-index:3;border-top:1px solid var(--line-night);background:rgba(8,16,32,.55);backdrop-filter:blur(6px)}
+  .wayfind ul{max-width:var(--maxw);margin-inline:auto;padding:18px var(--gut);display:flex;flex-wrap:wrap;gap:8px 38px;list-style:none}
+  .wayfind li{display:flex;align-items:baseline;gap:10px;font-size:.8rem;color:rgba(255,255,255,.78)}
+  .wayfind b{font-family:var(--serif);font-size:1.12rem;color:var(--gilt-2);font-weight:500;letter-spacing:.01em}
+  .wayfind .lbl{letter-spacing:.06em}
+
+  .star{transform-origin:center;animation:tw 5.5s ease-in-out infinite}
+  @keyframes tw{0%,100%{opacity:.5}50%{opacity:1}}
+  @media (prefers-reduced-motion:reduce){.star{animation:none;opacity:.92}}
+
+  /* ---------- intro ---------- */
+  .intro-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(36px,6vw,90px);align-items:start}
+  .intro-grid h2{font-size:clamp(1.9rem,3.6vw,3rem);max-width:14ch}
+  .intro-body p+p{margin-top:1.1em}
+  .sign{margin-top:30px;display:flex;align-items:center;gap:16px}
+  .sign .nm{font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--ink)}
+  .sign .rl{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+
+  /* ---------- pillars (three facets, not a sequence) ---------- */
+  .facets{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:54px}
+  .facet{background:var(--paper-2);padding:clamp(28px,3vw,40px);display:flex;flex-direction:column;gap:14px;transition:background .35s}
+  .facet:hover{background:#fff}
+  .facet .gl{width:40px;height:40px;color:var(--gilt)}
+  .facet h3{font-size:1.5rem}
+  .facet p{font-size:.95rem;color:var(--ink-soft);line-height:1.6}
+
+  /* ---------- editorial split ---------- */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch}
+  .split.flip .ed-media{order:2}
+  .ed-media{position:relative;min-height:clamp(360px,52vw,640px)}
+  .ed-text{display:flex;flex-direction:column;justify-content:center;padding:clamp(40px,6vw,96px)}
+  .ed-text h2{font-size:clamp(2rem,4vw,3.4rem);margin:18px 0 22px;max-width:15ch}
+  .ed-text .lede{margin-bottom:18px}
+  .facts{list-style:none;margin-top:26px;display:flex;flex-direction:column;gap:14px}
+  .facts li{display:flex;gap:14px;align-items:baseline;font-size:.95rem;color:var(--ink-soft)}
+  .facts .yr{font-family:var(--serif);font-size:1.05rem;color:var(--gilt);min-width:58px;font-weight:500}
+  .sec-night .facts li,.sec-tar .facts li{color:var(--paper-on-dark-soft)}
+
+  /* photo slots */
+  .photo{position:absolute;inset:0;overflow:hidden}
+  .photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+  .photo-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(5,12,28,.6) 0%,rgba(5,12,28,.15) 55%,transparent 100%)}
+  .photo .ph{position:absolute;inset:0;display:flex;align-items:flex-end;padding:18px;z-index:2}
+  .ph-cap{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.9);background:rgba(14,30,58,.42);backdrop-filter:blur(3px);padding:6px 11px;border:1px solid rgba(255,255,255,.18);border-radius:4px;display:inline-flex;gap:8px;align-items:center}
+  .duo{position:absolute;inset:0}
+  .duo.tun{background:linear-gradient(150deg,#2b4a37,#16302a 55%,#0e1f1a)}
+  .duo.kafe{background:linear-gradient(150deg,#7a4a2f,#3c2a1d 60%,#1c130c)}
+  .duo.room{background:linear-gradient(150deg,#43506b,#212a3d 60%,#11151f)}
+  .duo.barn{background:linear-gradient(150deg,#9e3b28,#5a2117 55%,#2a100b)}
+  .duo.river{background:linear-gradient(150deg,#3a6a7a,#1d3f49 55%,#0e2127)}
+  .duo .grain{position:absolute;inset:0;opacity:.5;mix-blend-mode:overlay;background-image:radial-gradient(rgba(255,255,255,.10) 1px,transparent 1px);background-size:4px 4px}
+
+  /* ---------- gallery (art) ---------- */
+  .gallery-head{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:end;margin-bottom:54px}
+  .gallery-head h2{font-size:clamp(2rem,4.4vw,3.6rem);max-width:13ch}
+  .frames{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(16px,2vw,26px)}
+  .frame{position:relative;border:1px solid var(--line-night);background:#0a1730;padding:14px;border-radius:3px;cursor:pointer;transition:transform .4s,box-shadow .4s}
+  .frame:hover{transform:translateY(-5px);box-shadow:0 24px 50px -28px rgba(0,0,0,.8)}
+  .frame .mat{border:1px solid var(--line-night);position:relative;overflow:hidden}
+  .frame .art{position:relative;aspect-ratio:4/5}
+  .frame.lg{grid-column:span 5}
+  .frame.md{grid-column:span 4}
+  .frame.sm{grid-column:span 3}
+  .frame .plate{position:absolute;left:14px;bottom:14px;right:14px;font-size:.72rem;color:var(--gilt-2);letter-spacing:.05em;z-index:2}
+  .frame .plate b{display:block;font-family:var(--serif);font-style:italic;font-size:1rem;color:#fff;margin-bottom:3px;font-weight:400}
+  .art.sohlberg{background:linear-gradient(to top,#0b1d44,#13316f 45%,#1f4790)}
+  .art.melgaard{background:linear-gradient(135deg,#7a2a4a,#3a1830 60%,#160b12)}
+  .art.books{background:linear-gradient(120deg,#5a3a22,#33210f)}
+  .art.tour{background:linear-gradient(150deg,#244a37,#10241b)}
+  .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.72}
+  .art .ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,12,28,.7),transparent 60%)}
+
+  /* ---------- café ---------- */
+  .menu-cols{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(36px,6vw,80px);align-items:start;margin-top:50px}
+  .menu-list{display:flex;flex-direction:column}
+  .menu-item{display:flex;justify-content:space-between;gap:18px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--line)}
+  .menu-item:first-child{padding-top:0}
+  .menu-item .nm{font-family:var(--serif);font-size:1.18rem}
+  .menu-item .ds{font-size:.86rem;color:var(--ink-soft);margin-top:3px;max-width:46ch}
+  .menu-item .pr{font-family:var(--serif);color:var(--gilt);font-size:1.02rem;white-space:nowrap}
+  .aquavit{background:var(--night);color:var(--paper-on-dark);border-radius:14px;padding:clamp(28px,3vw,42px);position:relative;overflow:hidden}
+  .aquavit h3{font-size:1.7rem;color:#fff;margin-bottom:12px}
+  .aquavit p{font-size:.95rem;color:var(--paper-on-dark-soft)}
+  .aquavit .tag{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gilt-2)}
+
+  /* ---------- rooms ---------- */
+  .rooms{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2.4vw,30px);margin-top:50px}
+  .room{background:var(--paper-2);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:transform .35s,box-shadow .35s}
+  .room:hover{transform:translateY(-6px);box-shadow:0 26px 50px -30px rgba(27,35,30,.5)}
+  .room .rm-media{position:relative;aspect-ratio:3/2}
+  .room .rm-body{padding:24px 24px 28px}
+  .room h3{font-size:1.4rem;margin-bottom:8px}
+  .room p{font-size:.9rem;color:var(--ink-soft)}
+  .room .rm-meta{margin-top:16px;display:flex;align-items:center;gap:12px;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gilt)}
+
+  /* ---------- packages ---------- */
+  .packs{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(16px,2vw,24px);margin-top:50px}
+  .pack{position:relative;border:1px solid var(--line-night);border-radius:14px;overflow:hidden;padding:clamp(26px,3vw,40px);min-height:260px;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;isolation:isolate}
+  .pack .bg{position:absolute;inset:0;z-index:-1}
+  .pack.moose .bg{background:radial-gradient(120% 100% at 80% 20%,#2a3b55,#0e1c32 60%,#0a1424)}
+  .pack.rondane .bg{background:linear-gradient(160deg,#1c3a6b,#0c1d3c)}
+  .pack.fish .bg{background:linear-gradient(160deg,#1f5a52,#0c2722)}
+  .pack.rail .bg{background:linear-gradient(160deg,#5a4326,#2a1d10)}
+  .pack .kx{position:absolute;top:22px;right:22px;width:74px;height:74px;opacity:.9;z-index:-1}
+  .pack h3{font-size:1.55rem;margin-bottom:8px}
+  .pack p{font-size:.9rem;color:rgba(255,255,255,.82);max-width:40ch}
+  .pack .pill{position:absolute;top:22px;left:22px;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;background:rgba(190,145,79,.18);border:1px solid var(--line-night);color:var(--gilt-2);padding:5px 11px;border-radius:999px}
+  .pack a.lk{margin-top:18px;font-size:.8rem;font-weight:600;letter-spacing:.04em;color:var(--gilt-2);display:inline-flex;gap:8px;align-items:center}
+  .pack a.lk:hover{color:#fff}
+
+  /* ---------- conference ---------- */
+  .conf-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch}
+  .conf-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line-night);border:1px solid var(--line-night);border-radius:12px;overflow:hidden;margin-top:30px}
+  .conf-stats div{background:var(--tar);padding:24px}
+  .conf-stats .n{font-family:var(--serif);font-size:2.1rem;color:var(--gilt-2)}
+  .conf-stats .l{font-size:.78rem;color:var(--paper-on-dark-soft);letter-spacing:.04em}
+
+  /* ---------- location ---------- */
+  .loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,70px);align-items:center}
+  .map{position:relative;aspect-ratio:4/3;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  .map .mbg{position:absolute;inset:0;background:linear-gradient(135deg,#e7e0cf,#d8d0bb)}
+  .map .route{position:absolute;inset:0}
+  .contact-lines{list-style:none;display:flex;flex-direction:column;gap:18px;margin-top:26px}
+  .contact-lines li{display:flex;gap:14px;align-items:flex-start;font-size:.96rem;color:var(--ink-soft)}
+  .contact-lines svg{flex:none;width:20px;height:20px;color:var(--gilt);margin-top:2px}
+  .contact-lines b{color:var(--ink);font-weight:600;display:block;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+
+  /* ---------- booking band ---------- */
+  .book-band{position:relative;overflow:hidden;text-align:center}
+  .book-band .wrap{position:relative;z-index:2}
+  .book-band h2{font-size:clamp(2.1rem,5vw,4rem);color:#fff;max-width:18ch;margin:0 auto 20px;text-wrap:balance}
+  .book-band h2 em{font-style:italic;color:var(--gilt-2)}
+  .book-band .lede{max-width:54ch;margin:0 auto 34px}
+  .perks{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 14px;margin-bottom:38px}
+  .perk{font-size:.78rem;letter-spacing:.04em;color:var(--paper-on-dark);border:1px solid var(--line-night);border-radius:999px;padding:8px 16px;display:inline-flex;gap:8px;align-items:center}
+  .perk svg{width:15px;height:15px;color:var(--gilt-2);flex:none}
+  .bb-sky{position:absolute;inset:0;z-index:0;opacity:.5}
+
+  /* ---------- footer ---------- */
+  footer{background:var(--tar);color:var(--paper-on-dark);padding-block:clamp(56px,7vw,90px) 32px}
+  .foot-grid{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gut);display:grid;grid-template-columns:1.4fr 1fr 1fr 1.4fr;gap:40px}
+  .foot-brand b{font-family:var(--serif);font-size:1.4rem;color:#fff;font-weight:500}
+  .foot-brand p{font-size:.88rem;color:var(--paper-on-dark-soft);margin-top:14px;max-width:34ch}
+  .foot-col h4{font-family:var(--sans);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gilt-2);margin-bottom:18px;font-weight:600}
+  .foot-col ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+  .foot-col a,.foot-col li{font-size:.9rem;color:var(--paper-on-dark-soft);transition:color .2s}
+  .foot-col a:hover{color:#fff}
+  .news p{font-size:.88rem;color:var(--paper-on-dark-soft);margin-bottom:14px}
+  .news form{display:flex;gap:8px;flex-wrap:wrap}
+  .news input{flex:1;min-width:0;background:rgba(255,255,255,.05);border:1px solid var(--line-night);border-radius:999px;padding:12px 18px;color:#fff;font:inherit;font-size:.86rem}
+  .news input::placeholder{color:rgba(255,255,255,.4)}
+  .news button{flex:none}
+  .foot-bot{max-width:var(--maxw);margin:48px auto 0;padding:24px var(--gut) 0;border-top:1px solid var(--line-night);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.76rem;color:rgba(255,255,255,.45)}
+  .foot-bot a{color:rgba(255,255,255,.6)}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+  /* lightbox */
+  .lb{position:fixed;inset:0;z-index:90;background:rgba(8,14,28,.93);display:none;align-items:center;justify-content:center;padding:5vw;opacity:0;transition:opacity .3s}
+  .lb.open{display:flex}
+  .lb.show{opacity:1}
+  .lb-card{max-width:560px;width:100%;text-align:center;color:#fff}
+  .lb-art{aspect-ratio:4/5;border:14px solid #0a1730;border-radius:4px;position:relative;overflow:hidden;box-shadow:0 40px 100px -30px #000}
+  .lb-card h3{font-family:var(--serif);font-size:1.7rem;margin-top:24px}
+  .lb-card p{color:var(--paper-on-dark-soft);font-size:.95rem;margin-top:8px;max-width:46ch;margin-inline:auto}
+  .lb-close{position:absolute;top:24px;right:30px;background:none;border:none;color:#fff;cursor:pointer;width:44px;height:44px;font-size:0}
+  .lb-close::before,.lb-close::after{content:"";position:absolute;left:10px;top:21px;width:24px;height:2px;background:#fff}
+  .lb-close::before{transform:rotate(45deg)}.lb-close::after{transform:rotate(-45deg)}
+
+  /* ===== PREMIUM GLOBAL REFINEMENTS ===== */
+  ::-webkit-scrollbar{width:5px}
+  ::-webkit-scrollbar-track{background:var(--paper)}
+  ::-webkit-scrollbar-thumb{background:var(--gilt-2);border-radius:3px}
+
+  /* button: inner top-light sheen */
+  .btn:not(.btn-ghost){
+    background-image:linear-gradient(to bottom,rgba(255,255,255,.16) 0%,transparent 55%);
+    box-shadow:0 1px 0 rgba(255,255,255,.14) inset,0 3px 14px rgba(0,0,0,.18);
+  }
+  .btn:not(.btn-ghost):hover{
+    background-image:linear-gradient(to bottom,rgba(255,255,255,.22) 0%,transparent 55%);
+  }
+  .btn-ink{background-image:linear-gradient(to bottom,rgba(255,255,255,.07),transparent)!important}
+
+  /* room card depth */
+  .room{box-shadow:0 2px 18px rgba(27,35,30,.06),0 0 0 1px var(--line)}
+  .room:hover{box-shadow:0 32px 58px -24px rgba(27,35,30,.42),0 0 0 1px rgba(190,145,79,.2)}
+
+  /* gallery frame depth */
+  .frame{box-shadow:0 4px 22px rgba(0,0,0,.4)}
+  .frame:hover{box-shadow:0 28px 64px -18px rgba(0,0,0,.95),0 0 0 1px rgba(214,180,115,.4)}
+
+  /* hero rule: gold glow */
+  .hero-rule{box-shadow:0 0 24px 3px rgba(190,145,79,.5)}
+
+  /* eyebrow: tighter, more refined */
+  .eyebrow{font-size:.67rem;letter-spacing:.3em}
+
+  /* aquavit card: top accent */
+  .aquavit{border-top:2px solid var(--gilt);box-shadow:inset 0 1px 0 rgba(190,145,79,.25)}
+
+  /* pack pill: glass blur */
+  .pack .pill{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+
+  /* wayfind numbers: larger weight */
+  .wayfind b{font-size:1.28rem;font-weight:500}
+
+  /* footer brand size */
+  .foot-brand b{font-size:1.55rem}
+
+  /* nav brand: tighter */
+  .brand b{letter-spacing:.05em}
+
+  /* facts: slightly bigger number */
+  .facts .yr{font-size:1.12rem;letter-spacing:.02em}
+
+  /* conf stats number */
+  .conf-stats .n{font-size:2.4rem}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:1000px){
+    .frame.lg,.frame.md,.frame.sm{grid-column:span 6}
+    .facets{grid-template-columns:1fr}
+    .rooms{grid-template-columns:1fr 1fr}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:860px){
+    .nav{justify-content:flex-start}
+    .nav-links,.nav-right .btn,.nav-right{display:none}
+    .nav-toggle{display:block}
+    .nav .lang{display:none}
+    .intro-grid,.split,.split.flip,.gallery-head,.menu-cols,.conf-grid,.loc-grid{grid-template-columns:1fr}
+    .split.flip .ed-media{order:0}
+    .ed-media{min-height:clamp(260px,50vw,420px)}
+    .packs{grid-template-columns:1fr}
+    section{padding-block:clamp(52px,8vw,96px)}
+    .wayfind ul{gap:6px 28px}
+    .gallery-head{gap:18px}
+    .gallery-head h2{font-size:clamp(1.75rem,5.5vw,2.8rem)}
+    .hero h1{text-wrap:balance}
+    .book-band h2{font-size:clamp(1.8rem,5.5vw,3rem)}
+  }
+  @media (max-width:600px){
+    .frames{grid-template-columns:repeat(6,1fr)}
+    .frame.lg{grid-column:span 6}
+    .frame.md,.frame.sm{grid-column:span 3}
+    .conf-stats{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:560px){
+    .rooms{grid-template-columns:1fr}
+    .frames{grid-template-columns:1fr 1fr}
+    .frame.lg,.frame.md,.frame.sm{grid-column:span 1}
+    .conf-stats{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr}
+    body{font-size:16px}
+    .wayfind ul{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;padding:20px var(--gut)}
+    .news form{flex-direction:column}
+    .news button{width:100%;justify-content:center}
+    .perks{gap:7px 9px}
+    .perk{font-size:.73rem;padding:7px 12px}
+    .hero h1{font-size:clamp(2.4rem,10vw,3.6rem)}
+    .pack{min-height:220px;padding:clamp(20px,4vw,32px)}
+    .facet{padding:clamp(20px,4vw,32px)}
+    .lb-card{padding:0 8px}
+  }
+  @media (max-width:400px){
+    .wayfind ul{grid-template-columns:1fr}
+    .hero-cta{flex-direction:column}
+    .hero-cta .btn{justify-content:center}
+    .hero-badge{font-size:.63rem}
+  }
+
+  /* ---- menu overlay ---- */
+  .menu-overlay{
+    position:fixed;inset:0;z-index:54;
+    background:rgba(4,10,22,.72);
+    opacity:0;pointer-events:none;
+    transition:opacity .42s ease;
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  }
+  body.menu-open .menu-overlay{opacity:1;pointer-events:auto}
+
+  /* ---- premium mobile menu: slides in from right ---- */
+  .mobile-menu{
+    position:fixed;top:0;right:0;bottom:0;z-index:55;
+    width:min(340px,86vw);
+    background:linear-gradient(155deg,#0e2244 0%,#09162b 50%,#050d1c 100%);
+    border-left:1px solid rgba(214,180,115,.14);
+    box-shadow:-28px 0 80px rgba(0,0,0,.7);
+    display:flex;flex-direction:column;
+    transform:translateX(105%);
+    transition:transform .52s cubic-bezier(.76,0,.24,1);
+    overflow-y:auto;overflow-x:hidden;
+  }
+  body.menu-open .mobile-menu{transform:none}
+
+  .mobile-menu-inner{
+    flex:1;display:flex;flex-direction:column;
+    padding:clamp(82px,15vw,106px) clamp(26px,6vw,44px) 36px;
+  }
+  .mobile-menu-links{display:flex;flex-direction:column}
+  .mobile-menu-links a{
+    font-family:var(--serif);
+    font-size:clamp(1.25rem,4.5vw,1.55rem);
+    color:rgba(255,255,255,.72);
+    padding:14px 0;
+    border-bottom:1px solid rgba(214,180,115,.1);
+    display:block;
+    transition:color .22s,padding-left .22s,opacity .36s,transform .36s;
+    letter-spacing:.01em;
+    opacity:0;transform:translateX(24px);
+  }
+  .mobile-menu-links a:last-of-type{border-bottom:none}
+  .mobile-menu-links a:hover{color:var(--gilt-2);padding-left:10px}
+  body.menu-open .mobile-menu-links a:nth-child(1){opacity:1;transform:none;transition-delay:.1s}
+  body.menu-open .mobile-menu-links a:nth-child(2){opacity:1;transform:none;transition-delay:.15s}
+  body.menu-open .mobile-menu-links a:nth-child(3){opacity:1;transform:none;transition-delay:.2s}
+  body.menu-open .mobile-menu-links a:nth-child(4){opacity:1;transform:none;transition-delay:.25s}
+  body.menu-open .mobile-menu-links a:nth-child(5){opacity:1;transform:none;transition-delay:.3s}
+  body.menu-open .mobile-menu-links a:nth-child(6){opacity:1;transform:none;transition-delay:.35s}
+
+  .mobile-menu-footer{
+    margin-top:auto;padding-top:28px;
+    border-top:1px solid rgba(214,180,115,.12);
+    display:flex;flex-direction:column;gap:16px;
+  }
+  .mobile-menu-footer .btn{width:100%;justify-content:center;padding:14px 22px}
+  .mobile-menu .lang{margin-top:0;gap:4px}
+  .mobile-menu .lang button{padding:6px 10px;font-size:.76rem}
+  .mobile-menu-contact{font-size:.74rem;color:var(--paper-on-dark-soft)}
+  .mobile-menu-contact small{
+    display:block;text-transform:uppercase;letter-spacing:.2em;
+    font-size:.62rem;color:rgba(255,255,255,.32);margin-bottom:6px;
+  }
+  .mobile-menu-contact a{color:var(--gilt-2);display:block}
+  @media (prefers-reduced-motion:reduce){
+    .mobile-menu-links a{opacity:1;transform:none}
+  }
+
+  /* ===== AESTHETIC ENHANCEMENTS ===== */
+
+  /* 1 — paper grain: tactile noise on warm sections */
+  .sec-paper,.sec-paper-2{position:relative}
+  .sec-paper::after,.sec-paper-2::after{
+    content:'';position:absolute;inset:0;pointer-events:none;z-index:1;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23g)'/%3E%3C/svg%3E");
+    opacity:.038;mix-blend-mode:multiply;
+  }
+  .sec-paper>.wrap,.sec-paper>div:not(.sec-paper::after),
+  .sec-paper-2>.wrap,.sec-paper-2>div{position:relative;z-index:2}
+
+  /* 2 — section wave dividers */
+  .wv{display:block;line-height:0;overflow:hidden;margin:-1px 0;position:relative;z-index:10}
+  .wv svg{display:block;width:100%;height:clamp(44px,5.5vw,80px)}
+
+  /* 3 — hero parallax foreground layer */
+  .hero-fg{position:absolute;inset:0;z-index:2;pointer-events:none;will-change:transform}
+  .hero-sky{will-change:transform}
+
+  /* 4 — intro drop cap */
+  .dropcap::first-letter{
+    font-family:var(--serif);font-size:4.1rem;font-weight:500;
+    float:left;line-height:.84;margin:0 .13em -.03em 0;color:var(--gilt);
+  }
+
+  /* 5 — pull-quote ornament */
+  blockquote.serif-quote{position:relative;padding:0 1.8rem}
+  blockquote.serif-quote::before,blockquote.serif-quote::after{
+    font-family:var(--serif);font-size:6rem;line-height:.8;
+    color:var(--gilt-2);opacity:.25;position:absolute;font-style:normal;
+  }
+  blockquote.serif-quote::before{content:'\201C';top:-.2em;left:0}
+  blockquote.serif-quote::after{content:'\201D';bottom:-.55em;right:0}
+
+  /* 6 — gilt ornament between sections */
+  .gilt-ornament{
+    display:flex;align-items:center;justify-content:center;gap:16px;
+    padding:clamp(32px,4vw,56px) 0 0;
+  }
+  .gilt-ornament::before,.gilt-ornament::after{
+    content:'';flex:1;max-width:180px;height:1px;
+    background:linear-gradient(to right,transparent,var(--gilt));
+  }
+  .gilt-ornament::after{background:linear-gradient(to left,transparent,var(--gilt))}
+  .gilt-ornament-inner{display:flex;gap:6px;align-items:center}
+  .gilt-ornament-inner span{display:block;border-radius:50%;background:var(--gilt)}
+  .gilt-ornament-inner span:nth-child(1),.gilt-ornament-inner span:nth-child(3){width:4px;height:4px;opacity:.6}
+  .gilt-ornament-inner span:nth-child(2){width:6px;height:6px;box-shadow:0 0 8px 2px rgba(190,145,79,.5)}
+
+  /* 7 — pack card unique animations */
+  /* moose: golden aura pulse */
+  .antler-glow{
+    position:absolute;top:-10px;right:-10px;width:180px;height:180px;z-index:0;
+    background:radial-gradient(circle at 65% 35%,rgba(214,180,115,.28) 0%,transparent 65%);
+    border-radius:50%;animation:pulse-gold 3.5s ease-in-out infinite;pointer-events:none;
+  }
+  @keyframes pulse-gold{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+
+  /* rondane: mountain silhouette rising */
+  .rondane-peaks{position:absolute;bottom:0;left:0;right:0;z-index:0;pointer-events:none;opacity:.18}
+
+  /* fish: rippling water rings */
+  .water-rings{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  .water-ring{
+    position:absolute;border-radius:50%;
+    border:1px solid rgba(63,195,170,.28);
+    animation:ripple 4.2s ease-out infinite;
+  }
+  .water-ring:nth-child(1){width:90px;height:90px;top:28%;right:18%;animation-delay:0s}
+  .water-ring:nth-child(2){width:170px;height:170px;top:14%;right:7%;animation-delay:1.4s}
+  .water-ring:nth-child(3){width:270px;height:270px;top:-2%;right:-5%;animation-delay:2.8s}
+  @keyframes ripple{0%{transform:scale(.55);opacity:.85}100%{transform:scale(1.35);opacity:0}}
+
+  /* rail: horizontal speed lines */
+  .speed-lines{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  .speed-line{
+    position:absolute;height:1px;
+    background:linear-gradient(to right,transparent 0%,rgba(190,145,79,.5) 45%,rgba(190,145,79,.1) 100%);
+    animation:speed-anim linear infinite;
+  }
+  .speed-line:nth-child(1){width:58%;top:31%;animation-duration:2.1s;animation-delay:0s}
+  .speed-line:nth-child(2){width:40%;top:47%;animation-duration:2.7s;animation-delay:.45s}
+  .speed-line:nth-child(3){width:68%;top:62%;animation-duration:1.9s;animation-delay:.9s}
+  .speed-line:nth-child(4){width:47%;top:75%;animation-duration:2.4s;animation-delay:1.35s}
+  @keyframes speed-anim{from{left:-70%}to{left:110%}}
+  @media (prefers-reduced-motion:reduce){
+    .antler-glow,.water-ring,.speed-line{animation:none}
+  }
+
+  /* ===== MOBILE OVERLAP FIXES ===== */
+  /* drop cap: disable float on small screens to prevent text collision */
+  @media(max-width:600px){
+    .dropcap::first-letter{
+      float:none;font-size:1em;margin:0;
+      color:var(--gilt);display:inline;
+    }
+  }
+  /* blockquote ornament: contain and shrink on mobile */
+  @media(max-width:860px){
+    blockquote.serif-quote{padding:0 .5rem;overflow:visible}
+    blockquote.serif-quote::before{font-size:3.5rem;top:-.1em;left:-.05em}
+    blockquote.serif-quote::after{font-size:3.5rem;bottom:-.4em;right:-.05em}
+    /* frame plate: smaller text on narrow cards */
+    .frame .plate{font-size:.64rem;left:10px;bottom:10px;right:10px}
+    .frame .plate b{font-size:.86rem}
+    /* hero badge: don't let it crowd hero text on small landscape */
+    .hero-badge{font-size:.62rem;letter-spacing:.16em}
+    /* pack kx icon: smaller on mobile */
+    .pack .kx{width:56px;height:56px;top:16px;right:16px}
+    /* antler glow: constrain within card */
+    .antler-glow{width:120px;height:120px;top:0;right:0}
+    /* ed-text: tighter padding on mobile */
+    .ed-text{padding:clamp(28px,5vw,56px)}
+    /* gilt ornament: smaller top margin */
+    .gilt-ornament{padding-top:clamp(20px,3vw,40px)}
+  }
+  @media(max-width:560px){
+    /* frame: minimum readable layout */
+    .frame{padding:10px}
+    .frame .mat{padding:0}
+    /* pack card: ensure pill and heading don't squeeze */
+    .pack{padding:clamp(18px,4vw,28px);min-height:200px}
+    .pack .pill{font-size:.6rem;padding:4px 9px;top:16px;left:16px}
+    .pack h3{font-size:1.25rem;margin-top:4px}
+    .pack p{font-size:.86rem}
+    /* wayfind: ensure numbers and labels don't bleed */
+    .wayfind b{font-size:1.1rem}
+    .wayfind .lbl{font-size:.74rem}
+    /* facet: tighter */
+    .facet h3{font-size:1.28rem}
+    /* room meta tag: no wrap */
+    .rm-meta{font-size:.68rem}
+    /* sign: smaller on mobile */
+    .sign .nm{font-size:1.1rem}
+    /* conf stats: bigger number is fine but label should breathe */
+    .conf-stats .n{font-size:1.9rem}
+    .conf-stats .l{font-size:.72rem}
+  }
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonials{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:clamp(14px,2.5vw,26px);margin-top:50px;
+  }
+  .tcard{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:14px;
+    padding:clamp(22px,3vw,34px);display:flex;flex-direction:column;gap:16px;
+    transition:transform .35s,box-shadow .35s;
+    box-shadow:0 2px 18px rgba(27,35,30,.05);
+  }
+  .tcard:hover{
+    transform:translateY(-5px);
+    box-shadow:0 22px 48px -20px rgba(27,35,30,.3),0 0 0 1px rgba(190,145,79,.15);
+  }
+  .tcard-stars{color:var(--gilt);font-size:.82rem;letter-spacing:.14em}
+  .tcard-q{
+    font-family:var(--serif);font-style:italic;
+    font-size:clamp(.96rem,1.6vw,1.12rem);color:var(--ink);line-height:1.58;flex:1;
+  }
+  .tcard-who{display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;margin-top:4px}
+  .tcard-avatar{
+    width:40px;height:40px;border-radius:50%;flex:none;
+    background:var(--night);color:var(--gilt-2);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--serif);font-size:1rem;letter-spacing:.01em;
+  }
+  .tcard-name{font-size:.86rem;font-weight:600;color:var(--ink)}
+  .tcard-from{font-size:.72rem;color:var(--ink-soft);margin-top:2px;letter-spacing:.04em}
+  @media(max-width:1000px){.testimonials{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.testimonials{grid-template-columns:1fr}}
+
+  /* ===== BOOKING MODAL ===== */
+  .book-modal{
+    position:fixed;inset:0;z-index:80;display:none;
+    align-items:center;justify-content:center;
+    padding:clamp(12px,4vw,32px);
+  }
+  .book-modal.open{display:flex}
+  .book-modal-overlay{
+    position:absolute;inset:0;background:rgba(4,10,22,.78);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    opacity:0;transition:opacity .35s;
+  }
+  .book-modal.show .book-modal-overlay{opacity:1}
+  .book-panel{
+    position:relative;z-index:2;background:var(--paper);border-radius:18px;
+    width:100%;max-width:580px;max-height:92vh;overflow-y:auto;
+    transform:translateY(28px) scale(.97);opacity:0;
+    transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .4s;
+    box-shadow:0 40px 100px -20px rgba(0,0,0,.55),0 0 0 1px rgba(190,145,79,.14);
+  }
+  .book-modal.show .book-panel{transform:none;opacity:1}
+  .book-panel-inner{padding:clamp(24px,5vw,48px)}
+  .book-close{
+    position:absolute;top:16px;right:18px;
+    background:none;border:1px solid var(--line);border-radius:50%;
+    width:34px;height:34px;cursor:pointer;
+    color:var(--ink-soft);font-size:1.1rem;
+    display:flex;align-items:center;justify-content:center;
+    transition:border-color .2s,color .2s;line-height:1;
+  }
+  .book-close:hover{border-color:var(--gilt);color:var(--gilt)}
+  .book-form{display:flex;flex-direction:column;gap:14px;margin-top:26px}
+  .book-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:480px){.book-row{grid-template-columns:1fr}}
+  .book-field{display:flex;flex-direction:column;gap:5px}
+  .book-field label{
+    font-size:.68rem;font-weight:600;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink-soft);
+  }
+  .book-field input,.book-field select{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:8px;
+    padding:11px 13px;font:inherit;font-size:.92rem;color:var(--ink);
+    transition:border-color .2s,box-shadow .2s;
+    -webkit-appearance:none;appearance:none;
+  }
+  .book-field input:focus,.book-field select:focus{
+    outline:none;border-color:var(--gilt);
+    box-shadow:0 0 0 3px rgba(190,145,79,.13);
+  }
+  .book-success{
+    display:none;text-align:center;padding:32px 0;
+  }
+  .book-success svg{margin:0 auto 16px}
+  .book-success h3{font-family:var(--serif);font-size:1.45rem;color:var(--ink);margin-bottom:10px}
+  .book-success p{color:var(--ink-soft);font-size:.94rem}
+
+  /* ===== LANGUAGE SWITCHER — always visible on mobile ===== */
+  .lang-mobile{display:none}
+  @media(max-width:860px){
+    .nav .lang-mobile{
+      display:flex;align-items:center;gap:2px;
+      font-size:.72rem;font-weight:600;letter-spacing:.08em;
+      margin-left:auto;
+    }
+    .nav-toggle{margin-left:14px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<nav class="nav" id="nav" aria-label="Hovedmeny">
+  <a href="#top" class="brand" aria-label="Stor-Elvdal Hotell — til toppen">
+    <b>Stor-Elvdal Hotell</b>
+    <small data-i18n="brand.tag">Koppang · Østerdalen</small>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#opphold" data-i18n="nav.stay">Bo hos oss</a></li>
+    <li><a href="#kunst" data-i18n="nav.art">Kunsten</a></li>
+    <li><a href="#kafe" data-i18n="nav.cafe">Tunet Kafé</a></li>
+    <li><a href="#opplevelser" data-i18n="nav.exp">Opplevelser</a></li>
+    <li><a href="#selskap" data-i18n="nav.conf">Kurs &amp; selskap</a></li>
+    <li><a href="#finn-fram" data-i18n="nav.find">Finn fram</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang" role="group" aria-label="Språk / Language">
+      <button data-lang="no" class="active">NO</button><span>·</span>
+      <button data-lang="en">EN</button><span>·</span>
+      <button data-lang="de">DE</button>
+    </div>
+    <a href="#book" class="btn" data-i18n="nav.book">Book opphold</a>
+  </div>
+  <!-- lang switcher always visible on mobile -->
+  <div class="lang lang-mobile" role="group" aria-label="Språk / Language">
+    <button data-lang="no" class="active">NO</button><span>·</span>
+    <button data-lang="en">EN</button><span>·</span>
+    <button data-lang="de">DE</button>
+  </div>
+  <button class="nav-toggle" id="navToggle" aria-label="Åpne meny" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="menu-overlay" id="menuOverlay" aria-hidden="true"></div>
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true" role="dialog" aria-label="Navigasjonsmeny">
+  <div class="mobile-menu-inner">
+    <nav class="mobile-menu-links" aria-label="Sidenavigasjon">
+      <a href="#opphold" data-i18n="nav.stay">Bo hos oss</a>
+      <a href="#kunst" data-i18n="nav.art">Kunsten</a>
+      <a href="#kafe" data-i18n="nav.cafe">Tunet Kafé</a>
+      <a href="#opplevelser" data-i18n="nav.exp">Opplevelser</a>
+      <a href="#selskap" data-i18n="nav.conf">Kurs &amp; selskap</a>
+      <a href="#finn-fram" data-i18n="nav.find">Finn fram</a>
+    </nav>
+    <div class="mobile-menu-footer">
+      <a href="#book" class="btn" data-i18n="nav.book">Book opphold</a>
+      <div class="lang" role="group" aria-label="Språk">
+        <button data-lang="no" class="active">NO</button><span>·</span>
+        <button data-lang="en">EN</button><span>·</span>
+        <button data-lang="de">DE</button>
+      </div>
+      <div class="mobile-menu-contact">
+        <small>Kontakt</small>
+        <a href="mailto:post@storelvdalhotell.no">post@storelvdalhotell.no</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero" id="top">
+  <div class="hero-sky" aria-hidden="true">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Vinternatt over Rondane">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#0a1430"/>
+          <stop offset="42%" stop-color="#10265a"/>
+          <stop offset="74%" stop-color="#1c3f7e"/>
+          <stop offset="100%" stop-color="#33598f"/>
+        </linearGradient>
+        <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+          <stop offset="0" stop-color="#fff" stop-opacity="1"/>
+          <stop offset="22%" stop-color="#e9eeff" stop-opacity=".55"/>
+          <stop offset="60%" stop-color="#cdd9ff" stop-opacity=".12"/>
+          <stop offset="100%" stop-color="#cdd9ff" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="m1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#244a86"/><stop offset="100%" stop-color="#15305f"/>
+        </linearGradient>
+        <linearGradient id="m2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#16305f"/><stop offset="100%" stop-color="#0d1e40"/>
+        </linearGradient>
+        <linearGradient id="m3" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#0c1d3e"/><stop offset="100%" stop-color="#091428"/>
+        </linearGradient>
+      </defs>
+      <rect width="1440" height="900" fill="url(#sky)"/>
+      <g fill="#dfe7ff">
+        <circle cx="210" cy="120" r="1.1" opacity=".7"/><circle cx="430" cy="80" r="1.4" opacity=".5"/>
+        <circle cx="640" cy="160" r="1" opacity=".6"/><circle cx="980" cy="90" r="1.2" opacity=".55"/>
+        <circle cx="1180" cy="200" r="1.3" opacity=".5"/><circle cx="1320" cy="120" r="1" opacity=".6"/>
+        <circle cx="120" cy="250" r="1" opacity=".45"/><circle cx="760" cy="60" r="1" opacity=".5"/>
+        <circle cx="540" cy="240" r="1" opacity=".4"/><circle cx="1050" cy="300" r="1.1" opacity=".45"/>
+      </g>
+      <g class="star">
+        <circle cx="1075" cy="150" r="120" fill="url(#halo)"/>
+        <circle cx="1075" cy="150" r="3.4" fill="#ffffff"/>
+        <path d="M1075 132 L1077 148 L1075 168 L1073 148 Z M1057 150 L1073 152 L1093 150 L1073 148 Z" fill="#ffffff" opacity=".85"/>
+      </g>
+      <path d="M0 640 L150 470 L300 560 L470 410 L620 540 L760 470 L900 590 L1060 440 L1230 560 L1360 480 L1440 540 L1440 900 L0 900 Z" fill="url(#m1)" opacity=".9"/>
+      <path d="M0 720 L180 560 L360 660 L560 520 L760 640 L960 540 L1160 660 L1340 580 L1440 640 L1440 900 L0 900 Z" fill="url(#m2)"/>
+      <path d="M0 800 L1440 800 L1440 900 L0 900 Z" fill="url(#m3)"/>
+      <g fill="#0a1730">
+        <path d="M40 800 l14 -54 l14 54 z"/><path d="M95 800 l11 -42 l11 42 z"/><path d="M150 800 l16 -64 l16 64 z"/>
+        <path d="M215 800 l12 -48 l12 48 z"/><path d="M275 800 l15 -58 l15 58 z"/><path d="M340 800 l11 -40 l11 40 z"/>
+        <path d="M400 800 l16 -62 l16 62 z"/><path d="M470 800 l12 -46 l12 46 z"/><path d="M530 800 l15 -56 l15 56 z"/>
+        <path d="M600 800 l13 -50 l13 50 z"/><path d="M665 800 l16 -64 l16 64 z"/><path d="M735 800 l11 -42 l11 42 z"/>
+        <path d="M795 800 l15 -58 l15 58 z"/><path d="M860 800 l12 -48 l12 48 z"/><path d="M920 800 l16 -62 l16 62 z"/>
+        <path d="M990 800 l13 -52 l13 52 z"/><path d="M1055 800 l15 -58 l15 58 z"/><path d="M1125 800 l11 -44 l11 44 z"/>
+        <path d="M1185 800 l16 -64 l16 64 z"/><path d="M1255 800 l12 -48 l12 48 z"/><path d="M1315 800 l15 -58 l15 58 z"/>
+        <path d="M1385 800 l13 -50 l13 50 z"/>
+      </g>
+    </svg>
+  </div>
+  <div class="hero-veil" aria-hidden="true"></div>
+
+  <!-- foreground parallax treeline — moves slower than the sky -->
+  <div class="hero-fg" id="heroFg" aria-hidden="true">
+    <svg viewBox="0 0 1440 220" preserveAspectRatio="xMidYMax slice" style="position:absolute;bottom:0;left:0;width:100%;height:220px">
+      <path d="M0 220 L0 160 L30 145 L55 165 L80 130 L110 150 L135 115 L158 138 L180 105 L205 128 L228 95 L252 118 L275 88 L300 110 L325 78 L350 100 L375 72 L398 95 L420 68 L448 90 L470 60 L500 82 L525 55 L552 78 L575 50 L600 72 L628 48 L655 70 L680 45 L708 68 L732 42 L758 65 L782 40 L808 63 L832 38 L860 62 L885 36 L910 60 L936 35 L962 58 L986 32 L1012 56 L1036 30 L1062 54 L1086 29 L1110 52 L1135 28 L1160 50 L1184 26 L1210 50 L1235 26 L1260 48 L1285 24 L1310 47 L1335 24 L1360 46 L1385 23 L1410 46 L1440 24 L1440 220 Z" fill="#060c1a" opacity=".97"/>
+      <path d="M0 220 L0 185 L50 172 L100 188 L150 168 L200 182 L260 162 L320 178 L380 158 L440 174 L500 155 L560 170 L620 152 L680 168 L740 150 L800 166 L860 148 L920 164 L980 146 L1040 162 L1100 144 L1160 160 L1220 142 L1280 158 L1340 140 L1400 156 L1440 142 L1440 220 Z" fill="#040912" opacity=".98"/>
+    </svg>
+  </div>
+
+  <p class="hero-badge"><span class="dot"></span><span data-i18n="hero.badge">Halvveis mellom Oslo og Trondheim · 350 m fra toget</span></p>
+
+  <div class="hero-inner">
+    <h1 data-i18n="hero.h1">Et galleri du kan <em>sove i</em>.</h1>
+    <div class="hero-rule"></div>
+    <p class="sub" data-i18n="hero.sub">Ni fredede tømmerhus, et eget kunst- og kultursenter og hjemmelaget tradisjonsmat — midt i Østerdalen, der den korteste vegen mellom hovedstaden og Trøndelag går.</p>
+    <div class="hero-cta">
+      <a href="#book" class="btn" data-i18n="hero.cta1">Book opphold</a>
+      <a href="#kunst" class="btn btn-ghost" data-i18n="hero.cta2">Se kunsten</a>
+    </div>
+  </div>
+
+  <div class="wayfind" aria-label="Avstander">
+    <ul>
+      <li><b>3 t</b><span class="lbl" data-i18n="way.oslo">fra Oslo på rv. 3</span></li>
+      <li><b>350 m</b><span class="lbl" data-i18n="way.train">til toget (Rørosbanen)</span></li>
+      <li><b>11 km</b><span class="lbl" data-i18n="way.moose">til Storelgen</span></li>
+      <li><b>30 min</b><span class="lbl" data-i18n="way.rondane">til Rondane</span></li>
+    </ul>
+  </div>
+</header>
+
+<!-- ===================== INTRO ===================== -->
+<section class="sec-paper" id="intro">
+  <div class="wrap intro-grid">
+    <div class="rv">
+      <span class="eyebrow" data-i18n="intro.ey">Velkommen</span>
+      <h2 style="margin-top:18px" data-i18n="intro.h">Et hotell med særpreg — drevet av en kunsthandler.</h2>
+    </div>
+    <div class="intro-body rv">
+      <p class="lede dropcap" data-i18n="intro.p1">Stor-Elvdal Hotell er ikke et vanlig veikrohotell. Det er et helt tun av vernede tømmerhus, samlet på ett sted, der nasjonalt viktig norsk kunst, gamle bøker og hjemmelaget mat møtes.</p>
+      <p data-i18n="intro.p2">Eieren, Pål Sagen, er kunsthandler og antikvarisk bokhandler fra Oslo. Han har fylt husene med malerier, grafikk og litteratur — og gjort hotellet til hjem for Norsk Kultursenter. Her henger en Sohlberg-litografi i resepsjonen og et Bjarne Melgaard-maleri i baren. Her smaker maten av Østerdalen, og akevitten bærer navnet til elgen oppe i veien.</p>
+      <div class="sign">
+        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true"><circle cx="22" cy="22" r="21" stroke="#BE914F"/><path d="M14 27c4-10 6-12 8-12s4 2 8 12" stroke="#BE914F" stroke-width="1.4" stroke-linecap="round"/><circle cx="22" cy="14" r="1.6" fill="#BE914F"/></svg>
+        <div>
+          <div class="nm">Pål Sagen</div>
+          <div class="rl" data-i18n="intro.role">Eier &amp; kurator</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="facets">
+      <div class="facet rv">
+        <svg class="gl" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M14 6v12a4 4 0 0 1-8 0V6M10 6v28M30 6c-3 0-5 4-5 10s2 8 5 8 5-2 5-8-2-10-5-10zm0 18v10" stroke="#BE914F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3 data-i18n="facet.food.h">Matopplevelser</h3>
+        <p data-i18n="facet.food.p">Hjemmelaget tradisjonsmat av kortreiste råvarer — bygg fra dalen, vilt om høsten, og vårt eget bakeri i tunet.</p>
+      </div>
+      <div class="facet rv">
+        <svg class="gl" viewBox="0 0 40 40" fill="none" aria-hidden="true"><rect x="6" y="6" width="28" height="22" rx="1.5" stroke="#BE914F" stroke-width="1.6"/><path d="M6 22l8-7 6 5 5-4 9 8M20 34h0M14 34h12" stroke="#BE914F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3 data-i18n="facet.art.h">Kunstopplevelser</h3>
+        <p data-i18n="facet.art.p">Et museum og bibliotek du bor oppi. Originalkunst på veggene, omvisninger med kuratoren, og Norges nasjonalmaleri i nabolaget.</p>
+      </div>
+      <div class="facet rv">
+        <svg class="gl" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M6 18L20 7l14 11M9 16v16h22V16M16 32V24h8v8" stroke="#BE914F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 5l2 2 2-2" stroke="#BE914F" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <h3 data-i18n="facet.culture.h">Kulturopplevelser</h3>
+        <p data-i18n="facet.culture.p">Ni fredede hus med levende historie, Rondane i vest og Glomma forbi døra. Reis med toget og la bilen stå.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HERITAGE SPLIT ===================== -->
+<section class="sec-tar" style="padding:0" id="historie">
+  <div class="split">
+    <div class="ed-media">
+      <div class="photo">
+        <img src="img/hotel-exterior-rainbow.jpg" alt="Stor-Elvdal Hotell med regnbue over tunet" loading="lazy">
+        <div class="photo-overlay"></div>
+        <div class="ph"><span class="ph-cap" data-i18n="cap.barn">▲ Hotellet med regnbue over tunet</span></div>
+      </div>
+    </div>
+    <div class="ed-text">
+      <span class="eyebrow" data-i18n="her.ey">Et levende museum</span>
+      <h2 data-i18n="her.h">Hus som har stått siden før Norge var et fotografi.</h2>
+      <p class="lede" data-i18n="her.p1">Tunet er satt sammen av tømmerhus flyttet hit og reist på nytt — et stykke Østerdalen samlet på én tomt.</p>
+      <p data-i18n="her.p2">Hjørnesteinen er Barfrøstua, et av de aller første husene i Norge som ble fredet. Å bo her er å sove inne i kulturhistorien, med moderne komfort lagt varsomt innimellom det gamle.</p>
+      <ul class="facts">
+        <li><span class="yr">1923</span><span data-i18n="her.f1">Barfrøstua fredet av Riksantikvaren — blant de første i landet.</span></li>
+        <li><span class="yr">9</span><span data-i18n="her.f2">vernede tømmerhus i ett samlet tun.</span></li>
+        <li><span class="yr">2017</span><span data-i18n="her.f3">Norsk Kultursenter etablert i husene.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- wave: tar → night -->
+<div class="wv" aria-hidden="true" style="background:#0E1E3A">
+  <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0 0 Q240 70 480 30 Q720 -10 960 50 Q1200 100 1440 20 L1440 0 Z" fill="#15191A"/></svg>
+</div>
+
+<!-- ===================== ART / GALLERY ===================== -->
+<section class="sec-night" id="kunst">
+  <div class="wrap">
+    <div class="gallery-head">
+      <div class="rv">
+        <span class="eyebrow" data-i18n="art.ey">Kunsten &amp; Norsk Kultursenter</span>
+        <h2 style="margin-top:18px" data-i18n="art.h">Veggene henger fulle. Bli med kuratoren rundt.</h2>
+      </div>
+      <p class="lede rv" data-i18n="art.p">Et hotell er sjelden et museum. Dette er begge deler. Bli med på omvisning og hør historiene bak verkene — fra Sohlbergs vinternatt til Melgaards farger og bokhyllenes førsteutgaver.</p>
+    </div>
+    <div class="frames">
+      <article class="frame lg rv" tabindex="0" role="button"
+        data-title="Vinternatt i Rondane" data-art="sohlberg"
+        data-desc="Et litografi av Harald Sohlbergs «Vinternatt i Rondane» henger i resepsjonen. Den dype blåtimen med én lysende stjerne ble først skissert på toget hjem fra Koppang. I 1995 ble maleriet kåret til Norges nasjonalmaleri.">
+        <div class="mat"><div class="art sohlberg">
+          <svg viewBox="0 0 300 375" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true"><circle cx="225" cy="70" r="42" fill="url(#halo)"/><circle cx="225" cy="70" r="2.6" fill="#fff"/><path d="M0 250L70 170 150 230 230 150 300 220V375H0Z" fill="#0c2052"/><path d="M0 300L90 230 180 290 300 240V375H0Z" fill="#081738"/></svg>
+          <div class="ov"></div>
+        </div></div>
+        <div class="plate"><b>Vinternatt i Rondane</b><span data-i18n="art.cap.sohlberg">Litografi etter Harald Sohlberg · i resepsjonen</span></div>
+      </article>
+      <article class="frame md rv" tabindex="0" role="button"
+        data-title="Maleri i baren" data-art="melgaard"
+        data-desc="Et stort oljemaleri av Bjarne Melgaard — en av Norges mest omtalte samtidskunstnere — henger i baren. Et uventet møte mellom samtidskunst og gammelt tømmer.">
+        <div class="mat"><div class="art melgaard"><div class="ov"></div></div></div>
+        <div class="plate"><b>Bjarne Melgaard</b><span data-i18n="art.cap.melgaard">Oljemaleri · i baren</span></div>
+      </article>
+      <article class="frame sm rv" tabindex="0" role="button"
+        data-title="Biblioteket" data-art="books"
+        data-desc="Museumsbiblioteket rommer førsteutgaver av norsk litteratur — blant dem A.O. Vinjes «Ferdaminni» fra 1861. En antikvarisk skattkiste midt i Østerdalen.">
+        <div class="mat"><div class="art books">
+          <svg viewBox="0 0 300 375" style="position:absolute;inset:0;width:100%;height:100%;opacity:.8" aria-hidden="true"><g fill="none" stroke="rgba(214,180,115,.55)" stroke-width="3"><rect x="40" y="60" width="30" height="255"/><rect x="78" y="48" width="26" height="267"/><rect x="112" y="70" width="34" height="245"/><rect x="154" y="55" width="24" height="260"/><rect x="186" y="66" width="32" height="249"/><rect x="226" y="50" width="28" height="265"/></g></svg>
+          <div class="ov"></div>
+        </div></div>
+        <div class="plate"><b data-i18n="art.cap.books.t">Biblioteket</b><span data-i18n="art.cap.books">Førsteutgaver · Ferdaminni 1861</span></div>
+      </article>
+      <article class="frame sm rv" tabindex="0" role="button"
+        data-title="Omvisning" data-art="tour"
+        data-desc="Eier og kurator Pål Sagen tar gjester med på omvisning i samlingen. Hør historiene bak verkene — inkludert i en velkomstpakke når du booker direkte.">
+        <div class="mat"><div class="art tour">
+          <img src="img/askeladden.jpg" alt="Askeladden — tradisjonelt norsk tømmerhus med torvtak" loading="lazy">
+          <div class="ov"></div>
+        </div></div>
+        <div class="plate"><b data-i18n="art.cap.tour.t">Omvisning</b><span data-i18n="art.cap.tour">Med kuratoren · på forespørsel</span></div>
+      </article>
+    </div>
+    <blockquote class="serif-quote rv" style="font-size:clamp(1.4rem,3vw,2.2rem);max-width:24ch;margin:64px auto 0;text-align:center;color:#fff;line-height:1.25" data-i18n="art.quote">«Generiske hoteller selger rom. Vi inviterer deg inn i en samling.»</blockquote>
+
+    <!-- gilt ornament -->
+    <div class="gilt-ornament rv" style="margin-top:64px">
+      <div class="gilt-ornament-inner"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- wave: night → paper-2 -->
+<div class="wv" aria-hidden="true" style="background:#FAF5EA">
+  <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0 70 Q360 0 720 40 Q1080 80 1440 10 L1440 0 L0 0 Z" fill="#0E1E3A"/></svg>
+</div>
+
+<!-- ===================== CAFÉ ===================== -->
+<section class="sec-paper-2" id="kafe">
+  <div class="wrap">
+    <span class="eyebrow rv" data-i18n="cafe.ey">Tunet Kafé</span>
+    <div class="gallery-head" style="margin-top:18px">
+      <h2 class="rv" data-i18n="cafe.h">Smaken av dalen — bakt og kokt på huset.</h2>
+      <p class="lede rv" data-i18n="cafe.p">Kortreist tradisjonsmat, et nyåpnet bakeri og kaffe verdt en omvei. Stopp innom på vegen, eller bli sittende.</p>
+    </div>
+    <div class="menu-cols">
+      <div class="menu-list rv">
+        <div class="menu-item"><div><div class="nm" data-i18n="cafe.m1.n">Storelg-bolle</div><div class="ds" data-i18n="cafe.m1.d">Kardemommebolle med surdeig og brunet smør. Husets signatur.</div></div><div class="pr">kr 55</div></div>
+        <div class="menu-item"><div><div class="nm" data-i18n="cafe.m2.n">Jønnbrød</div><div class="ds" data-i18n="cafe.m2.d">Østerdalens sprø «jernbrød» av rømme og byggmel. Bakt som før.</div></div><div class="pr">kr 45</div></div>
+        <div class="menu-item"><div><div class="nm" data-i18n="cafe.m3.n">Dagens varmrett</div><div class="ds" data-i18n="cafe.m3.d">Tradisjonsmat av kortreiste råvarer — vilt i sesong.</div></div><div class="pr" data-i18n="cafe.m3.p">dagspris</div></div>
+        <div class="menu-item"><div><div class="nm" data-i18n="cafe.m4.n">Kaffe &amp; bolle</div><div class="ds" data-i18n="cafe.m4.d">Trakta kaffe og dagens bakst. Den beste pausen på rv. 3.</div></div><div class="pr">kr 65</div></div>
+      </div>
+      <div class="aquavit rv">
+        <div class="cafe-photo-wrap" style="margin-bottom:24px;border-radius:10px;overflow:hidden;aspect-ratio:4/3;position:relative">
+          <img src="img/table-setting.jpg" alt="Norsk flagg og roser på bordet — festpyntet i restauranten" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block">
+        </div>
+        <span class="tag" data-i18n="cafe.aq.tag">Vår egen</span>
+        <h3 style="margin-top:10px">Storelgen Aquavit</h3>
+        <p data-i18n="cafe.aq.p">Hotellet har sin egen akevitt, oppkalt etter elgen oppe i veien og produsert ved Det Norske Brenneri i Grimstad. Smak den til maten — eller som en velkomstdram.</p>
+        <svg viewBox="0 0 200 90" style="margin-top:24px;width:140px;opacity:.9" aria-hidden="true"><g fill="none" stroke="#D6B473" stroke-width="2" stroke-linejoin="round"><path d="M70 30c-6-10-10-12-10-12M130 30c6-10 10-12 10-12M60 18c-8-4-10-10-10-10M140 18c8-4 10-10 10-10"/><path d="M70 30h60v18c0 14-10 22-30 22S70 62 70 48z"/><circle cx="88" cy="44" r="2.5" fill="#D6B473"/><circle cx="112" cy="44" r="2.5" fill="#D6B473"/></g></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ROOMS ===================== -->
+<section class="sec-paper" id="opphold">
+  <div class="wrap">
+    <span class="eyebrow rv" data-i18n="rooms.ey">Bo hos oss</span>
+    <div class="gallery-head" style="margin-top:18px">
+      <h2 class="rv" data-i18n="rooms.h">Sov i det gamle tunet — eller helt nytt ved sida av.</h2>
+      <p class="lede rv" data-i18n="rooms.p">Rom i de historiske husene for deg som vil bo i historien, og moderne rom for deg som vil ha alt nytt. Begge deler med samme ro rundt seg.</p>
+    </div>
+    <div class="rooms">
+      <article class="room rv">
+        <div class="rm-media"><div class="photo">
+          <img src="img/dining-room.jpg" alt="Det historiske spisesalen med peis, hvite duker og gul trekledning" loading="lazy">
+          <div class="photo-overlay"></div>
+          <div class="ph"><span class="ph-cap" data-i18n="cap.room1">▲ Det historiske spisesalet med peis</span></div>
+        </div></div>
+        <div class="rm-body"><h3 data-i18n="rooms.r1.h">Historiske rom</h3><p data-i18n="rooms.r1.p">Rom i de vernede tømmerhusene — karakter, knirk i golvet og kunst på veggen.</p><div class="rm-meta" data-i18n="rooms.r1.m">I tunet · særpreg</div></div>
+      </article>
+      <article class="room rv">
+        <div class="rm-media"><div class="photo"><div class="duo room"><div class="grain"></div></div><div class="ph"><span class="ph-cap" data-i18n="cap.room2">▲ Foto: moderne rom</span></div></div></div>
+        <div class="rm-body"><h3 data-i18n="rooms.r2.h">Moderne rom</h3><p data-i18n="rooms.r2.p">Nyere rom i besøkssenteret ved sida av — lyst, romslig og praktisk for lengre opphold.</p><div class="rm-meta" data-i18n="rooms.r2.m">Nordstu · nytt</div></div>
+      </article>
+      <article class="room rv">
+        <div class="rm-media"><div class="photo">
+          <img src="img/terrace-guests.jpg" alt="Gjester på uteserveringen i solskinn foran det røde bygget" loading="lazy">
+          <div class="photo-overlay"></div>
+          <div class="ph"><span class="ph-cap" data-i18n="cap.room3">▲ Uteserveringen i solskinn</span></div>
+        </div></div>
+        <div class="rm-body"><h3 data-i18n="rooms.r3.h">Familie &amp; grupper</h3><p data-i18n="rooms.r3.p">Plass til følget — for familieturen, fisketuren eller laget på tur. Ta kontakt for større grupper.</p><div class="rm-meta" data-i18n="rooms.r3.m">Fleksibelt · på forespørsel</div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- wave: paper → night -->
+<div class="wv" aria-hidden="true" style="background:#0E1E3A">
+  <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0 0 Q360 70 720 28 Q1080 -14 1440 55 L1440 0 Z" fill="#F2ECDF"/></svg>
+</div>
+
+<!-- ===================== EXPERIENCES / PACKAGES ===================== -->
+<section class="sec-night" id="opplevelser">
+  <div class="wrap">
+    <span class="eyebrow rv" data-i18n="exp.ey">Opplevelser &amp; pakker</span>
+    <div class="gallery-head" style="margin-top:18px">
+      <h2 class="rv" data-i18n="exp.h">Gode grunner til å svinge av vegen.</h2>
+      <p class="lede rv" data-i18n="exp.p">Bygg oppholdet rundt det du kommer for — elgen, fjellet, fisket eller toget. Vi setter sammen pakken.</p>
+    </div>
+    <div class="packs">
+      <article class="pack moose rv">
+        <div class="bg"></div>
+        <div class="antler-glow"></div>
+        <svg class="kx" viewBox="0 0 100 100" fill="none" aria-hidden="true"><g stroke="#D6B473" stroke-width="3" stroke-linejoin="round"><path d="M35 40c-10-14-16-16-16-16M65 40c10-14 16-16 16-16M28 24c-12-6-14-14-14-14M72 24c12-6 14-14 14-14"/><path d="M35 40h30v22c0 16-8 26-15 26s-15-10-15-26z"/><circle cx="45" cy="55" r="2.5" fill="#D6B473"/><circle cx="55" cy="55" r="2.5" fill="#D6B473"/></g></svg>
+        <span class="pill" data-i18n="exp.moose.pill">11 km</span>
+        <h3 data-i18n="exp.moose.h">Møt Storelgen</h3>
+        <p data-i18n="exp.moose.p">Verdens nest største elg — 10,3 meter blank stål — står ved rv. 3 like nord for oss. Overnatting, elg-middag og en dram Storelgen Aquavit.</p>
+        <a class="lk" href="#book" data-i18n="exp.moose.lk">Be om pakken →</a>
+      </article>
+      <article class="pack rondane rv">
+        <div class="bg"></div>
+        <svg class="rondane-peaks" viewBox="0 0 400 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+          <path d="M0 160 L0 100 L50 40 L100 80 L160 20 L220 70 L280 30 L340 75 L400 35 L400 160 Z" fill="#1c3a6b" opacity=".8"/>
+          <path d="M0 160 L0 120 L80 65 L150 100 L240 50 L310 90 L400 55 L400 160 Z" fill="#0c1d3c"/>
+        </svg>
+        <span class="pill" data-i18n="exp.rondane.pill">30 min</span>
+        <h3 data-i18n="exp.rondane.h">Porten til Rondane</h3>
+        <p data-i18n="exp.rondane.p">Fra Sohlberg-litografiet i resepsjonen til Sohlbergplassen og det ekte fjellet. Kunsten som inspirerte en nasjon — og turene under den.</p>
+        <a class="lk" href="#book" data-i18n="exp.rondane.lk">Be om pakken →</a>
+      </article>
+      <article class="pack fish rv">
+        <div class="bg"></div>
+        <div class="water-rings" aria-hidden="true"><div class="water-ring"></div><div class="water-ring"></div><div class="water-ring"></div></div>
+        <span class="pill" data-i18n="exp.fish.pill">VM 2026</span>
+        <h3 data-i18n="exp.fish.h">Fisk i Glomma</h3>
+        <p data-i18n="exp.fish.p">Norges lengste elv renner forbi. I 2026 kommer fluefiske-VM til Koppang — fisk der de beste i verden fisker, med fiskekort, guiding og tørkerom.</p>
+        <a class="lk" href="#book" data-i18n="exp.fish.lk">Be om pakken →</a>
+      </article>
+      <article class="pack rail rv">
+        <div class="bg"></div>
+        <div class="speed-lines" aria-hidden="true"><div class="speed-line"></div><div class="speed-line"></div><div class="speed-line"></div><div class="speed-line"></div></div>
+        <span class="pill" data-i18n="exp.rail.pill">350 m</span>
+        <h3 data-i18n="exp.rail.h">La bilen stå</h3>
+        <p data-i18n="exp.rail.p">Ta Rørosbanen til Koppang, gå 350 meter, og la kunsten og maten ta over. En reise uten ratt.</p>
+        <a class="lk" href="#book" data-i18n="exp.rail.lk">Be om pakken →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TESTIMONIALS ===================== -->
+<section class="sec-paper" id="gjester">
+  <div class="wrap">
+    <span class="eyebrow rv" data-i18n="test.ey">Gjestenes ord</span>
+    <div class="gallery-head" style="margin-top:18px">
+      <h2 class="rv" data-i18n="test.h">Hva sier de som har vært her.</h2>
+      <p class="lede rv" data-i18n="test.p">Ekte tilbakemeldinger fra gjester som har sovet, spist og opplevd Stor-Elvdal.</p>
+    </div>
+    <div class="testimonials">
+      <article class="tcard rv">
+        <div class="tcard-stars" aria-label="5 av 5 stjerner">★★★★★</div>
+        <blockquote class="tcard-q" data-i18n="test.q1">«Helt unikt. Vi har bodd på mange hoteller, men ingenting som dette. Kunsten på veggene, maten, atmosfæren — en opplevelse vi vil huske lenge.»</blockquote>
+        <div class="tcard-who">
+          <div class="tcard-avatar" aria-hidden="true">M</div>
+          <div>
+            <div class="tcard-name">Maria &amp; Erik L.</div>
+            <div class="tcard-from" data-i18n="test.from1">Oslo · Juli 2024</div>
+          </div>
+        </div>
+      </article>
+      <article class="tcard rv">
+        <div class="tcard-stars" aria-label="5 av 5 stjerner">★★★★★</div>
+        <blockquote class="tcard-q" data-i18n="test.q2">«Omvisningen med Pål var et høydepunkt. Han vet alt om bildene og husene. Storelgen-akevitten var en fin overraskelse ved ankomst.»</blockquote>
+        <div class="tcard-who">
+          <div class="tcard-avatar" aria-hidden="true">T</div>
+          <div>
+            <div class="tcard-name">Thomas H.</div>
+            <div class="tcard-from" data-i18n="test.from2">Bergen · September 2024</div>
+          </div>
+        </div>
+      </article>
+      <article class="tcard rv">
+        <div class="tcard-stars" aria-label="5 av 5 stjerner">★★★★★</div>
+        <blockquote class="tcard-q" data-i18n="test.q3">«Vi tok toget fra Oslo og ble møtt av ro og særpreg. Kafé-bollen var legendarisk. Vi kommer tilbake om høsten for elg-pakken.»</blockquote>
+        <div class="tcard-who">
+          <div class="tcard-avatar" aria-hidden="true">S</div>
+          <div>
+            <div class="tcard-name">Sofie &amp; Knut A.</div>
+            <div class="tcard-from" data-i18n="test.from3">Trondheim · August 2024</div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONFERENCE / EVENTS ===================== -->
+<section class="sec-tar" style="padding:0" id="selskap">
+  <div class="conf-grid">
+    <div class="ed-text">
+      <span class="eyebrow" data-i18n="conf.ey">Kurs, konferanse &amp; selskap</span>
+      <h2 data-i18n="conf.h">Møter, julebord og bryllup — i en ramme ingen glemmer.</h2>
+      <p class="lede" data-i18n="conf.p1">Samle laget et sted med sjel. Møterom for små og store grupper, hjemmelaget mat, og en kunstomvisning eller dram som det sosiale innslaget.</p>
+      <p data-i18n="conf.p2">Perfekt for kick-off, fagdager, julebord og feiringer langt fra det vanlige konferansehotellet.</p>
+      <div class="conf-stats">
+        <div><div class="n">10–70</div><div class="l" data-i18n="conf.s1">gjester i møterom</div></div>
+        <div><div class="n">9</div><div class="l" data-i18n="conf.s2">historiske hus å feire i</div></div>
+      </div>
+      <a href="#book" class="btn" style="margin-top:30px;align-self:flex-start" data-i18n="conf.cta">Be om tilbud</a>
+    </div>
+    <div class="ed-media">
+      <div class="photo"><div class="duo tun"><div class="grain"></div></div><div class="ph"><span class="ph-cap" data-i18n="cap.conf">▲ Foto: selskap / dekket bord i tunet</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== LOCATION ===================== -->
+<section class="sec-paper" id="finn-fram">
+  <div class="wrap loc-grid">
+    <div class="rv">
+      <div class="map">
+        <div class="mbg"></div>
+        <svg class="route" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-label="Kart-skisse: Koppang ved rv. 3 og Rørosbanen">
+          <rect width="400" height="300" fill="#e7e0cf"/>
+          <path d="M-20 40C80 60 120 140 200 150S340 230 420 250" stroke="#c9bfa6" stroke-width="22" fill="none"/>
+          <path d="M-20 40C80 60 120 140 200 150S340 230 420 250" stroke="#b7375a" stroke-width="3" stroke-dasharray="2 7" fill="none"/>
+          <path d="M40 -20C70 80 150 120 180 220S250 320 230 360" stroke="#aebb9a" stroke-width="6" fill="none" opacity=".7"/>
+          <g><circle cx="200" cy="150" r="9" fill="#0E1E3A"/><circle cx="200" cy="150" r="4" fill="#D6B473"/></g>
+          <text x="214" y="145" font-family="Fraunces, serif" font-size="17" fill="#1B231E">Koppang</text>
+          <text x="300" y="244" font-family="Inter, sans-serif" font-size="11" fill="#7a7058" letter-spacing="1">rv. 3 → Trondheim</text>
+          <text x="20" y="60" font-family="Inter, sans-serif" font-size="11" fill="#7a7058" letter-spacing="1">rv. 3 → Oslo</text>
+        </svg>
+      </div>
+    </div>
+    <div class="rv">
+      <span class="eyebrow" data-i18n="loc.ey">Finn fram</span>
+      <h2 style="margin:16px 0 18px;font-size:clamp(1.9rem,3.6vw,3rem)" data-i18n="loc.h">Lett å finne. Verdt å stoppe for.</h2>
+      <p class="lede" data-i18n="loc.p">Vi ligger midt i Koppang sentrum, rett ved den korteste vegen mellom Oslo og Trondheim — og bare 350 meter fra togstasjonen.</p>
+      <ul class="contact-lines">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s7-6.3 7-12a7 7 0 1 0-14 0c0 5.7 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg><div><b data-i18n="loc.addr">Adresse</b>2480 Koppang, Stor-Elvdal, Innlandet</div></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg><div><b data-i18n="loc.phone">Telefon</b>+47 00 00 00 00 <span style="opacity:.6">(legg inn)</span></div></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><div><b data-i18n="loc.email">E-post</b>post@storelvdalhotell.no</div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== BOOKING BAND ===================== -->
+<section class="sec-night book-band" id="book">
+  <div class="bb-sky" aria-hidden="true">
+    <svg viewBox="0 0 1440 500" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%"><rect width="1440" height="500" fill="#0E1E3A"/><circle cx="1180" cy="120" r="80" fill="url(#halo)"/><circle cx="1180" cy="120" r="2.6" fill="#fff"/><g fill="#dfe7ff" opacity=".6"><circle cx="200" cy="90" r="1.2"/><circle cx="500" cy="150" r="1"/><circle cx="820" cy="80" r="1.1"/><circle cx="300" cy="220" r="1"/></g></svg>
+  </div>
+  <div class="wrap">
+    <span class="eyebrow center rv" style="justify-content:center" data-i18n="book.ey">Book direkte</span>
+    <h2 class="rv" style="margin-top:22px" data-i18n="book.h">Book direkte — og få mer enn et rom.</h2>
+    <p class="lede rv" data-i18n="book.p">Bestill rett hos oss for beste pris, og få en velkomstdram av vår egen akevitt eller en omvisning i samlingen med på kjøpet.</p>
+    <div class="perks rv">
+      <span class="perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="book.perk1">Beste pris direkte</span></span>
+      <span class="perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="book.perk2">Velkomstdram eller kunstomvisning</span></span>
+      <span class="perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg><span data-i18n="book.perk3">Personlig svar fra oss</span></span>
+    </div>
+    <div class="hero-cta rv" style="justify-content:center">
+      <a href="#" class="btn" id="bookBtn" data-i18n="book.cta1">Sjekk ledige rom</a>
+      <a href="#finn-fram" class="btn btn-ghost" data-i18n="book.cta2">Kontakt oss</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <b>Stor-Elvdal Hotell</b>
+      <p data-i18n="foot.tag">Et galleri du kan sove i — kunst, mat og historie midt i Østerdalen, halvveis mellom Oslo og Trondheim.</p>
+    </div>
+    <div class="foot-col">
+      <h4 data-i18n="foot.visit">Besøk</h4>
+      <ul>
+        <li><a href="#opphold" data-i18n="nav.stay">Bo hos oss</a></li>
+        <li><a href="#kunst" data-i18n="nav.art">Kunsten</a></li>
+        <li><a href="#kafe" data-i18n="nav.cafe">Tunet Kafé</a></li>
+        <li><a href="#opplevelser" data-i18n="nav.exp">Opplevelser</a></li>
+        <li><a href="#selskap" data-i18n="nav.conf">Kurs &amp; selskap</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4 data-i18n="foot.contact">Kontakt</h4>
+      <ul>
+        <li>2480 Koppang</li>
+        <li>Stor-Elvdal, Innlandet</li>
+        <li>post@storelvdalhotell.no</li>
+        <li>+47 00 00 00 00</li>
+      </ul>
+    </div>
+    <div class="foot-col news">
+      <h4 data-i18n="foot.news">Stor-Elvdal-venner</h4>
+      <p data-i18n="foot.newsp">Få sesongens pakker, kunstkvelder og nytt fra tunet i innboksen.</p>
+      <form id="newsForm">
+        <input type="email" required placeholder="Din e-post" data-i18n-ph="foot.email" aria-label="E-post" />
+        <button class="btn" type="submit" data-i18n="foot.sub">Meld meg på</button>
+      </form>
+      <p id="newsMsg" style="margin-top:12px;color:#D6B473;display:none" data-i18n="foot.thanks">Takk — du er på lista.</p>
+    </div>
+  </div>
+  <div class="foot-bot">
+    <span>© <span id="yr"></span> Stor-Elvdal Hotell · Norsk Kultursenter</span>
+    <span data-i18n="foot.credit">Org.nr 000 000 000 · Personvern</span>
+  </div>
+</footer>
+
+<!-- ===================== BOOKING MODAL ===================== -->
+<div class="book-modal" id="bookModal" role="dialog" aria-modal="true" aria-label="Book opphold" aria-hidden="true">
+  <div class="book-modal-overlay" id="bookModalOverlay"></div>
+  <div class="book-panel">
+    <button class="book-close" id="bookClose" aria-label="Lukk">✕</button>
+    <div class="book-panel-inner">
+      <span class="eyebrow" style="color:var(--gilt)">Book direkte</span>
+      <h2 style="font-size:clamp(1.5rem,3vw,2.2rem);margin:14px 0 4px;color:var(--ink)" data-i18n="bm.h">Sjekk ledige rom</h2>
+      <p style="font-size:.9rem;color:var(--ink-soft);margin-bottom:4px" data-i18n="bm.sub">Beste pris direkte — vi svarer innen 24 timer.</p>
+      <form class="book-form" id="bookForm" novalidate>
+        <div class="book-row">
+          <div class="book-field">
+            <label for="bfCheckin" data-i18n="bm.checkin">Innsjekk</label>
+            <input type="date" id="bfCheckin" name="checkin" required>
+          </div>
+          <div class="book-field">
+            <label for="bfCheckout" data-i18n="bm.checkout">Utsjekk</label>
+            <input type="date" id="bfCheckout" name="checkout" required>
+          </div>
+        </div>
+        <div class="book-row">
+          <div class="book-field">
+            <label for="bfRoom" data-i18n="bm.room">Romtype</label>
+            <select id="bfRoom" name="room">
+              <option value="historisk" data-i18n="bm.r1">Historisk rom (i tunet)</option>
+              <option value="moderne" data-i18n="bm.r2">Moderne rom (Nordstu)</option>
+              <option value="gruppe" data-i18n="bm.r3">Familie / gruppe</option>
+            </select>
+          </div>
+          <div class="book-field">
+            <label for="bfGuests" data-i18n="bm.guests">Gjester</label>
+            <select id="bfGuests" name="guests">
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <option value="3">3</option>
+              <option value="4+">4+</option>
+            </select>
+          </div>
+        </div>
+        <div class="book-row">
+          <div class="book-field">
+            <label for="bfName" data-i18n="bm.name">Navn</label>
+            <input type="text" id="bfName" name="name" placeholder="Fullt navn" required>
+          </div>
+          <div class="book-field">
+            <label for="bfEmail" data-i18n="bm.email">E-post</label>
+            <input type="email" id="bfEmail" name="email" placeholder="din@epost.no" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-ink" style="width:100%;justify-content:center;margin-top:6px;padding:15px 22px" data-i18n="bm.send">Send forespørsel</button>
+        <p style="font-size:.74rem;color:var(--ink-soft);text-align:center;margin-top:12px">
+          <a href="mailto:post@storelvdalhotell.no" style="color:var(--gilt)">post@storelvdalhotell.no</a>
+        </p>
+      </form>
+      <div class="book-success" id="bookSuccess">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none" aria-hidden="true"><circle cx="26" cy="26" r="25" stroke="#BE914F" stroke-width="1.4"/><path d="M15 26l9 9 13-16" stroke="#BE914F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3 data-i18n="bm.ok.h">Takk for din forespørsel!</h3>
+        <p data-i18n="bm.ok.p">Vi kontakter deg innen 24 timer for å bekrefte oppholdet.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== LIGHTBOX ===================== -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Kunstverk">
+  <button class="lb-close" id="lbClose" aria-label="Lukk">Lukk</button>
+  <div class="lb-card">
+    <div class="lb-art" id="lbArt"></div>
+    <h3 id="lbTitle"></h3>
+    <p id="lbDesc"></p>
+  </div>
+</div>
+
+<script>
+/* ---------------- i18n ---------------- */
+const I18N = {
+  en:{
+    "brand.tag":"Koppang · Østerdalen","nav.stay":"Stay","nav.art":"The Art","nav.cafe":"The Café","nav.exp":"Experiences","nav.conf":"Meetings & Events","nav.find":"Find Us","nav.book":"Book a stay",
+    "hero.badge":"Halfway between Oslo and Trondheim · 350 m from the train","hero.h1":"A gallery you can <em>sleep in</em>.","hero.sub":"Nine protected timber houses, our own art and culture centre, and homemade traditional food — in the heart of Østerdalen, on the shortest road between the capital and Trøndelag.","hero.cta1":"Book a stay","hero.cta2":"See the art",
+    "way.oslo":"from Oslo on Rv3","way.train":"to the train (Rørosbanen)","way.moose":"to the Storelgen moose","way.rondane":"to Rondane",
+    "intro.ey":"Welcome","intro.h":"A hotel with character — run by an art dealer.","intro.p1":"Stor-Elvdal Hotell is no ordinary roadside hotel. It is a whole farmstead of protected timber houses, gathered in one place, where nationally significant Norwegian art, old books and homemade food meet.","intro.p2":"The owner, Pål Sagen, is an art dealer and antiquarian bookseller from Oslo. He has filled the houses with paintings, prints and literature — and made the hotel home to Norsk Kultursenter. A Sohlberg lithograph hangs in reception; a Bjarne Melgaard painting hangs in the bar. The food tastes of Østerdalen, and the aquavit is named after the moose up the road.","intro.role":"Owner & curator",
+    "facet.food.h":"Food","facet.food.p":"Homemade traditional food from local ingredients — barley from the valley, game in autumn, and our own bakery in the courtyard.","facet.art.h":"Art","facet.art.p":"A museum and library you sleep inside. Original art on the walls, tours with the curator, and Norway's national painting in the neighbourhood.","facet.culture.h":"Culture","facet.culture.p":"Nine protected houses with living history, Rondane to the west and the Glomma river past the door. Take the train and leave the car.",
+    "her.ey":"A living museum","her.h":"Houses that have stood since before Norway was a photograph.","her.p1":"The courtyard is built from timber houses moved here and raised again — a piece of Østerdalen gathered on one plot.","her.p2":"The cornerstone is Barfrøstua, one of the very first buildings in Norway to be protected. To stay here is to sleep inside cultural history, with modern comfort laid gently among the old.","her.f1":"Barfrøstua protected by the Directorate for Cultural Heritage — among the first in the country.","her.f2":"protected timber houses in one gathered courtyard.","her.f3":"Norsk Kultursenter established in the houses.","cap.barn":"▲ Photo: the red bell tower in the courtyard",
+    "art.ey":"The Art & Norsk Kultursenter","art.h":"The walls are full. Come round with the curator.","art.p":"A hotel is rarely a museum. This is both. Join a tour and hear the stories behind the works — from Sohlberg's winter night to Melgaard's colours and the first editions on the shelves.","art.cap.sohlberg":"Lithograph after Harald Sohlberg · in reception","art.cap.melgaard":"Oil painting · in the bar","art.cap.books.t":"The Library","art.cap.books":"First editions · Ferdaminni 1861","art.cap.tour.t":"Guided tour","art.cap.tour":"With the curator · on request","art.quote":"“Generic hotels sell rooms. We invite you into a collection.”",
+    "cafe.ey":"Tunet Kafé","cafe.h":"The taste of the valley — baked and cooked in-house.","cafe.p":"Local traditional food, a new bakery and coffee worth the detour. Stop by on the road, or stay a while.","cafe.m1.n":"Storelg bun","cafe.m1.d":"Cardamom bun with sourdough and brown butter. The house signature.","cafe.m2.n":"Jønnbrød","cafe.m2.d":"Østerdalen's crisp ‘iron bread’ of sour cream and barley flour. Baked as before.","cafe.m3.n":"Dish of the day","cafe.m3.d":"Traditional food from local ingredients — game in season.","cafe.m3.p":"market price","cafe.m4.n":"Coffee & a bun","cafe.m4.d":"Filter coffee and the day's bake. The best break on Rv3.","cafe.aq.tag":"Our own","cafe.aq.p":"The hotel has its own aquavit, named after the moose up the road and produced at Det Norske Brenneri in Grimstad. Taste it with the food — or as a welcome dram.",
+    "rooms.ey":"Stay","rooms.h":"Sleep in the old courtyard — or somewhere brand new beside it.","rooms.p":"Rooms in the historic houses for those who want to live in history, and modern rooms for those who want everything new. Both with the same calm around them.","rooms.r1.h":"Historic rooms","rooms.r1.p":"Rooms in the protected timber houses — character, creaking floors and art on the wall.","rooms.r1.m":"In the courtyard · character","rooms.r2.h":"Modern rooms","rooms.r2.p":"Newer rooms in the visitor centre next door — bright, spacious and practical for longer stays.","rooms.r2.m":"Nordstu · new","rooms.r3.h":"Family & groups","rooms.r3.p":"Room for the whole party — the family trip, the fishing trip, the team away-day. Get in touch for larger groups.","rooms.r3.m":"Flexible · on request","cap.room1":"▲ Photo: room in the historic houses","cap.room2":"▲ Photo: modern room","cap.room3":"▲ Photo: family / group",
+    "exp.ey":"Experiences & packages","exp.h":"Good reasons to turn off the road.","exp.p":"Build your stay around what you came for — the moose, the mountains, the fishing or the train. We'll put the package together.","exp.moose.pill":"11 km","exp.moose.h":"Meet the Storelgen moose","exp.moose.p":"The world's second-tallest moose — 10.3 metres of polished steel — stands on Rv3 just north of us. A stay, a moose dinner and a dram of Storelgen Aquavit.","exp.moose.lk":"Ask for the package →","exp.rondane.pill":"30 min","exp.rondane.h":"Gateway to Rondane","exp.rondane.p":"From the Sohlberg lithograph in reception to the Sohlbergplassen viewpoint and the real mountains. The art that inspired a nation — and the hikes beneath it.","exp.rondane.lk":"Ask for the package →","exp.fish.pill":"Worlds 2026","exp.fish.h":"Fish the Glomma","exp.fish.p":"Norway's longest river runs past. In 2026 the Fly Fishing World Championship comes to Koppang — fish where the world's best fish, with licence, guiding and a drying room.","exp.fish.lk":"Ask for the package →","exp.rail.pill":"350 m","exp.rail.h":"Leave the car","exp.rail.p":"Take the Rørosbanen to Koppang, walk 350 metres, and let the art and the food take over. A journey without a steering wheel.","exp.rail.lk":"Ask for the package →",
+    "conf.ey":"Meetings, conferences & events","conf.h":"Meetings, Christmas parties and weddings — in a setting no one forgets.","conf.p1":"Gather the team somewhere with soul. Meeting rooms for small and large groups, homemade food, and an art tour or a dram as the social touch.","conf.p2":"Perfect for kick-offs, seminars, julebord and celebrations far from the ordinary conference hotel.","conf.s1":"guests in meeting rooms","conf.s2":"historic houses to celebrate in","conf.cta":"Request a quote","cap.conf":"▲ Photo: event / laid table in the courtyard",
+    "loc.ey":"Find us","loc.h":"Easy to find. Worth stopping for.","loc.p":"We're right in the centre of Koppang, on the shortest road between Oslo and Trondheim — and just 350 metres from the train station.","loc.addr":"Address","loc.phone":"Phone","loc.email":"Email",
+    "book.ey":"Book direct","book.h":"Book direct — and get more than a room.","book.p":"Book straight with us for the best price, and get a welcome dram of our own aquavit or a tour of the collection on the house.","book.perk1":"Best price direct","book.perk2":"Welcome dram or art tour","book.perk3":"A personal reply from us","book.cta1":"Check availability","book.cta2":"Contact us",
+    "foot.tag":"A gallery you can sleep in — art, food and history in the heart of Østerdalen, halfway between Oslo and Trondheim.","foot.visit":"Visit","foot.contact":"Contact","foot.news":"Friends of Stor-Elvdal","foot.newsp":"Get the season's packages, art evenings and news from the courtyard in your inbox.","foot.email":"Your email","foot.sub":"Sign me up","foot.thanks":"Thanks — you're on the list.","foot.credit":"Org. no. 000 000 000 · Privacy",
+    "test.ey":"Guest Reviews","test.h":"What those who've stayed say.","test.p":"Genuine feedback from guests who've slept, eaten and experienced Stor-Elvdal.",
+    "test.q1":"\"Completely unique. We've stayed at many hotels, but nothing like this. The art on the walls, the food, the atmosphere — an experience we'll remember for a long time.\"",
+    "test.q2":"\"The guided tour with Pål was a highlight. He knows everything about the paintings and the buildings. The Storelgen aquavit was a lovely surprise on arrival.\"",
+    "test.q3":"\"We took the train from Oslo and were met with calm and character. The café bun was legendary. We're coming back in autumn for the moose package.\"",
+    "test.from1":"Oslo · July 2024","test.from2":"Bergen · September 2024","test.from3":"Trondheim · August 2024",
+    "bm.h":"Check availability","bm.sub":"Best price direct — we reply within 24 hours.","bm.checkin":"Check-in","bm.checkout":"Check-out","bm.room":"Room type","bm.r1":"Historic room (courtyard)","bm.r2":"Modern room (Nordstu)","bm.r3":"Family / group","bm.guests":"Guests","bm.name":"Name","bm.email":"Email","bm.send":"Send enquiry","bm.ok.h":"Thank you for your enquiry!","bm.ok.p":"We will contact you within 24 hours to confirm your stay."
+  },
+  de:{
+    "brand.tag":"Koppang · Østerdalen","nav.stay":"Übernachten","nav.art":"Die Kunst","nav.cafe":"Das Café","nav.exp":"Erlebnisse","nav.conf":"Tagungen & Feiern","nav.find":"Anreise","nav.book":"Zimmer buchen",
+    "hero.badge":"Auf halbem Weg zwischen Oslo und Trondheim · 350 m vom Bahnhof","hero.h1":"Eine Galerie zum <em>Übernachten</em>.","hero.sub":"Neun denkmalgeschützte Holzhäuser, ein eigenes Kunst- und Kulturzentrum und hausgemachte traditionelle Küche — mitten im Østerdalen, an der kürzesten Straße zwischen Hauptstadt und Trøndelag.","hero.cta1":"Zimmer buchen","hero.cta2":"Kunst ansehen",
+    "way.oslo":"von Oslo über Rv3","way.train":"zum Zug (Rørosbanen)","way.moose":"zum Elch Storelgen","way.rondane":"nach Rondane",
+    "intro.ey":"Willkommen","intro.h":"Ein Hotel mit Charakter — geführt von einem Kunsthändler.","intro.p1":"Das Stor-Elvdal Hotell ist kein gewöhnliches Hotel an der Landstraße. Es ist ein ganzer Hof aus denkmalgeschützten Holzhäusern, an einem Ort versammelt, wo bedeutende norwegische Kunst, alte Bücher und hausgemachte Küche zusammentreffen.","intro.p2":"Der Eigentümer Pål Sagen ist Kunsthändler und Antiquar aus Oslo. Er hat die Häuser mit Gemälden, Grafiken und Literatur gefüllt — und das Hotel zum Sitz des Norsk Kultursenter gemacht. In der Rezeption hängt eine Sohlberg-Lithografie, in der Bar ein Gemälde von Bjarne Melgaard. Das Essen schmeckt nach Østerdalen, und der Aquavit trägt den Namen des Elchs an der Straße.","intro.role":"Eigentümer & Kurator",
+    "facet.food.h":"Genuss","facet.food.p":"Hausgemachte traditionelle Küche aus regionalen Zutaten — Gerste aus dem Tal, Wild im Herbst und unsere eigene Bäckerei im Hof.","facet.art.h":"Kunst","facet.art.p":"Ein Museum und eine Bibliothek, in denen Sie schlafen. Originalkunst an den Wänden, Führungen mit dem Kurator und Norwegens Nationalgemälde in der Nachbarschaft.","facet.culture.h":"Kultur","facet.culture.p":"Neun denkmalgeschützte Häuser mit lebendiger Geschichte, Rondane im Westen und der Fluss Glomma vor der Tür. Nehmen Sie den Zug und lassen Sie das Auto stehen.",
+    "her.ey":"Ein lebendiges Museum","her.h":"Häuser, die schon standen, bevor Norwegen eine Fotografie war.","her.p1":"Der Hof besteht aus Holzhäusern, die hierher versetzt und neu errichtet wurden — ein Stück Østerdalen auf einem Grundstück vereint.","her.p2":"Der Eckpfeiler ist die Barfrøstua, eines der allerersten denkmalgeschützten Gebäude Norwegens. Hier zu übernachten heißt, in der Kulturgeschichte zu schlafen, mit moderner Behaglichkeit behutsam dazwischen.","her.f1":"Barfrøstua vom Reichsantiquar unter Schutz gestellt — eine der ersten im Land.","her.f2":"denkmalgeschützte Holzhäuser in einem Hof.","her.f3":"Norsk Kultursenter in den Häusern gegründet.","cap.barn":"▲ Foto: der rote Glockenturm im Hof",
+    "art.ey":"Die Kunst & Norsk Kultursenter","art.h":"Die Wände sind voll. Kommen Sie mit dem Kurator herum.","art.p":"Ein Hotel ist selten ein Museum. Dies ist beides. Nehmen Sie an einer Führung teil und hören Sie die Geschichten hinter den Werken — von Sohlbergs Winternacht bis zu Melgaards Farben und den Erstausgaben in den Regalen.","art.cap.sohlberg":"Lithografie nach Harald Sohlberg · in der Rezeption","art.cap.melgaard":"Ölgemälde · in der Bar","art.cap.books.t":"Die Bibliothek","art.cap.books":"Erstausgaben · Ferdaminni 1861","art.cap.tour.t":"Führung","art.cap.tour":"Mit dem Kurator · auf Anfrage","art.quote":"„Gewöhnliche Hotels verkaufen Zimmer. Wir laden Sie in eine Sammlung ein.“",
+    "cafe.ey":"Tunet Kafé","cafe.h":"Der Geschmack des Tals — im Haus gebacken und gekocht.","cafe.p":"Regionale traditionelle Küche, eine neue Bäckerei und Kaffee, der den Umweg wert ist. Halten Sie unterwegs an oder bleiben Sie eine Weile.","cafe.m1.n":"Storelg-Hörnchen","cafe.m1.d":"Kardamombrötchen mit Sauerteig und brauner Butter. Die Spezialität des Hauses.","cafe.m2.n":"Jønnbrød","cafe.m2.d":"Das knusprige „Eisenbrot“ aus Østerdalen aus Sauerrahm und Gerstenmehl. Gebacken wie früher.","cafe.m3.n":"Tagesgericht","cafe.m3.d":"Traditionelle Küche aus regionalen Zutaten — Wild in der Saison.","cafe.m3.p":"Tagespreis","cafe.m4.n":"Kaffee & Hörnchen","cafe.m4.d":"Filterkaffee und das Gebäck des Tages. Die beste Pause an der Rv3.","cafe.aq.tag":"Unser eigener","cafe.aq.p":"Das Hotel hat seinen eigenen Aquavit, benannt nach dem Elch an der Straße und hergestellt bei Det Norske Brenneri in Grimstad. Genießen Sie ihn zum Essen — oder als Willkommensschluck.",
+    "rooms.ey":"Übernachten","rooms.h":"Schlafen Sie im alten Hof — oder ganz neu daneben.","rooms.p":"Zimmer in den historischen Häusern für alle, die in der Geschichte wohnen möchten, und moderne Zimmer für alle, die alles neu wollen. Beide mit derselben Ruhe ringsum.","rooms.r1.h":"Historische Zimmer","rooms.r1.p":"Zimmer in den denkmalgeschützten Holzhäusern — Charakter, knarrende Böden und Kunst an der Wand.","rooms.r1.m":"Im Hof · Charakter","rooms.r2.h":"Moderne Zimmer","rooms.r2.p":"Neuere Zimmer im Besucherzentrum nebenan — hell, geräumig und praktisch für längere Aufenthalte.","rooms.r2.m":"Nordstu · neu","rooms.r3.h":"Familie & Gruppen","rooms.r3.p":"Platz für die ganze Gesellschaft — den Familienausflug, die Angeltour, den Betriebsausflug. Kontaktieren Sie uns für größere Gruppen.","rooms.r3.m":"Flexibel · auf Anfrage","cap.room1":"▲ Foto: Zimmer in den historischen Häusern","cap.room2":"▲ Foto: modernes Zimmer","cap.room3":"▲ Foto: Familie / Gruppe",
+    "exp.ey":"Erlebnisse & Pakete","exp.h":"Gute Gründe, von der Straße abzubiegen.","exp.p":"Gestalten Sie Ihren Aufenthalt rund um das, weswegen Sie kommen — den Elch, die Berge, das Angeln oder den Zug. Wir stellen das Paket zusammen.","exp.moose.pill":"11 km","exp.moose.h":"Den Elch Storelgen treffen","exp.moose.p":"Der zweithöchste Elch der Welt — 10,3 Meter aus poliertem Stahl — steht an der Rv3 nördlich von uns. Übernachtung, Elch-Dinner und ein Schluck Storelgen Aquavit.","exp.moose.lk":"Paket anfragen →","exp.rondane.pill":"30 Min.","exp.rondane.h":"Tor nach Rondane","exp.rondane.p":"Von der Sohlberg-Lithografie in der Rezeption zum Aussichtspunkt Sohlbergplassen und den echten Bergen. Die Kunst, die eine Nation inspirierte — und die Wanderungen darunter.","exp.rondane.lk":"Paket anfragen →","exp.fish.pill":"WM 2026","exp.fish.h":"Angeln in der Glomma","exp.fish.p":"Norwegens längster Fluss fließt vorbei. 2026 kommt die Fliegenfischer-WM nach Koppang — angeln Sie, wo die Weltbesten angeln, mit Angelschein, Guiding und Trockenraum.","exp.fish.lk":"Paket anfragen →","exp.rail.pill":"350 m","exp.rail.h":"Auto stehen lassen","exp.rail.p":"Nehmen Sie die Rørosbanen nach Koppang, gehen Sie 350 Meter, und lassen Sie Kunst und Küche übernehmen. Eine Reise ohne Lenkrad.","exp.rail.lk":"Paket anfragen →",
+    "conf.ey":"Tagungen, Konferenzen & Feiern","conf.h":"Tagungen, Weihnachtsfeiern und Hochzeiten — in einem Rahmen, den niemand vergisst.","conf.p1":"Versammeln Sie das Team an einem Ort mit Seele. Tagungsräume für kleine und große Gruppen, hausgemachte Küche und eine Kunstführung oder ein Schluck als gesellschaftlicher Akzent.","conf.p2":"Perfekt für Kick-offs, Seminare, Weihnachtsfeiern und Feste fernab des gewöhnlichen Tagungshotels.","conf.s1":"Gäste in Tagungsräumen","conf.s2":"historische Häuser zum Feiern","conf.cta":"Angebot anfragen","cap.conf":"▲ Foto: Feier / gedeckter Tisch im Hof",
+    "loc.ey":"Anreise","loc.h":"Leicht zu finden. Einen Halt wert.","loc.p":"Wir liegen mitten im Zentrum von Koppang, an der kürzesten Straße zwischen Oslo und Trondheim — und nur 350 Meter vom Bahnhof entfernt.","loc.addr":"Adresse","loc.phone":"Telefon","loc.email":"E-Mail",
+    "book.ey":"Direkt buchen","book.h":"Direkt buchen — und mehr als ein Zimmer bekommen.","book.p":"Buchen Sie direkt bei uns zum besten Preis und erhalten Sie einen Willkommensschluck unseres eigenen Aquavits oder eine Führung durch die Sammlung gratis dazu.","book.perk1":"Bestpreis direkt","book.perk2":"Willkommensschluck oder Kunstführung","book.perk3":"Eine persönliche Antwort von uns","book.cta1":"Verfügbarkeit prüfen","book.cta2":"Kontakt",
+    "foot.tag":"Eine Galerie zum Übernachten — Kunst, Küche und Geschichte mitten im Østerdalen, auf halbem Weg zwischen Oslo und Trondheim.","foot.visit":"Besuchen","foot.contact":"Kontakt","foot.news":"Freunde von Stor-Elvdal","foot.newsp":"Erhalten Sie die Pakete der Saison, Kunstabende und Neues aus dem Hof in Ihr Postfach.","foot.email":"Ihre E-Mail","foot.sub":"Anmelden","foot.thanks":"Danke — Sie sind auf der Liste.","foot.credit":"Org.-Nr. 000 000 000 · Datenschutz",
+    "test.ey":"Gästestimmen","test.h":"Was unsere Gäste sagen.","test.p":"Echte Rückmeldungen von Gästen, die bei uns geschlafen, gegessen und Stor-Elvdal erlebt haben.",
+    "test.q1":"„Einzigartig. Wir haben in vielen Hotels übernachtet, aber nichts davon war wie hier. Die Kunst an den Wänden, das Essen, die Atmosphäre — ein Erlebnis, das wir lange in Erinnerung behalten werden."",
+    "test.q2":"„Die Führung mit Pål war ein Highlight. Er weiß alles über die Bilder und die Gebäude. Der Storelgen-Aquavit bei der Ankunft war eine schöne Überraschung."",
+    "test.q3":"„Wir nahmen den Zug aus Oslo und wurden von Ruhe und Charakter empfangen. Das Café-Brötchen war legendär. Wir kommen im Herbst für das Elch-Paket wieder."",
+    "test.from1":"Oslo · Juli 2024","test.from2":"Bergen · September 2024","test.from3":"Trondheim · August 2024",
+    "bm.h":"Verfügbarkeit prüfen","bm.sub":"Bestpreis direkt — wir antworten innerhalb von 24 Stunden.","bm.checkin":"Anreise","bm.checkout":"Abreise","bm.room":"Zimmertyp","bm.r1":"Historisches Zimmer (Hof)","bm.r2":"Modernes Zimmer (Nordstu)","bm.r3":"Familie / Gruppe","bm.guests":"Gäste","bm.name":"Name","bm.email":"E-Mail","bm.send":"Anfrage senden","bm.ok.h":"Danke für Ihre Anfrage!","bm.ok.p":"Wir melden uns innerhalb von 24 Stunden, um Ihren Aufenthalt zu bestätigen."
+  }
+};
+const NO_STORE = {};
+let curLang = "no";
+
+function captureNorwegian(){
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    NO_STORE[el.getAttribute("data-i18n")] = el.innerHTML;
+  });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el=>{
+    NO_STORE["__ph__"+el.getAttribute("data-i18n-ph")] = el.getAttribute("placeholder");
+  });
+}
+function setLang(lang){
+  curLang = lang;
+  document.documentElement.lang = lang;
+  const dict = lang==="no" ? null : I18N[lang];
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const k = el.getAttribute("data-i18n");
+    if(lang==="no"){ if(NO_STORE[k]!==undefined) el.innerHTML = NO_STORE[k]; }
+    else if(dict && dict[k]!==undefined){ el.innerHTML = dict[k]; }
+  });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el=>{
+    const k = el.getAttribute("data-i18n-ph");
+    if(lang==="no"){ const v=NO_STORE["__ph__"+k]; if(v!==undefined) el.setAttribute("placeholder",v); }
+    else if(dict && dict[k]!==undefined){ el.setAttribute("placeholder",dict[k]); }
+  });
+  document.querySelectorAll(".lang button").forEach(b=>{
+    b.classList.toggle("active", b.getAttribute("data-lang")===lang);
+  });
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  captureNorwegian();
+  document.getElementById("yr").textContent = new Date().getFullYear();
+
+  const nav = document.getElementById("nav");
+  const heroSky = document.querySelector(".hero-sky");
+  const heroFg  = document.getElementById("heroFg");
+  const heroEl  = document.querySelector(".hero");
+
+  function onScroll(){
+    const y = window.scrollY;
+    nav.classList.toggle("scrolled", y > 40);
+    if(heroEl && y < heroEl.offsetHeight){
+      if(heroSky) heroSky.style.transform = `translateY(${y * 0.28}px)`;
+      if(heroFg)  heroFg.style.transform  = `translateY(${y * 0.11}px)`;
+    }
+  }
+  onScroll(); window.addEventListener("scroll", onScroll, {passive:true});
+
+  document.querySelectorAll(".lang button").forEach(b=>{
+    b.addEventListener("click", ()=> setLang(b.getAttribute("data-lang")));
+  });
+
+  const toggle = document.getElementById("navToggle");
+  const overlay = document.getElementById("menuOverlay");
+  function closeMenu(){
+    document.body.classList.remove("menu-open");
+    toggle.setAttribute("aria-expanded","false");
+    toggle.setAttribute("aria-label","Åpne meny");
+    document.getElementById("mobileMenu").setAttribute("aria-hidden","true");
+  }
+  toggle.addEventListener("click", ()=>{
+    const open = document.body.classList.toggle("menu-open");
+    toggle.setAttribute("aria-expanded", open?"true":"false");
+    toggle.setAttribute("aria-label", open?"Lukk meny":"Åpne meny");
+    document.getElementById("mobileMenu").setAttribute("aria-hidden", open?"false":"true");
+  });
+  overlay.addEventListener("click", closeMenu);
+  document.querySelectorAll(".mobile-menu-links a, .mobile-menu-footer .btn").forEach(a=>{
+    a.addEventListener("click", closeMenu);
+  });
+
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, {threshold:.12, rootMargin:"0px 0px -8% 0px"});
+  document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+
+  const lb=document.getElementById("lb"), lbArt=document.getElementById("lbArt"),
+        lbTitle=document.getElementById("lbTitle"), lbDesc=document.getElementById("lbDesc"),
+        lbClose=document.getElementById("lbClose");
+  function openLB(card){
+    const cls=card.getAttribute("data-art");
+    lbArt.className="lb-art";
+    lbArt.innerHTML='<div class="art '+cls+'" style="position:absolute;inset:0"></div>';
+    lbTitle.textContent=card.getAttribute("data-title");
+    lbDesc.textContent=card.getAttribute("data-desc");
+    lb.classList.add("open"); requestAnimationFrame(()=>lb.classList.add("show"));
+  }
+  function closeLB(){ lb.classList.remove("show"); setTimeout(()=>lb.classList.remove("open"),300); }
+  document.querySelectorAll(".frame").forEach(f=>{
+    f.addEventListener("click", ()=>openLB(f));
+    f.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openLB(f); } });
+  });
+  lbClose.addEventListener("click", closeLB);
+  lb.addEventListener("click", e=>{ if(e.target===lb) closeLB(); });
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape" && lb.classList.contains("open")) closeLB(); });
+
+  const form=document.getElementById("newsForm"), msg=document.getElementById("newsMsg");
+  form.addEventListener("submit", e=>{ e.preventDefault(); form.reset(); msg.style.display="block"; });
+
+  /* ---------- booking modal ---------- */
+  const bookModal   = document.getElementById("bookModal");
+  const bookMOverlay= document.getElementById("bookModalOverlay");
+  const bookClose   = document.getElementById("bookClose");
+  const bookForm    = document.getElementById("bookForm");
+  const bookSuccess = document.getElementById("bookSuccess");
+  const bfCheckin   = document.getElementById("bfCheckin");
+  const bfCheckout  = document.getElementById("bfCheckout");
+
+  const todayStr = new Date().toISOString().split("T")[0];
+  bfCheckin.min = todayStr;
+  bfCheckout.min = todayStr;
+  bfCheckin.addEventListener("change", ()=>{ bfCheckout.min = bfCheckin.value || todayStr; });
+
+  function openBooking(){
+    bookModal.classList.add("open");
+    bookModal.setAttribute("aria-hidden","false");
+    document.body.style.overflow="hidden";
+    requestAnimationFrame(()=>bookModal.classList.add("show"));
+  }
+  function closeBooking(){
+    bookModal.classList.remove("show");
+    bookModal.setAttribute("aria-hidden","true");
+    document.body.style.overflow="";
+    setTimeout(()=>{ bookModal.classList.remove("open"); bookForm.style.display=""; bookSuccess.style.display="none"; },420);
+  }
+  document.querySelectorAll(".book-trigger, #bookBtn").forEach(el=>{
+    el.addEventListener("click", e=>{ e.preventDefault(); openBooking(); });
+  });
+  bookMOverlay.addEventListener("click", closeBooking);
+  bookClose.addEventListener("click", closeBooking);
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape" && bookModal.classList.contains("open")) closeBooking(); });
+  bookForm.addEventListener("submit", e=>{
+    e.preventDefault();
+    bookForm.style.display="none";
+    bookSuccess.style.display="block";
+    setTimeout(closeBooking, 3200);
+  });
+});
+</script>
+</body>
+</html>
