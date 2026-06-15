@@ -349,6 +349,96 @@
   .mobile-menu a.btn{border-bottom:none;font-family:var(--sans);font-size:.82rem}
   .mobile-menu .btn{margin-top:22px;justify-content:center;display:inline-flex}
   .mobile-menu .lang{margin-top:18px}
+
+  /* ===== AESTHETIC ENHANCEMENTS ===== */
+
+  /* 1 — paper grain: tactile noise on warm sections */
+  .sec-paper,.sec-paper-2{position:relative}
+  .sec-paper::after,.sec-paper-2::after{
+    content:'';position:absolute;inset:0;pointer-events:none;z-index:1;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23g)'/%3E%3C/svg%3E");
+    opacity:.038;mix-blend-mode:multiply;
+  }
+  .sec-paper>.wrap,.sec-paper>div:not(.sec-paper::after),
+  .sec-paper-2>.wrap,.sec-paper-2>div{position:relative;z-index:2}
+
+  /* 2 — section wave dividers */
+  .wv{display:block;line-height:0;overflow:hidden;margin:-1px 0;position:relative;z-index:10}
+  .wv svg{display:block;width:100%;height:clamp(44px,5.5vw,80px)}
+
+  /* 3 — hero parallax foreground layer */
+  .hero-fg{position:absolute;inset:0;z-index:2;pointer-events:none;will-change:transform}
+  .hero-sky{will-change:transform}
+
+  /* 4 — intro drop cap */
+  .dropcap::first-letter{
+    font-family:var(--serif);font-size:4.1rem;font-weight:500;
+    float:left;line-height:.84;margin:0 .13em -.03em 0;color:var(--gilt);
+  }
+
+  /* 5 — pull-quote ornament */
+  blockquote.serif-quote{position:relative;padding:0 1.8rem}
+  blockquote.serif-quote::before,blockquote.serif-quote::after{
+    font-family:var(--serif);font-size:6rem;line-height:.8;
+    color:var(--gilt-2);opacity:.25;position:absolute;font-style:normal;
+  }
+  blockquote.serif-quote::before{content:'\201C';top:-.2em;left:0}
+  blockquote.serif-quote::after{content:'\201D';bottom:-.55em;right:0}
+
+  /* 6 — gilt ornament between sections */
+  .gilt-ornament{
+    display:flex;align-items:center;justify-content:center;gap:16px;
+    padding:clamp(32px,4vw,56px) 0 0;
+  }
+  .gilt-ornament::before,.gilt-ornament::after{
+    content:'';flex:1;max-width:180px;height:1px;
+    background:linear-gradient(to right,transparent,var(--gilt));
+  }
+  .gilt-ornament::after{background:linear-gradient(to left,transparent,var(--gilt))}
+  .gilt-ornament-inner{display:flex;gap:6px;align-items:center}
+  .gilt-ornament-inner span{display:block;border-radius:50%;background:var(--gilt)}
+  .gilt-ornament-inner span:nth-child(1),.gilt-ornament-inner span:nth-child(3){width:4px;height:4px;opacity:.6}
+  .gilt-ornament-inner span:nth-child(2){width:6px;height:6px;box-shadow:0 0 8px 2px rgba(190,145,79,.5)}
+
+  /* 7 — pack card unique animations */
+  /* moose: golden aura pulse */
+  .antler-glow{
+    position:absolute;top:-10px;right:-10px;width:180px;height:180px;z-index:0;
+    background:radial-gradient(circle at 65% 35%,rgba(214,180,115,.28) 0%,transparent 65%);
+    border-radius:50%;animation:pulse-gold 3.5s ease-in-out infinite;pointer-events:none;
+  }
+  @keyframes pulse-gold{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+
+  /* rondane: mountain silhouette rising */
+  .rondane-peaks{position:absolute;bottom:0;left:0;right:0;z-index:0;pointer-events:none;opacity:.18}
+
+  /* fish: rippling water rings */
+  .water-rings{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  .water-ring{
+    position:absolute;border-radius:50%;
+    border:1px solid rgba(63,195,170,.28);
+    animation:ripple 4.2s ease-out infinite;
+  }
+  .water-ring:nth-child(1){width:90px;height:90px;top:28%;right:18%;animation-delay:0s}
+  .water-ring:nth-child(2){width:170px;height:170px;top:14%;right:7%;animation-delay:1.4s}
+  .water-ring:nth-child(3){width:270px;height:270px;top:-2%;right:-5%;animation-delay:2.8s}
+  @keyframes ripple{0%{transform:scale(.55);opacity:.85}100%{transform:scale(1.35);opacity:0}}
+
+  /* rail: horizontal speed lines */
+  .speed-lines{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  .speed-line{
+    position:absolute;height:1px;
+    background:linear-gradient(to right,transparent 0%,rgba(190,145,79,.5) 45%,rgba(190,145,79,.1) 100%);
+    animation:speed-anim linear infinite;
+  }
+  .speed-line:nth-child(1){width:58%;top:31%;animation-duration:2.1s;animation-delay:0s}
+  .speed-line:nth-child(2){width:40%;top:47%;animation-duration:2.7s;animation-delay:.45s}
+  .speed-line:nth-child(3){width:68%;top:62%;animation-duration:1.9s;animation-delay:.9s}
+  .speed-line:nth-child(4){width:47%;top:75%;animation-duration:2.4s;animation-delay:1.35s}
+  @keyframes speed-anim{from{left:-70%}to{left:110%}}
+  @media (prefers-reduced-motion:reduce){
+    .antler-glow,.water-ring,.speed-line{animation:none}
+  }
 </style>
 </head>
 <body>
@@ -450,6 +540,14 @@
   </div>
   <div class="hero-veil" aria-hidden="true"></div>
 
+  <!-- foreground parallax treeline — moves slower than the sky -->
+  <div class="hero-fg" id="heroFg" aria-hidden="true">
+    <svg viewBox="0 0 1440 220" preserveAspectRatio="xMidYMax slice" style="position:absolute;bottom:0;left:0;width:100%;height:220px">
+      <path d="M0 220 L0 160 L30 145 L55 165 L80 130 L110 150 L135 115 L158 138 L180 105 L205 128 L228 95 L252 118 L275 88 L300 110 L325 78 L350 100 L375 72 L398 95 L420 68 L448 90 L470 60 L500 82 L525 55 L552 78 L575 50 L600 72 L628 48 L655 70 L680 45 L708 68 L732 42 L758 65 L782 40 L808 63 L832 38 L860 62 L885 36 L910 60 L936 35 L962 58 L986 32 L1012 56 L1036 30 L1062 54 L1086 29 L1110 52 L1135 28 L1160 50 L1184 26 L1210 50 L1235 26 L1260 48 L1285 24 L1310 47 L1335 24 L1360 46 L1385 23 L1410 46 L1440 24 L1440 220 Z" fill="#060c1a" opacity=".97"/>
+      <path d="M0 220 L0 185 L50 172 L100 188 L150 168 L200 182 L260 162 L320 178 L380 158 L440 174 L500 155 L560 170 L620 152 L680 168 L740 150 L800 166 L860 148 L920 164 L980 146 L1040 162 L1100 144 L1160 160 L1220 142 L1280 158 L1340 140 L1400 156 L1440 142 L1440 220 Z" fill="#040912" opacity=".98"/>
+    </svg>
+  </div>
+
   <p class="hero-badge"><span class="dot"></span><span data-i18n="hero.badge">Halvveis mellom Oslo og Trondheim · 350 m fra toget</span></p>
 
   <div class="hero-inner">
@@ -480,7 +578,7 @@
       <h2 style="margin-top:18px" data-i18n="intro.h">Et hotell med særpreg — drevet av en kunsthandler.</h2>
     </div>
     <div class="intro-body rv">
-      <p class="lede" data-i18n="intro.p1">Stor-Elvdal Hotell er ikke et vanlig veikrohotell. Det er et helt tun av vernede tømmerhus, samlet på ett sted, der nasjonalt viktig norsk kunst, gamle bøker og hjemmelaget mat møtes.</p>
+      <p class="lede dropcap" data-i18n="intro.p1">Stor-Elvdal Hotell er ikke et vanlig veikrohotell. Det er et helt tun av vernede tømmerhus, samlet på ett sted, der nasjonalt viktig norsk kunst, gamle bøker og hjemmelaget mat møtes.</p>
       <p data-i18n="intro.p2">Eieren, Pål Sagen, er kunsthandler og antikvarisk bokhandler fra Oslo. Han har fylt husene med malerier, grafikk og litteratur — og gjort hotellet til hjem for Norsk Kultursenter. Her henger en Sohlberg-litografi i resepsjonen og et Bjarne Melgaard-maleri i baren. Her smaker maten av Østerdalen, og akevitten bærer navnet til elgen oppe i veien.</p>
       <div class="sign">
         <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true"><circle cx="22" cy="22" r="21" stroke="#BE914F"/><path d="M14 27c4-10 6-12 8-12s4 2 8 12" stroke="#BE914F" stroke-width="1.4" stroke-linecap="round"/><circle cx="22" cy="14" r="1.6" fill="#BE914F"/></svg>
@@ -543,6 +641,11 @@
   </div>
 </section>
 
+<!-- wave: tar → night -->
+<div class="wv" aria-hidden="true" style="background:#0E1E3A">
+  <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0 0 Q240 70 480 30 Q720 -10 960 50 Q1200 100 1440 20 L1440 0 Z" fill="#15191A"/></svg>
+</div>
+
 <!-- ===================== ART / GALLERY ===================== -->
 <section class="sec-night" id="kunst">
   <div class="wrap">
@@ -589,8 +692,18 @@
       </article>
     </div>
     <blockquote class="serif-quote rv" style="font-size:clamp(1.4rem,3vw,2.2rem);max-width:24ch;margin:64px auto 0;text-align:center;color:#fff;line-height:1.25" data-i18n="art.quote">«Generiske hoteller selger rom. Vi inviterer deg inn i en samling.»</blockquote>
+
+    <!-- gilt ornament -->
+    <div class="gilt-ornament rv" style="margin-top:64px">
+      <div class="gilt-ornament-inner"><span></span><span></span><span></span></div>
+    </div>
   </div>
 </section>
+
+<!-- wave: night → paper-2 -->
+<div class="wv" aria-hidden="true" style="background:#FAF5EA">
+  <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0 70 Q360 0 720 40 Q1080 80 1440 10 L1440 0 L0 0 Z" fill="#0E1E3A"/></svg>
+</div>
 
 <!-- ===================== CAFÉ ===================== -->
 <section class="sec-paper-2" id="kafe">
@@ -642,6 +755,11 @@
   </div>
 </section>
 
+<!-- wave: paper → night -->
+<div class="wv" aria-hidden="true" style="background:#0E1E3A">
+  <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0 0 Q360 70 720 28 Q1080 -14 1440 55 L1440 0 Z" fill="#F2ECDF"/></svg>
+</div>
+
 <!-- ===================== EXPERIENCES / PACKAGES ===================== -->
 <section class="sec-night" id="opplevelser">
   <div class="wrap">
@@ -653,6 +771,7 @@
     <div class="packs">
       <article class="pack moose rv">
         <div class="bg"></div>
+        <div class="antler-glow"></div>
         <svg class="kx" viewBox="0 0 100 100" fill="none" aria-hidden="true"><g stroke="#D6B473" stroke-width="3" stroke-linejoin="round"><path d="M35 40c-10-14-16-16-16-16M65 40c10-14 16-16 16-16M28 24c-12-6-14-14-14-14M72 24c12-6 14-14 14-14"/><path d="M35 40h30v22c0 16-8 26-15 26s-15-10-15-26z"/><circle cx="45" cy="55" r="2.5" fill="#D6B473"/><circle cx="55" cy="55" r="2.5" fill="#D6B473"/></g></svg>
         <span class="pill" data-i18n="exp.moose.pill">11 km</span>
         <h3 data-i18n="exp.moose.h">Møt Storelgen</h3>
@@ -661,6 +780,10 @@
       </article>
       <article class="pack rondane rv">
         <div class="bg"></div>
+        <svg class="rondane-peaks" viewBox="0 0 400 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+          <path d="M0 160 L0 100 L50 40 L100 80 L160 20 L220 70 L280 30 L340 75 L400 35 L400 160 Z" fill="#1c3a6b" opacity=".8"/>
+          <path d="M0 160 L0 120 L80 65 L150 100 L240 50 L310 90 L400 55 L400 160 Z" fill="#0c1d3c"/>
+        </svg>
         <span class="pill" data-i18n="exp.rondane.pill">30 min</span>
         <h3 data-i18n="exp.rondane.h">Porten til Rondane</h3>
         <p data-i18n="exp.rondane.p">Fra Sohlberg-litografiet i resepsjonen til Sohlbergplassen og det ekte fjellet. Kunsten som inspirerte en nasjon — og turene under den.</p>
@@ -668,6 +791,7 @@
       </article>
       <article class="pack fish rv">
         <div class="bg"></div>
+        <div class="water-rings" aria-hidden="true"><div class="water-ring"></div><div class="water-ring"></div><div class="water-ring"></div></div>
         <span class="pill" data-i18n="exp.fish.pill">VM 2026</span>
         <h3 data-i18n="exp.fish.h">Fisk i Glomma</h3>
         <p data-i18n="exp.fish.p">Norges lengste elv renner forbi. I 2026 kommer fluefiske-VM til Koppang — fisk der de beste i verden fisker, med fiskekort, guiding og tørkerom.</p>
@@ -675,6 +799,7 @@
       </article>
       <article class="pack rail rv">
         <div class="bg"></div>
+        <div class="speed-lines" aria-hidden="true"><div class="speed-line"></div><div class="speed-line"></div><div class="speed-line"></div><div class="speed-line"></div></div>
         <span class="pill" data-i18n="exp.rail.pill">350 m</span>
         <h3 data-i18n="exp.rail.h">La bilen stå</h3>
         <p data-i18n="exp.rail.p">Ta Rørosbanen til Koppang, gå 350 meter, og la kunsten og maten ta over. En reise uten ratt.</p>
@@ -879,7 +1004,18 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("yr").textContent = new Date().getFullYear();
 
   const nav = document.getElementById("nav");
-  const onScroll = ()=> nav.classList.toggle("scrolled", window.scrollY > 40);
+  const heroSky = document.querySelector(".hero-sky");
+  const heroFg  = document.getElementById("heroFg");
+  const heroEl  = document.querySelector(".hero");
+
+  function onScroll(){
+    const y = window.scrollY;
+    nav.classList.toggle("scrolled", y > 40);
+    if(heroEl && y < heroEl.offsetHeight){
+      if(heroSky) heroSky.style.transform = `translateY(${y * 0.28}px)`;
+      if(heroFg)  heroFg.style.transform  = `translateY(${y * 0.11}px)`;
+    }
+  }
   onScroll(); window.addEventListener("scroll", onScroll, {passive:true});
 
   document.querySelectorAll(".lang button").forEach(b=>{
