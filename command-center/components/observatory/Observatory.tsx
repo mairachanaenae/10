@@ -305,7 +305,8 @@ const ChgTag = ({ v, big }: { v: number; big?: boolean }) => (
   </span>
 );
 const Badge = ({ sym, tone }: { sym: string; tone: string }) => (
-  <div className="iv-badge" style={{ background: tone + "22", color: tone, border: `1px solid ${tone}44` }}>{sym[0]}</div>
+  // editorial: a quiet ink monogram with a thin tone keyline (no loud brand fills)
+  <div className="iv-badge" style={{ background: "rgba(39,35,32,.04)", color: "var(--paper)", border: `1px solid ${tone}55` }}>{sym[0]}</div>
 );
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Tip = ({ active, payload, prefix = "$" }: any) =>
