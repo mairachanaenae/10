@@ -376,7 +376,8 @@
     .foot-grid{grid-template-columns:1fr 1fr}
   }
   @media (max-width:860px){
-    .nav-links,.nav-right .btn{display:none}
+    .nav{justify-content:flex-start}
+    .nav-links,.nav-right .btn,.nav-right{display:none}
     .nav-toggle{display:block}
     .nav .lang{display:none}
     .intro-grid,.split,.split.flip,.gallery-head,.menu-cols,.conf-grid,.loc-grid{grid-template-columns:1fr}
@@ -718,11 +719,12 @@
   /* ===== LANGUAGE SWITCHER — always visible on mobile ===== */
   .lang-mobile{display:none}
   @media(max-width:860px){
-    .nav .nav-right .lang{display:none}
-    .lang-mobile{
+    .nav .lang-mobile{
       display:flex;align-items:center;gap:2px;
       font-size:.72rem;font-weight:600;letter-spacing:.08em;
+      margin-left:auto;
     }
+    .nav-toggle{margin-left:14px}
   }
 </style>
 </head>
