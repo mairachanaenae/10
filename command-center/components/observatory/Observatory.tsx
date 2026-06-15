@@ -46,7 +46,7 @@ const CSS = `
 .iv-root::after{content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5; mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E")}
 
-.iv-display{font-family:'Newsreader',Georgia,serif; font-weight:500; letter-spacing:-.018em; color:var(--paper); line-height:1.12}
+.iv-display{font-family:'Newsreader',Georgia,serif; font-weight:500; letter-spacing:-.018em; color:var(--paper); line-height:1.12; font-variant-numeric:tabular-nums lining-nums}
 .iv-mono{font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums}
 .iv-eyebrow{font-family:'Newsreader',serif; font-style:italic; font-size:14.5px; letter-spacing:0; text-transform:none; color:var(--mute); font-weight:400}
 .up{color:var(--up)} .down{color:var(--down)} .brass{color:var(--cyan)}
@@ -82,7 +82,7 @@ const CSS = `
 
 .iv-panel{position:relative; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:26px;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.6), 0 1px 2px rgba(39,35,32,.04), 0 12px 28px -22px rgba(39,35,32,.22); min-width:0}
-.iv-grid{display:grid; gap:24px; min-width:0}
+.iv-grid{display:grid; gap:26px; min-width:0}
 .iv-grid > *{min-width:0}
 
 .iv-hero-num{font-size:clamp(40px,5.5vw,62px); font-weight:500; line-height:1.02; margin:10px 0 8px}
@@ -391,18 +391,19 @@ function Portfolio() {
           </div>
           <div style={{ height: 260 }}>
             <ResponsiveContainer>
-              <AreaChart data={data} margin={{ top: 10, right: 6, left: -18, bottom: 0 }}>
+              <AreaChart data={data} margin={{ top: 12, right: 8, left: -16, bottom: 0 }}>
                 <defs>
                   <linearGradient id="pArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3E6B52" stopOpacity={0.16} />
+                    <stop offset="0%" stopColor="#3E6B52" stopOpacity={0.22} />
+                    <stop offset="70%" stopColor="#3E6B52" stopOpacity={0.04} />
                     <stop offset="100%" stopColor="#3E6B52" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="rgba(39,35,32,.07)" strokeDasharray="2 5" vertical={false} />
+                <CartesianGrid stroke="rgba(39,35,32,.06)" strokeDasharray="1 6" vertical={false} />
                 <XAxis dataKey="t" hide />
-                <YAxis tick={{ fill: "#6B6358", fontSize: 11, fontFamily: "JetBrains Mono" }} axisLine={false} tickLine={false} width={56} tickFormatter={(v: number) => "$" + (v / 1000).toFixed(0) + "k"} />
-                <Tooltip content={<Tip />} cursor={{ stroke: "rgba(39,35,32,.2)" }} />
-                <Area type="monotone" dataKey="v" stroke="#3E6B52" strokeWidth={2} fill="url(#pArea)" />
+                <YAxis tick={{ fill: "#6B6358", fontSize: 10.5, fontFamily: "JetBrains Mono" }} axisLine={false} tickLine={false} width={52} tickCount={4} tickFormatter={(v: number) => "$" + (v / 1000).toFixed(0) + "k"} />
+                <Tooltip content={<Tip />} cursor={{ stroke: "rgba(39,35,32,.22)", strokeDasharray: "3 3" }} />
+                <Area type="monotone" dataKey="v" stroke="#3E6B52" strokeWidth={2.4} fill="url(#pArea)" dot={false} activeDot={{ r: 4, fill: "#3E6B52", stroke: "#FBF9F3", strokeWidth: 2 }} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -415,7 +416,7 @@ function Portfolio() {
           <div style={{ height: 200, marginTop: 10, position: "relative" }}>
             <ResponsiveContainer>
               <PieChart>
-                <Pie data={donut} dataKey="value" innerRadius={58} outerRadius={86} paddingAngle={2} stroke="none">
+                <Pie data={donut} dataKey="value" innerRadius={60} outerRadius={88} paddingAngle={2.5} stroke="#FCFAF4" strokeWidth={2} cornerRadius={3}>
                   {donut.map((d, i) => <Cell key={i} fill={d.tone} />)}
                 </Pie>
                 <Tooltip content={<Tip prefix="$" />} />
