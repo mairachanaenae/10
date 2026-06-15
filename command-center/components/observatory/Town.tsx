@@ -161,7 +161,7 @@ export function Town() {
     <div className="iv-page">
       <div className="iv-pagehead">
         <div><span className="iv-eyebrow">Investment Town</span>
-          <div className="iv-display" style={{ fontSize: 34, marginTop: 6 }}>The Town</div>
+          <div className="iv-display" style={{ fontSize: 40, marginTop: 6 }}>The Town</div>
           <div className="iv-hero-sub" style={{ marginTop: 8 }}>
             <span style={{ color: "var(--mute)", fontSize: 13 }}>Each agent moves as its task changes. A living view of your decision system.</span>
           </div>

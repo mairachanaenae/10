@@ -42,9 +42,9 @@ const CSS = `
 }
 .iv-aurora{display:none}
 
-.iv-display{font-family:'Newsreader',Georgia,serif; font-weight:500; letter-spacing:-.01em; color:var(--paper)}
+.iv-display{font-family:'Newsreader',Georgia,serif; font-weight:500; letter-spacing:-.018em; color:var(--paper); line-height:1.12}
 .iv-mono{font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums}
-.iv-eyebrow{font-family:'Inter',sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--mute); font-weight:600}
+.iv-eyebrow{font-family:'Newsreader',serif; font-style:italic; font-size:14.5px; letter-spacing:0; text-transform:none; color:var(--mute); font-weight:400}
 .up{color:var(--up)} .down{color:var(--down)} .brass{color:var(--cyan)}
 
 .iv-shell{position:relative; z-index:1; display:grid; grid-template-columns:84px 1fr; height:100%}
@@ -72,17 +72,17 @@ const CSS = `
 .iv-icon-btn:hover{color:var(--paper)}
 .dot-live{width:7px; height:7px; border-radius:50%; background:var(--up)}
 
-.iv-page{padding:34px; max-width:1240px; margin:0 auto}
-.iv-pagehead{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:24px; flex-wrap:wrap}
+.iv-page{padding:44px 44px 72px; max-width:1180px; margin:0 auto}
+.iv-pagehead{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:30px; flex-wrap:wrap}
 
-.iv-panel{position:relative; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:24px;
-  box-shadow:0 1px 2px rgba(39,35,32,.04), 0 10px 28px -20px rgba(39,35,32,.25); min-width:0}
-.iv-grid{display:grid; gap:20px; min-width:0}
+.iv-panel{position:relative; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:26px;
+  box-shadow:0 1px 3px rgba(39,35,32,.05); min-width:0}
+.iv-grid{display:grid; gap:24px; min-width:0}
 .iv-grid > *{min-width:0}
 
-.iv-hero-num{font-size:clamp(36px,5vw,56px); font-weight:500; line-height:1.05; margin:8px 0 6px}
+.iv-hero-num{font-size:clamp(40px,5.5vw,62px); font-weight:500; line-height:1.02; margin:10px 0 8px}
 .iv-hero-sub{display:flex; align-items:center; gap:10px; color:var(--mute); font-size:14px; flex-wrap:wrap}
-.iv-rule{height:1px; width:54px; margin-top:18px; background:var(--cyan)}
+.iv-rule{height:2px; width:38px; margin-top:18px; background:var(--cyan)}
 
 .iv-tabs{display:inline-flex; gap:2px; padding:3px; border-radius:9px; background:rgba(39,35,32,.05); border:1px solid var(--line)}
 .iv-tab{border:0; background:transparent; color:var(--mute); padding:6px 13px; border-radius:7px; cursor:pointer; font-size:12.5px; font-weight:500}
@@ -243,9 +243,9 @@ const GOV_FUNCTIONS = [
   { k: "Transportation", v: 130 }, { k: "Other", v: 320 },
 ];
 const GOV_SPLIT = [
-  { k: "Mandatory", v: 63, tone: "#D9B26A" },
-  { k: "Discretionary", v: 27, tone: "#2BB8C4" },
-  { k: "Net Interest", v: 10, tone: "#6D5AE0" },
+  { k: "Mandatory", v: 63, tone: "#9A6B2E" },
+  { k: "Discretionary", v: 27, tone: "#3E6B52" },
+  { k: "Net Interest", v: 10, tone: "#7A5C86" },
 ];
 
 /* portfolio context for the AI advisor (built from what's on screen) */
@@ -336,7 +336,7 @@ function Portfolio() {
       <div className="iv-pagehead" style={{ marginBottom: 14 }}>
         <div>
           <span className="iv-eyebrow">Portfolio</span>
-          <div className="iv-display" style={{ fontSize: 30, marginTop: 4 }}>Overview</div>
+          <div className="iv-display" style={{ fontSize: 38, marginTop: 4 }}>Overview</div>
         </div>
         <span className="iv-tag" style={qb.c ? { color: qb.c, borderColor: qb.c } : undefined}>
           <Circle size={8} /> {qb.t}
@@ -761,7 +761,7 @@ function Markets() {
     <div className="iv-page">
       <div className="iv-pagehead">
         <div><span className="iv-eyebrow">Markets</span>
-          <div className="iv-display" style={{ fontSize: 34, marginTop: 6 }}>Scanner</div>
+          <div className="iv-display" style={{ fontSize: 40, marginTop: 6 }}>Scanner</div>
           <div className="iv-hero-sub" style={{ marginTop: 8, gap: 14 }}>
             <span className="iv-mono" style={{ fontSize: 13, color: "var(--up)" }}>{scan.filter((s) => s.chg >= 0).length} advancing</span>
             <span className="iv-mono" style={{ fontSize: 13, color: "var(--down)" }}>{scan.filter((s) => s.chg < 0).length} declining</span>
@@ -1049,7 +1049,7 @@ function Advisor() {
     <div className="iv-page">
       <div className="iv-pagehead">
         <div><span className="iv-eyebrow">Advisor</span>
-          <div className="iv-display" style={{ fontSize: 34, marginTop: 6 }}>AI Council</div>
+          <div className="iv-display" style={{ fontSize: 40, marginTop: 6 }}>AI Council</div>
           <div className="iv-hero-sub">
             {connected
               ? <span className="iv-tag" style={{ color: "var(--up)", borderColor: "rgba(86,197,150,.4)" }}><Circle size={8} /> Live Claude</span>

@@ -22,7 +22,7 @@ const Head = ({ eyebrow, title, sub }: { eyebrow: string; title: string; sub?: s
   <div className="iv-pagehead">
     <div>
       <span className="iv-eyebrow">{eyebrow}</span>
-      <div className="iv-display" style={{ fontSize: 34, marginTop: 6 }}>{title}</div>
+      <div className="iv-display" style={{ fontSize: 40, marginTop: 6 }}>{title}</div>
       {sub && <div className="iv-hero-sub" style={{ marginTop: 8 }}><span style={{ color: "var(--mute)", fontSize: 13 }}>{sub}</span></div>}
       <div className="iv-rule" />
     </div>
