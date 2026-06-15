@@ -42,6 +42,9 @@ const CSS = `
   -webkit-font-smoothing:antialiased;
 }
 .iv-aurora{display:none}
+/* faint paper grain for editorial warmth (fixed, no repaint cost) */
+.iv-root::after{content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E")}
 
 .iv-display{font-family:'Newsreader',Georgia,serif; font-weight:500; letter-spacing:-.018em; color:var(--paper); line-height:1.12}
 .iv-mono{font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums}
@@ -78,7 +81,7 @@ const CSS = `
 .iv-pagehead{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:30px; flex-wrap:wrap}
 
 .iv-panel{position:relative; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:26px;
-  box-shadow:0 1px 3px rgba(39,35,32,.05); min-width:0}
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6), 0 1px 2px rgba(39,35,32,.04), 0 12px 28px -22px rgba(39,35,32,.22); min-width:0}
 .iv-grid{display:grid; gap:24px; min-width:0}
 .iv-grid > *{min-width:0}
 
@@ -160,7 +163,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .iv-kpi .lab{font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--mute)}
 .iv-kpi .val{font-family:'Newsreader',serif; font-weight:600; font-size:28px; margin-top:9px; line-height:1}
 .iv-kpi .meta{font-size:12px; color:var(--mute); margin-top:6px}
-.iv-kpi.feature{background:linear-gradient(150deg, rgba(62,107,82,.09), var(--surface) 62%)}
+.iv-kpi.feature{background:linear-gradient(150deg, rgba(62,107,82,.10), var(--surface) 62%)}
+.iv-kpi.feature .val{font-size:36px; letter-spacing:-.02em}
+.iv-kpi.feature .lab{color:var(--cyan)}
 
 .iv-word{font-family:'Newsreader',serif; font-weight:600; letter-spacing:.005em; font-size:16px; white-space:nowrap}
 .iv-word .dim{color:var(--mute); font-weight:400}
