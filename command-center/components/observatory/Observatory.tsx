@@ -13,7 +13,7 @@ import {
 import { Town } from "./Town";
 import { NewsView, HistoryView, GoalsView, AcademyView, OpportunitiesView } from "./Workspaces";
 import { MENTORS } from "@/lib/mentors";
-import { chat, hasKey, getApiKey, setApiKey, clearApiKey, type Msg as AiMsg } from "@/lib/browser-ai";
+import { chat, ask, hasKey, getApiKey, setApiKey, clearApiKey, type Msg as AiMsg } from "@/lib/browser-ai";
 import { fetchQuotes, type Quote } from "@/lib/market-api";
 import { hasNewsKey, getNewsKey, setNewsKey, clearNewsKey } from "@/lib/news-api";
 import { fetchGov, type GovData } from "@/lib/gov-api";
@@ -391,6 +391,8 @@ function Portfolio() {
         </div>
       </div>
 
+      <DailyBrief holdings={rows} metrics={metrics} />
+
       <div className="iv-grid" style={{ gridTemplateColumns: "1fr", marginBottom: 18 }}>
         <div className="iv-panel" style={{ paddingBottom: 14 }}>
           <div style={{ height: 280 }}>
@@ -466,6 +468,58 @@ function Portfolio() {
 
       <RiskTargets metrics={metrics} />
       <ApprovalStrip />
+    </div>
+  );
+}
+
+/* ---------- Daily market brief (cached per calendar day) ---------- */
+function DailyBrief({ holdings, metrics }: { holdings: Position[]; metrics: PortfolioMetrics }) {
+  const today = new Date();
+  const dayKey = "cc_daily_" + today.toISOString().slice(0, 10);
+  const rule = summarizer(holdings, metrics);
+  const movers = [...holdings].sort((a, b) => Math.abs(b.chg ?? 0) - Math.abs(a.chg ?? 0)).slice(0, 3);
+  const [ai, setAi] = useState("");
+  const [busy, setBusy] = useState(false);
+  useEffect(() => { const c = localStorage.getItem(dayKey); if (c) setAi(c); }, [dayKey]);
+
+  async function generate() {
+    if (busy) return;
+    if (!hasKey()) { setAi("Add your Anthropic key (top-right) for a written AI market update."); return; }
+    setBusy(true);
+    try {
+      const mv = movers.map((m) => `${m.sym} ${(m.chg ?? 0) >= 0 ? "+" : ""}${(m.chg ?? 0).toFixed(1)}%`).join(", ");
+      const txt = await ask(
+        "You are a calm, factual market briefer. Write a 3-4 sentence daily market update for this investor in plain English: overall direction, their notable movers, and one thing to watch today. Educational only, never advice.\n" + advisorContext(holdings),
+        `Date ${today.toDateString()}. Notable movers: ${mv}. Portfolio is ${metrics.dayChangePct >= 0 ? "up" : "down"} ${Math.abs(metrics.dayChangePct).toFixed(1)}% today.`,
+        320,
+      );
+      setAi(txt); localStorage.setItem(dayKey, txt);
+    } catch (e) { setAi(`Unavailable: ${e instanceof Error ? e.message.slice(0, 60) : "error"}`); }
+    finally { setBusy(false); }
+  }
+
+  return (
+    <div className="iv-panel" style={{ marginBottom: 18 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+        <span className="iv-eyebrow">Daily Brief</span>
+        <span className="iv-mono" style={{ fontSize: 11.5, color: "var(--mute)" }}>{today.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" })}</span>
+        <span className="iv-tag" style={{ marginLeft: "auto", color: metrics.dayChangePct >= 0 ? "var(--up)" : "var(--down)", borderColor: metrics.dayChangePct >= 0 ? "var(--up)" : "var(--down)" }}>
+          <Circle size={8} /> {metrics.dayChangePct >= 0 ? "+" : ""}{metrics.dayChangePct.toFixed(2)}% today
+        </span>
+      </div>
+      <div className="iv-display" style={{ fontSize: 18, marginTop: 10 }}>{rule.summary}</div>
+      <p style={{ color: "var(--mute)", fontSize: 13.5, marginTop: 6 }}>{rule.detail}</p>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
+        {movers.map((m) => (
+          <span key={m.sym} className="iv-mono" style={{ fontSize: 12, border: "1px solid var(--line2)", borderRadius: 7, padding: "3px 9px", color: (m.chg ?? 0) >= 0 ? "var(--up)" : "var(--down)" }}>
+            {m.sym} {(m.chg ?? 0) >= 0 ? "+" : ""}{(m.chg ?? 0).toFixed(1)}%
+          </span>
+        ))}
+      </div>
+      {ai && <div style={{ marginTop: 12, border: "1px solid var(--line)", borderRadius: 10, padding: 13, fontSize: 13.5, lineHeight: 1.6, background: "var(--frost)" }}>{ai}</div>}
+      <button className="iv-cta brassbtn" style={{ width: "auto", margin: "12px 0 0", padding: "8px 16px", fontSize: 12.5 }} disabled={busy} onClick={generate}>
+        <Sparkles size={13} style={{ marginRight: 5, verticalAlign: "-2px" }} />{busy ? "Writing…" : ai ? "Regenerate AI update" : "Generate AI market update"}
+      </button>
     </div>
   );
 }

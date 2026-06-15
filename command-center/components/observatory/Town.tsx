@@ -75,9 +75,32 @@ const ROLES: Role[] = [
   ] },
 ];
 
-interface RT { x: number; y: number; wp: number; dwellUntil: number; moving: boolean }
-const SPEED = 2.1; // px per frame
-const ARRIVE = 4;
+// adjacency graph from the roads, so agents walk the network (not straight lines)
+const ADJ: Record<string, string[]> = {};
+for (const [a, b] of ROADS) { (ADJ[a] ||= []).push(b); (ADJ[b] ||= []).push(a); }
+function bfs(start: string, goal: string): string[] {
+  if (start === goal) return [goal];
+  const prev: Record<string, string | null> = { [start]: null };
+  const q = [start];
+  while (q.length) {
+    const c = q.shift()!;
+    for (const n of ADJ[c] || []) {
+      if (n in prev) continue;
+      prev[n] = c;
+      if (n === goal) {
+        const path: string[] = []; let cur: string | null = goal;
+        while (cur != null) { path.unshift(cur); cur = prev[cur]; }
+        return path;
+      }
+      q.push(n);
+    }
+  }
+  return [start, goal];
+}
+
+interface RT { x: number; y: number; at: string; wp: number; path: string[]; pi: number; dwellUntil: number; moving: boolean }
+const SPEED = 2.4; // px per frame
+const ARRIVE = 5;
 
 export function Town() {
   const holdings = useHoldings();
@@ -89,7 +112,7 @@ export function Town() {
   const rt = useRef<Record<string, RT>>(
     Object.fromEntries(ROLES.map((r) => {
       const start = byId(r.route[0].b);
-      return [r.id, { x: start.x, y: start.y, wp: 0, dwellUntil: 0, moving: false }];
+      return [r.id, { x: start.x, y: start.y, at: r.route[0].b, wp: 0, path: [r.route[0].b], pi: 0, dwellUntil: 0, moving: false }];
     })),
   );
   const [, force] = useState(0);
@@ -100,17 +123,22 @@ export function Town() {
       const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
       for (const r of ROLES) {
         const a = rt.current[r.id];
-        const wp = r.route[a.wp];
-        const t = byId(wp.b);
-        const dx = t.x - a.x, dy = t.y - a.y, dist = Math.hypot(dx, dy);
-        if (dist > ARRIVE) {
-          a.moving = true;
-          const sp = Math.min(dist, reduce ? dist : SPEED); // ease into target
-          a.x += (dx / dist) * sp; a.y += (dy / dist) * sp;
+        const target = r.route[a.wp].b;
+        if (a.at === target) {
+          const c = byId(target); a.x = c.x; a.y = c.y; a.moving = false;
+          if (!a.dwellUntil) a.dwellUntil = ts + (reduce ? 400 : r.route[a.wp].dwell);
+          else if (ts >= a.dwellUntil) {
+            a.dwellUntil = 0;
+            a.wp = (a.wp + 1) % r.route.length;
+            a.path = bfs(a.at, r.route[a.wp].b); a.pi = 0;
+          }
         } else {
-          a.x = t.x; a.y = t.y; a.moving = false;
-          if (!a.dwellUntil) a.dwellUntil = ts + (reduce ? 400 : wp.dwell);
-          else if (ts >= a.dwellUntil) { a.dwellUntil = 0; a.wp = (a.wp + 1) % r.route.length; }
+          if (a.path.length < 2 || a.path[a.path.length - 1] !== target) { a.path = bfs(a.at, target); a.pi = 0; }
+          const node = byId(a.path[Math.min(a.pi + 1, a.path.length - 1)]);
+          const dx = node.x - a.x, dy = node.y - a.y, dist = Math.hypot(dx, dy);
+          a.moving = true;
+          if (dist > ARRIVE) { const sp = Math.min(dist, reduce ? dist : SPEED); a.x += (dx / dist) * sp; a.y += (dy / dist) * sp; }
+          else { a.x = node.x; a.y = node.y; a.at = node.id; a.pi = Math.min(a.pi + 1, a.path.length - 1); }
         }
       }
       force((n) => (n + 1) % 1000);
