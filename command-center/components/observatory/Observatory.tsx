@@ -59,6 +59,7 @@ const CSS = `
 .iv-navbtn.on{color:var(--paper); background:rgba(39,35,32,.07)}
 .iv-navbtn.on::before{content:""; position:absolute; left:-1px; top:14px; bottom:14px; width:3px; border-radius:3px; background:var(--cyan)}
 .iv-navlbl{font-size:9.5px; letter-spacing:.04em; margin-top:2px}
+.iv-railsep{width:28px; height:1px; background:var(--line); margin:8px 0; flex:none}
 
 .iv-main{overflow-y:auto; overflow-x:hidden; padding:0}
 .iv-topbar{position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:16px; padding:15px 30px;
@@ -178,6 +179,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     border-right:0; border-top:1px solid var(--line); position:fixed; bottom:0; left:0; z-index:20; order:2;
     background:#EEEADF; overflow-x:auto; padding-bottom:calc(8px + env(safe-area-inset-bottom,0px)); -webkit-overflow-scrolling:touch}
   .iv-navbtn{flex:0 0 auto; width:58px}
+  .iv-railsep{width:1px; height:28px; margin:0 6px; align-self:center}
   .iv-mark{display:none}
   .iv-navbtn.on::before{display:none}
   .iv-main{order:1; padding-bottom:84px}
@@ -1221,19 +1223,29 @@ function Government() {
 }
 
 /* ============================== SHELL ============================== */
-const NAV = [
-  { id: "portfolio", label: "Folio", Icon: Wallet, View: Portfolio },
-  { id: "markets", label: "Markets", Icon: Radar, View: Markets },
-  { id: "news", label: "News", Icon: Newspaper, View: NewsView },
-  { id: "opportunities", label: "Scout", Icon: Compass, View: OpportunitiesView },
-  { id: "trade", label: "Trade", Icon: Activity, View: Trade },
-  { id: "advisor", label: "Advisor", Icon: Sparkles, View: Advisor },
-  { id: "town", label: "Town", Icon: MapIcon, View: Town },
-  { id: "history", label: "History", Icon: History, View: HistoryView },
-  { id: "goals", label: "Goals", Icon: Target, View: GoalsView },
-  { id: "academy", label: "Academy", Icon: GraduationCap, View: AcademyView },
-  { id: "gov", label: "Gov", Icon: Landmark, View: Government },
+// Grouped navigation: Money / Markets / Intelligence / Learn
+const NAV_GROUPS = [
+  { label: "Money", items: [
+    { id: "portfolio", label: "Folio", Icon: Wallet, View: Portfolio },
+    { id: "trade", label: "Trade", Icon: Activity, View: Trade },
+    { id: "goals", label: "Goals", Icon: Target, View: GoalsView },
+  ] },
+  { label: "Markets", items: [
+    { id: "markets", label: "Markets", Icon: Radar, View: Markets },
+    { id: "news", label: "News", Icon: Newspaper, View: NewsView },
+    { id: "opportunities", label: "Scout", Icon: Compass, View: OpportunitiesView },
+    { id: "history", label: "History", Icon: History, View: HistoryView },
+  ] },
+  { label: "Intelligence", items: [
+    { id: "advisor", label: "Advisor", Icon: Sparkles, View: Advisor },
+    { id: "town", label: "Town", Icon: MapIcon, View: Town },
+  ] },
+  { label: "Learn", items: [
+    { id: "academy", label: "Academy", Icon: GraduationCap, View: AcademyView },
+    { id: "gov", label: "Gov", Icon: Landmark, View: Government },
+  ] },
 ];
+const NAV = NAV_GROUPS.flatMap((g) => g.items);
 
 function Connections({ onClose }: { onClose: () => void }) {
   const [ai, setAi] = useState(getApiKey() || "");
@@ -1285,11 +1297,16 @@ export default function Observatory() {
       <div className="iv-shell">
         <nav className="iv-rail">
           <div className="iv-mark">O</div>
-          {NAV.map(({ id, label, Icon }) => (
-            <button key={id} className={"iv-navbtn" + (active === id ? " on" : "")} onClick={() => setActive(id)} aria-label={label} aria-current={active === id}>
-              <Icon size={21} strokeWidth={1.8} />
-              <span className="iv-navlbl">{label}</span>
-            </button>
+          {NAV_GROUPS.map((g, gi) => (
+            <React.Fragment key={g.label}>
+              {gi > 0 && <div className="iv-railsep" role="separator" aria-label={g.label} />}
+              {g.items.map(({ id, label, Icon }) => (
+                <button key={id} className={"iv-navbtn" + (active === id ? " on" : "")} onClick={() => setActive(id)} aria-label={label} aria-current={active === id}>
+                  <Icon size={20} strokeWidth={1.8} />
+                  <span className="iv-navlbl">{label}</span>
+                </button>
+              ))}
+            </React.Fragment>
           ))}
         </nav>
 
