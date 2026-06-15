@@ -13,7 +13,7 @@ export interface NewsItem {
 }
 
 /**
- * Illustrative, holding-aware headlines (safe to commit — not live market data).
+ * Illustrative, holding-aware headlines (safe to commit - not live market data).
  * On a live deploy these would come from a keyed news API; the "Summarize with AI"
  * button uses the user's Claude key to digest any item against their portfolio.
  */

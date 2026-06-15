@@ -12,7 +12,7 @@ import { SAMPLE_GOALS } from "@/lib/sample-data";
 import { ask, hasKey } from "@/lib/browser-ai";
 import { useHoldings, type Position } from "@/lib/holdings-store";
 
-const tip = { background: "rgba(5,8,18,.94)", border: "1px solid rgba(55,230,255,.3)", borderRadius: 11, fontSize: 12, color: "#E8F0FF" };
+const tip = { background: "rgba(5,8,18,.94)", border: "1px solid rgba(98,200,216,.3)", borderRadius: 11, fontSize: 12, color: "#E8F0FF" };
 
 function ctx(holdings: Position[]): string {
   const v = holdings.reduce((a, h) => a + h.sh * h.px, 0) || 1;
@@ -111,7 +111,7 @@ export function HistoryView() {
   const [takes, setTakes] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState<Record<string, boolean>>({});
   useEffect(() => setLive(hasKey()), []);
-  const chart = MARKET_EVENTS.map((e) => ({ year: e.year.split("–")[0], drawdown: e.drawdown, name: e.name }));
+  const chart = MARKET_EVENTS.map((e) => ({ year: e.year.split("-")[0], drawdown: e.drawdown, name: e.name }));
 
   async function stress(e: typeof MARKET_EVENTS[number]) {
     if (busy[e.id]) return;
@@ -136,7 +136,7 @@ export function HistoryView() {
               <YAxis tick={{ fill: "#7E8BA6", fontSize: 11 }} axisLine={false} tickLine={false} width={34} unit="%" />
               <Tooltip contentStyle={tip} cursor={{ fill: "rgba(255,255,255,.04)" }} formatter={(v: number) => [`-${v}%`, "drawdown"]} />
               <Bar dataKey="drawdown" radius={[5, 5, 0, 0]}>
-                {chart.map((d, i) => <Cell key={i} fill={d.drawdown >= 60 ? "#FF5C7A" : d.drawdown >= 40 ? "#F4B23E" : "#37E6FF"} />)}
+                {chart.map((d, i) => <Cell key={i} fill={d.drawdown >= 60 ? "#E5707E" : d.drawdown >= 40 ? "#E3B765" : "#62C8D8"} />)}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
@@ -181,7 +181,7 @@ export function GoalsView() {
           return (
             <div key={g.id} className="iv-panel">
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span className="iv-badge" style={{ background: "rgba(244,178,62,.14)", color: "var(--gold)", border: "1px solid rgba(244,178,62,.3)" }}><g.icon size={18} /></span>
+                <span className="iv-badge" style={{ background: "rgba(227,183,101,.14)", color: "var(--gold)", border: "1px solid rgba(227,183,101,.3)" }}><g.icon size={18} /></span>
                 <div style={{ fontWeight: 600, fontFamily: "'Space Mono', monospace", fontSize: 17 }}>{g.title}</div>
                 <span className="iv-display" style={{ marginLeft: "auto", fontSize: 24, color: "var(--cyan)" }}>{pc}%</span>
               </div>
@@ -221,7 +221,7 @@ export function AcademyView() {
       <Head eyebrow="Learning Center" title="Academy" sub="Bite-size lessons with an AI tutor grounded in your portfolio." />
       <div className="iv-panel" style={{ marginBottom: 18 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span className="iv-badge" style={{ background: "rgba(55,230,255,.14)", color: "var(--cyan)" }}><GraduationCap size={18} /></span>
+          <span className="iv-badge" style={{ background: "rgba(98,200,216,.14)", color: "var(--cyan)" }}><GraduationCap size={18} /></span>
           <div style={{ fontWeight: 600 }}>AI Tutor</div>
         </div>
         <div className="iv-chatin" style={{ marginTop: 12 }}>
@@ -233,7 +233,7 @@ export function AcademyView() {
       </div>
       <div className="iv-grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))" }}>
         {TOPICS.map((x) => (
-          <button key={x.t} className="iv-panel" style={{ textAlign: "left", cursor: "pointer" }} onClick={() => { setQ(x.t); tutor("Explain: " + x.t + " — " + x.d); }}>
+          <button key={x.t} className="iv-panel" style={{ textAlign: "left", cursor: "pointer" }} onClick={() => { setQ(x.t); tutor("Explain: " + x.t + " - " + x.d); }}>
             <div style={{ fontWeight: 600, fontFamily: "'Space Mono', monospace", fontSize: 16 }}>{x.t}</div>
             <div style={{ fontSize: 12.5, color: "var(--mute)", marginTop: 4 }}>{x.d}</div>
             <div style={{ fontSize: 12, color: "var(--cyan)", marginTop: 10 }}>Ask the tutor →</div>
@@ -256,7 +256,7 @@ export function OpportunitiesView() {
   const riskColor = (r: number) => (r >= 4 ? "var(--down)" : r >= 3 ? "var(--gold)" : "var(--up)");
   return (
     <div className="iv-page">
-      <Head eyebrow="Opportunity Radar" title="Opportunities" sub="Ideas that would diversify or strengthen your book — categories, not hot tips." />
+      <Head eyebrow="Opportunity Radar" title="Opportunities" sub="Ideas that would diversify or strengthen your book - categories, not hot tips." />
       <div className="iv-grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))" }}>
         {OPPS.map((o) => (
           <div key={o.sym} className="iv-panel">
@@ -278,7 +278,7 @@ export function OpportunitiesView() {
           </div>
         ))}
       </div>
-      <p className="iv-foot">Illustrative, educational only — not financial advice or a recommendation to buy.</p>
+      <p className="iv-foot">Illustrative, educational only - not financial advice or a recommendation to buy.</p>
     </div>
   );
 }

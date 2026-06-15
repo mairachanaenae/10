@@ -8,27 +8,27 @@ import { usePendingApprovals } from "@/lib/approvals";
 // ── Town map ────────────────────────────────────────────────────────────────
 interface Building { id: string; name: string; x: number; y: number; color: string; kind: "civic" | "district" }
 const B: Building[] = [
-  { id: "townhall", name: "Town Hall", x: 500, y: 90, color: "#F4B23E", kind: "civic" },
-  { id: "bank", name: "Bank", x: 175, y: 150, color: "#37E6FF", kind: "civic" },
-  { id: "market", name: "Market Square", x: 825, y: 150, color: "#43E6A0", kind: "civic" },
-  { id: "library", name: "Research Library", x: 160, y: 350, color: "#9C8BFF", kind: "civic" },
-  { id: "workshop", name: "Workshop", x: 500, y: 330, color: "#F4B23E", kind: "civic" },
-  { id: "trading", name: "Trading Post", x: 840, y: 360, color: "#FF5C7A", kind: "civic" },
-  { id: "equity", name: "Equity District", x: 300, y: 520, color: "#37E6FF", kind: "district" },
-  { id: "crypto", name: "Crypto Block", x: 520, y: 545, color: "#E26DF0", kind: "district" },
-  { id: "real", name: "Real Assets", x: 730, y: 525, color: "#43E6A0", kind: "district" },
+  { id: "townhall", name: "Town Hall", x: 500, y: 90, color: "#E3B765", kind: "civic" },
+  { id: "bank", name: "Bank", x: 175, y: 150, color: "#62C8D8", kind: "civic" },
+  { id: "market", name: "Market Square", x: 825, y: 150, color: "#56C596", kind: "civic" },
+  { id: "library", name: "Research Library", x: 160, y: 350, color: "#9A86C9", kind: "civic" },
+  { id: "workshop", name: "Workshop", x: 500, y: 330, color: "#E3B765", kind: "civic" },
+  { id: "trading", name: "Trading Post", x: 840, y: 360, color: "#E5707E", kind: "civic" },
+  { id: "equity", name: "Equity District", x: 300, y: 520, color: "#62C8D8", kind: "district" },
+  { id: "crypto", name: "Crypto Block", x: 520, y: 545, color: "#9A86C9", kind: "district" },
+  { id: "real", name: "Real Assets", x: 730, y: 525, color: "#56C596", kind: "district" },
 ];
 const byId = (id: string) => B.find((b) => b.id === id)!;
 const PURPOSE: Record<string, string> = {
   townhall: "Where every agent reports and you review and approve decisions.",
   bank: "Your cash buffer, balances and safety reserve.",
-  market: "Market Square — where the Scout hunts for new opportunities.",
+  market: "Market Square - where the Scout hunts for new opportunities.",
   library: "Research & comparison: opportunities are tagged and weighed here.",
   workshop: "Where the Builder drafts rules, runs backtests and tests scenarios.",
-  trading: "The action queue — proposed orders wait here for your approval.",
-  equity: "Equity District — your stock-sector exposure.",
-  crypto: "Crypto Block — digital-asset exposure.",
-  real: "Real Assets — property and real-economy exposure.",
+  trading: "The action queue - proposed orders wait here for your approval.",
+  equity: "Equity District - your stock-sector exposure.",
+  crypto: "Crypto Block - digital-asset exposure.",
+  real: "Real Assets - property and real-economy exposure.",
 };
 const ROADS: [string, string][] = [
   ["townhall", "bank"], ["townhall", "market"], ["townhall", "workshop"],
@@ -41,27 +41,27 @@ const ROADS: [string, string][] = [
 interface WP { b: string; state: string; dwell: number }
 interface Role { id: string; name: string; color: string; route: WP[] }
 const ROLES: Role[] = [
-  { id: "scout", name: "Scout", color: "#37E6FF", route: [
+  { id: "scout", name: "Scout", color: "#62C8D8", route: [
     { b: "market", state: "scanning Market Square", dwell: 1600 },
     { b: "equity", state: "patrolling Equity District", dwell: 1400 },
     { b: "crypto", state: "discovered a lead", dwell: 1200 },
     { b: "library", state: "tagging for analysis", dwell: 1500 },
     { b: "townhall", state: "reporting findings", dwell: 1600 },
   ] },
-  { id: "analyst", name: "Analyst", color: "#43E6A0", route: [
+  { id: "analyst", name: "Analyst", color: "#56C596", route: [
     { b: "townhall", state: "awaiting a lead", dwell: 1400 },
     { b: "market", state: "receiving the opportunity", dwell: 1200 },
     { b: "library", state: "comparing options", dwell: 1800 },
     { b: "workshop", state: "testing scenarios", dwell: 1600 },
     { b: "townhall", state: "delivering a recommendation", dwell: 1500 },
   ] },
-  { id: "builder", name: "Builder", color: "#F4B23E", route: [
+  { id: "builder", name: "Builder", color: "#E3B765", route: [
     { b: "townhall", state: "taking the recommendation", dwell: 1300 },
     { b: "workshop", state: "drafting rules & lists", dwell: 1800 },
     { b: "workshop", state: "backtesting", dwell: 1400 },
     { b: "trading", state: "queueing for approval", dwell: 1700 },
   ] },
-  { id: "steward", name: "Steward", color: "#FF5C7A", route: [
+  { id: "steward", name: "Steward", color: "#E5707E", route: [
     { b: "bank", state: "checking cash buffer", dwell: 1500 },
     { b: "workshop", state: "auditing rules", dwell: 1300 },
     { b: "equity", state: "checking sector risk", dwell: 1400 },
@@ -175,12 +175,12 @@ export function Town() {
               <radialGradient id="ground" cx="50%" cy="40%" r="75%">
                 <stop offset="0%" stopColor="#0c1330" /><stop offset="100%" stopColor="#05070e" />
               </radialGradient>
-              <filter id="glow"><feGaussianBlur stdDeviation="3.2" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+              <filter id="glow"><feGaussianBlur stdDeviation="2" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
             </defs>
             <rect x="0" y="0" width="1000" height="620" rx="14" fill="url(#ground)" />
             {ROADS.map(([a, b], i) => {
               const p = byId(a), q = byId(b);
-              return <line key={i} x1={p.x} y1={p.y} x2={q.x} y2={q.y} stroke="rgba(120,200,255,.14)" strokeWidth={2} strokeDasharray="2 6" strokeLinecap="round" />;
+              return <line key={i} x1={p.x} y1={p.y} x2={q.x} y2={q.y} stroke="rgba(170,195,230,.14)" strokeWidth={2} strokeDasharray="2 6" strokeLinecap="round" />;
             })}
             {B.map((b) => {
               const on = selected === b.id;
@@ -188,10 +188,10 @@ export function Town() {
                 <g key={b.id} style={{ cursor: "pointer" }} onClick={() => setSelected(on ? null : b.id)}>
                   <ellipse cx={b.x} cy={b.y + 26} rx={34} ry={8} fill="rgba(0,0,0,.45)" />
                   <rect x={b.x - 30} y={b.y - 22} width={60} height={44} rx={11}
-                    fill={on ? "rgba(244,178,62,.16)" : b.kind === "district" ? "rgba(120,170,255,.06)" : "rgba(120,170,255,.1)"}
-                    stroke={on ? "#F4B23E" : b.color} strokeWidth={on ? 2.2 : 1.4} opacity={0.95} filter="url(#glow)" />
-                  <circle cx={b.x} cy={b.y - 2} r={4} fill={on ? "#F4B23E" : b.color} />
-                  <text x={b.x} y={b.y + 40} textAnchor="middle" fontFamily="'Space Mono', monospace" fontSize="11" letterSpacing="1" fill={on ? "#F4B23E" : "#aebbd6"}>{b.name}</text>
+                    fill={on ? "rgba(227,183,101,.16)" : b.kind === "district" ? "rgba(150,180,220,.06)" : "rgba(150,180,220,.1)"}
+                    stroke={on ? "#E3B765" : b.color} strokeWidth={on ? 2.2 : 1.4} opacity={0.95} filter="url(#glow)" />
+                  <circle cx={b.x} cy={b.y - 2} r={4} fill={on ? "#E3B765" : b.color} />
+                  <text x={b.x} y={b.y + 40} textAnchor="middle" fontFamily="'Space Mono', monospace" fontSize="11" letterSpacing="1" fill={on ? "#E3B765" : "#aebbd6"}>{b.name}</text>
                 </g>
               );
             })}
@@ -216,19 +216,48 @@ export function Town() {
         </div>
 
         <div className="iv-panel">
-          <span className="iv-eyebrow">Agents</span>
-          <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
-            {ROLES.map((r) => (
-              <div key={r.id} style={{ display: "flex", alignItems: "center", gap: 12, borderTop: "1px solid var(--line2)", paddingTop: 10 }}>
-                <span style={{ width: 10, height: 10, borderRadius: "50%", background: r.color, boxShadow: `0 0 10px ${r.color}`, flex: "none" }} />
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontWeight: 600, fontFamily: "'Space Mono', monospace", letterSpacing: ".02em" }}>{r.name}</div>
-                  <div style={{ fontSize: 12, color: "var(--mute)" }}>{stateOf(r)}</div>
+          {selected ? (() => {
+            const b = byId(selected);
+            const here = ROLES.filter((r) => !rt.current[r.id].moving && rt.current[r.id].at === selected);
+            const links = ADJ[selected] || [];
+            return (
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ width: 11, height: 11, borderRadius: 3, background: b.color, flex: "none" }} />
+                  <span className="iv-display" style={{ fontSize: 19 }}>{b.name}</span>
+                  <button className="iv-chip" style={{ marginLeft: "auto", padding: "4px 10px" }} onClick={() => setSelected(null)}>Back</button>
+                </div>
+                <p style={{ fontSize: 13, color: "var(--mute)", marginTop: 10 }}>{PURPOSE[selected]}</p>
+                <div className="iv-eyebrow" style={{ marginTop: 16 }}>Here now</div>
+                {here.length ? here.map((r) => (
+                  <div key={r.id} style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 8 }}>
+                    <span style={{ width: 9, height: 9, borderRadius: "50%", background: r.color, flex: "none" }} />
+                    <span style={{ fontSize: 13 }}>{r.name}</span><span style={{ fontSize: 12, color: "var(--mute)" }}>· {stateOf(r)}</span>
+                  </div>
+                )) : <div style={{ fontSize: 12.5, color: "var(--mute)", marginTop: 6 }}>No agent here right now.</div>}
+                <div className="iv-eyebrow" style={{ marginTop: 16 }}>Connected to</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
+                  {links.map((l) => <button key={l} className="iv-chip" style={{ padding: "4px 10px" }} onClick={() => setSelected(l)}>{byId(l).name}</button>)}
                 </div>
               </div>
-            ))}
-          </div>
-          <p className="iv-foot" style={{ marginTop: 16 }}>Steward and Messenger react to your real data — drift flags and pending approvals. The rest patrol their routes. Modular: add buildings or roles in <span className="iv-mono">Town.tsx</span>.</p>
+            );
+          })() : (
+            <>
+              <span className="iv-eyebrow">Agents</span>
+              <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
+                {ROLES.map((r) => (
+                  <div key={r.id} style={{ display: "flex", alignItems: "center", gap: 12, borderTop: "1px solid var(--line2)", paddingTop: 10 }}>
+                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: r.color, flex: "none" }} />
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontWeight: 600, fontFamily: "'Space Mono', monospace", letterSpacing: ".02em" }}>{r.name}</div>
+                      <div style={{ fontSize: 12, color: "var(--mute)" }}>{stateOf(r)}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="iv-foot" style={{ marginTop: 16 }}>Tap a building to inspect it. Steward and Messenger react to your real data (drift flags and pending approvals); the rest patrol their routes.</p>
+            </>
+          )}
         </div>
       </div>
     </div>

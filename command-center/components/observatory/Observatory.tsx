@@ -29,13 +29,13 @@ const CSS = `
 
 .iv-root *{box-sizing:border-box;margin:0;padding:0}
 .iv-root{
-  /* HUD: Iron Man cyan + Wakanda gold on deep navy glass */
-  --ink:#05070E; --abyss:#03050B; --paper:#E8F0FF; --mute:#7E8BA6;
-  --frost:rgba(120,170,255,.05); --frost2:rgba(120,170,255,.09);
-  --line:rgba(120,200,255,.14); --line2:rgba(120,200,255,.07);
-  --up:#43E6A0; --down:#FF5C7A; --warn:#F4B23E;
-  --cyan:#37E6FF; --gold:#F4B23E; --magenta:#E26DF0;
-  --brass:#37E6FF; /* legacy alias -> cyan, so existing accents turn HUD-cyan */
+  /* refined dark terminal: ONE muted accent + semantics, no neon (taste pass) */
+  --ink:#070A12; --abyss:#04060D; --paper:#E6ECF5; --mute:#8A97AD;
+  --frost:rgba(150,180,220,.045); --frost2:rgba(150,180,220,.08);
+  --line:rgba(170,195,230,.11); --line2:rgba(170,195,230,.055);
+  --up:#56C596; --down:#E5707E; --warn:#E3B765;
+  --cyan:#62C8D8; --gold:#E3B765; --magenta:#9A86C9;
+  --brass:#62C8D8; /* legacy alias -> the single accent */
   position:fixed; inset:0; overflow:hidden;
   background:
     radial-gradient(120% 90% at 50% -10%, #0A1024, transparent 70%),
@@ -52,9 +52,9 @@ const CSS = `
     radial-gradient(125% 85% at 50% -5%, transparent 58%, rgba(0,0,0,.5));}
 .iv-aurora{position:absolute; inset:-20%; z-index:0; pointer-events:none; filter:blur(70px);
   background:
-    radial-gradient(38% 46% at 18% 16%, rgba(55,230,255,.10), transparent 70%),
-    radial-gradient(42% 42% at 84% 24%, rgba(244,178,62,.10), transparent 70%),
-    radial-gradient(48% 48% at 60% 100%, rgba(244,178,62,.06), transparent 70%);
+    radial-gradient(38% 46% at 18% 16%, rgba(98,200,216,.10), transparent 70%),
+    radial-gradient(42% 42% at 84% 24%, rgba(227,183,101,.10), transparent 70%),
+    radial-gradient(48% 48% at 60% 100%, rgba(227,183,101,.06), transparent 70%);
   animation:drift 40s ease-in-out infinite alternate;
 }
 @keyframes drift{ from{transform:translate3d(-2%,-1%,0) scale(1)} to{transform:translate3d(3%,2%,0) scale(1.08)} }
@@ -72,13 +72,13 @@ const CSS = `
 .iv-mark{width:34px; height:34px; border-radius:11px; margin-bottom:20px;
   background:linear-gradient(140deg,var(--gold),#b5791f); display:grid; place-items:center;
   font-family:'Space Mono',monospace; font-weight:700; color:#0A0E14; font-size:16px;
-  box-shadow:0 0 18px rgba(244,178,62,.5), inset 0 1px 0 rgba(255,255,255,.4)}
+  inset 0 1px 0 rgba(255,255,255,.25)}
 .iv-navbtn{position:relative; width:52px; height:52px; border:0; background:transparent; cursor:pointer;
   border-radius:14px; color:var(--mute); display:grid; place-items:center; transition:.18s}
 .iv-navbtn:hover{color:var(--paper); background:var(--frost)}
 .iv-navbtn.on{color:var(--paper); background:var(--frost2)}
 .iv-navbtn.on::before{content:""; position:absolute; left:-2px; top:14px; bottom:14px; width:3px;
-  border-radius:3px; background:var(--cyan); box-shadow:0 0 12px rgba(55,230,255,.8)}
+  border-radius:3px; background:var(--cyan); box-shadow:none}
 .iv-navlbl{font-size:9.5px; letter-spacing:.08em; margin-top:2px}
 
 .iv-main{overflow-y:auto; overflow-x:hidden; padding:0}
@@ -105,7 +105,7 @@ const CSS = `
   backdrop-filter:blur(22px) saturate(125%)}
 /* a single, calm top-edge highlight (gold-cool) for material depth */
 .iv-panel::after{content:""; position:absolute; left:20px; right:20px; top:0; height:1px; pointer-events:none;
-  background:linear-gradient(90deg, transparent, rgba(244,178,62,.32), rgba(55,230,255,.28), transparent)}
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent)}
 .iv-panel > *{position:relative}
 .iv-panel{min-width:0}
 .iv-grid{display:grid; gap:20px; min-width:0}
@@ -119,7 +119,7 @@ const CSS = `
 .iv-tabs{display:inline-flex; gap:2px; padding:3px; border-radius:11px; background:var(--frost); border:1px solid var(--line)}
 .iv-tab{border:0; background:transparent; color:var(--mute); padding:6px 13px; border-radius:8px;
   cursor:pointer; font-size:12.5px; font-weight:500; font-family:'JetBrains Mono',monospace}
-.iv-tab.on{background:rgba(55,230,255,.14); color:#bff4ff; box-shadow:inset 0 0 0 1px rgba(55,230,255,.35)}
+.iv-tab.on{background:rgba(98,200,216,.14); color:#bff4ff; box-shadow:inset 0 0 0 1px rgba(98,200,216,.35)}
 
 .iv-tbl{width:100%; border-collapse:collapse}
 .iv-tbl th{text-align:right; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
@@ -134,7 +134,7 @@ const CSS = `
 
 .iv-chip{border:1px solid var(--line); background:var(--frost); color:var(--mute);
   padding:7px 14px; border-radius:999px; cursor:pointer; font-size:12.5px; font-weight:500}
-.iv-chip.on{background:linear-gradient(180deg,#5fe9ff,var(--cyan)); border-color:var(--cyan); color:#04121a; font-weight:600; box-shadow:0 4px 14px -4px rgba(55,230,255,.45)}
+.iv-chip.on{background:var(--cyan); border-color:var(--cyan); color:#04121a; font-weight:600; box-shadow:none}
 
 .iv-mover{flex:none; min-width:150px; padding:14px 16px; border-radius:14px;
   background:var(--frost); border:1px solid var(--line)}
@@ -155,11 +155,11 @@ const CSS = `
 .iv-cta{width:100%; margin-top:20px; padding:14px; border:0; border-radius:12px; cursor:pointer;
   font-weight:600; font-size:14px; letter-spacing:.02em}
 .iv-cta{transition:transform .15s ease, box-shadow .2s ease} .iv-cta:active{transform:translateY(1px)}
-.iv-cta.buy{background:var(--up); color:#04130d; box-shadow:0 8px 22px -10px rgba(67,230,160,.5)} .iv-cta.sell{background:var(--down); color:#1a0508; box-shadow:0 8px 22px -10px rgba(255,92,122,.45)}
-.iv-cta.brassbtn{background:linear-gradient(180deg,#5fe9ff,var(--cyan)); color:#04121a; box-shadow:0 8px 22px -10px rgba(55,230,255,.55)}
+.iv-cta.buy{background:var(--up); color:#04130d; box-shadow:0 8px 20px -12px rgba(0,0,0,.7)} .iv-cta.sell{background:var(--down); color:#1a0508; box-shadow:0 8px 20px -12px rgba(0,0,0,.7)}
+.iv-cta.brassbtn{background:var(--cyan); color:#04121a; box-shadow:0 8px 20px -12px rgba(0,0,0,.7)}
 input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:4px;background:var(--line);outline:0}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;
-  background:var(--cyan);cursor:pointer;box-shadow:0 0 0 4px rgba(55,230,255,.2), 0 0 10px rgba(55,230,255,.6)}
+  background:var(--cyan);cursor:pointer;box-shadow:0 0 0 4px rgba(98,200,216,.16)}
 
 .iv-book-row{position:relative; display:flex; justify-content:space-between; padding:5px 10px;
   font-family:'JetBrains Mono',monospace; font-size:12.5px; border-radius:6px}
@@ -171,31 +171,31 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
 .iv-fnrow{display:grid; grid-template-columns:160px 1fr auto; gap:14px; align-items:center; padding:9px 0}
 .iv-track{height:9px; border-radius:6px; background:var(--line2); overflow:hidden}
-.iv-fill{height:100%; border-radius:6px; background:linear-gradient(90deg,var(--cyan),#1a86c0); box-shadow:0 0 10px rgba(55,230,255,.4)}
+.iv-fill{height:100%; border-radius:6px; background:linear-gradient(90deg,var(--cyan),#1a86c0); }
 .iv-tag{display:inline-flex; align-items:center; gap:6px; font-size:10px; letter-spacing:.16em;
-  text-transform:uppercase; font-family:'Space Mono',monospace; color:var(--cyan); border:1px solid rgba(55,230,255,.35);
+  text-transform:uppercase; font-family:'Space Mono',monospace; color:var(--cyan); border:1px solid rgba(98,200,216,.35);
   padding:4px 9px; border-radius:999px}
 .iv-foot{font-size:11.5px; color:var(--mute); margin-top:20px; line-height:1.6}
 .iv-foot a{color:var(--cyan); text-decoration:none}
 
-.iv-stat{position:relative; padding:18px 20px; border-radius:14px; background:linear-gradient(180deg, rgba(120,170,255,.06), rgba(120,170,255,.02)); border:1px solid var(--line)}
+.iv-stat{position:relative; padding:18px 20px; border-radius:14px; background:linear-gradient(180deg, rgba(150,180,220,.06), rgba(150,180,220,.02)); border:1px solid var(--line)}
 .iv-stat .k{font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute)}
 .iv-stat .v{font-family:'Space Mono',monospace; font-weight:600; font-size:28px; margin-top:6px}
 
-.iv-tip{background:rgba(5,8,18,.94); border:1px solid rgba(55,230,255,.3); border-radius:11px; padding:10px 13px;
-  box-shadow:0 0 20px rgba(55,230,255,.15); backdrop-filter:blur(8px)}
+.iv-tip{background:rgba(5,8,18,.94); border:1px solid rgba(98,200,216,.3); border-radius:11px; padding:10px 13px;
+  backdrop-filter:blur(8px)}
 .iv-tip .tt{font-size:11px; color:var(--mute)} .iv-tip .tv{font-family:'JetBrains Mono',monospace; font-size:14px; margin-top:3px}
 
 /* advisor */
 .iv-mentor{display:flex; align-items:center; gap:12px; width:100%; text-align:left; cursor:pointer;
   padding:12px 14px; border-radius:14px; border:1px solid var(--line); background:var(--frost); color:var(--paper); transition:.15s}
 .iv-mentor:hover{background:var(--frost2)}
-.iv-mentor.on{border-color:rgba(55,230,255,.5); background:rgba(55,230,255,.1); box-shadow:0 0 16px rgba(55,230,255,.18)}
+.iv-mentor.on{border-color:rgba(98,200,216,.45); background:rgba(98,200,216,.09)}
 .iv-mentor .mi{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;flex:none;
-  background:rgba(55,230,255,.12); color:var(--cyan)}
+  background:rgba(98,200,216,.12); color:var(--cyan)}
 .iv-chatbox{display:flex; flex-direction:column; gap:10px; height:340px; overflow:auto; padding-right:4px}
 .iv-bub{max-width:84%; padding:10px 13px; border-radius:14px; font-size:13.5px; line-height:1.5; white-space:pre-wrap}
-.iv-bub.me{align-self:flex-end; background:rgba(55,230,255,.14); border:1px solid rgba(55,230,255,.3)}
+.iv-bub.me{align-self:flex-end; background:rgba(98,200,216,.14); border:1px solid rgba(98,200,216,.3)}
 .iv-bub.ai{align-self:flex-start; background:var(--frost); border:1px solid var(--line)}
 .iv-chatin{display:flex; gap:8px; margin-top:12px}
 .iv-chatin input{flex:1; background:var(--abyss); border:1px solid var(--line); border-radius:11px;
@@ -400,15 +400,15 @@ function Portfolio() {
               <AreaChart data={data} margin={{ top: 10, right: 6, left: -18, bottom: 0 }}>
                 <defs>
                   <linearGradient id="pArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#37E6FF" stopOpacity={0.34} />
-                    <stop offset="100%" stopColor="#37E6FF" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#62C8D8" stopOpacity={0.34} />
+                    <stop offset="100%" stopColor="#62C8D8" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid stroke="rgba(255,255,255,.05)" vertical={false} />
                 <XAxis dataKey="t" hide />
                 <YAxis tick={{ fill: "#8A93A3", fontSize: 11, fontFamily: "JetBrains Mono" }} axisLine={false} tickLine={false} width={56} tickFormatter={(v: number) => "$" + (v / 1000).toFixed(0) + "k"} />
                 <Tooltip content={<Tip />} cursor={{ stroke: "rgba(255,255,255,.2)" }} />
-                <Area type="monotone" dataKey="v" stroke="#37E6FF" strokeWidth={2} fill="url(#pArea)" />
+                <Area type="monotone" dataKey="v" stroke="#62C8D8" strokeWidth={2} fill="url(#pArea)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -491,7 +491,14 @@ function DailyBrief({ holdings, metrics }: { holdings: Position[]; metrics: Port
   const [busy, setBusy] = useState(false);
   const [headline, setHeadline] = useState<string>("");
 
-  useEffect(() => { setAi(localStorage.getItem(periodKey) || ""); }, [periodKey]);
+  // load the cached brief; if none yet and a key is connected, write it automatically
+  useEffect(() => {
+    const cached = localStorage.getItem(periodKey);
+    if (cached) { setAi(cached); return; }
+    setAi("");
+    if (hasKey()) generate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [periodKey]);
   useEffect(() => {
     if (!hasNewsKey()) return;
     let alive = true;
@@ -572,7 +579,7 @@ function runStewardCheck(m: PortfolioMetrics) {
   propose({
     agent: "Steward",
     title: `${trim ? "Trim" : "Add to"} ${d.sym} toward its ${d.target}% target`,
-    why: `${d.sym} is ${d.weight.toFixed(0)}% of the book vs a ${d.target}% target (${d.drift > 0 ? "+" : ""}${d.drift.toFixed(0)}pp drift). Concentration is ${m.concentrationLabel.toLowerCase()} (top weight ${m.topWeight.toFixed(0)}%). Consider ${trim ? "trimming" : "adding to"} it to move back toward target. Educational only — approving logs this recommendation to your audit trail; it does not place any trade.`,
+    why: `${d.sym} is ${d.weight.toFixed(0)}% of the book vs a ${d.target}% target (${d.drift > 0 ? "+" : ""}${d.drift.toFixed(0)}pp drift). Concentration is ${m.concentrationLabel.toLowerCase()} (top weight ${m.topWeight.toFixed(0)}%). Consider ${trim ? "trimming" : "adding to"} it to move back toward target. Educational only - approving logs this recommendation to your audit trail; it does not place any trade.`,
     confidence: Math.min(0.85, 0.5 + Math.abs(d.drift) / 100),
     kind: "note",
     payload: { sym: d.sym },
@@ -589,7 +596,7 @@ function RiskTargets({ metrics }: { metrics: PortfolioMetrics }) {
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
           <span className="iv-eyebrow">Allocation vs Target</span>
           <button className="iv-chip" style={{ marginLeft: "auto", padding: "5px 12px" }} onClick={() => runStewardCheck(metrics)}>Run Steward check</button>
-          <span className="iv-tag" style={{ color: over ? "var(--warn)" : "var(--up)", borderColor: over ? "rgba(244,178,62,.4)" : "rgba(67,230,160,.4)" }}>
+          <span className="iv-tag" style={{ color: over ? "var(--warn)" : "var(--up)", borderColor: over ? "rgba(227,183,101,.4)" : "rgba(86,197,150,.4)" }}>
             <Circle size={8} /> {over ? "Rebalance suggested" : "On target"}
           </span>
         </div>
@@ -671,7 +678,7 @@ function HoldingEditor({ holdings }: { holdings: Position[] }) {
         <input value={sym} onChange={(e) => setSym(e.target.value.toUpperCase())} placeholder="Add ticker (e.g. MSFT)"
           style={{ background: "var(--abyss)", border: "1px solid var(--line)", borderRadius: 10, color: "var(--paper)", padding: "9px 12px", fontFamily: "JetBrains Mono" }} />
         <button className="iv-cta brassbtn" style={{ width: "auto", margin: 0, padding: "9px 16px" }}
-          onClick={() => { if (sym.trim()) { upsertHolding({ sym: sym.trim(), name: sym.trim(), sh: 0, px: 0, tone: "#37E6FF", target: 0 }); setSym(""); } }}>
+          onClick={() => { if (sym.trim()) { upsertHolding({ sym: sym.trim(), name: sym.trim(), sh: 0, px: 0, tone: "#62C8D8", target: 0 }); setSym(""); } }}>
           Add
         </button>
         <span style={{ marginLeft: "auto", fontSize: 12, color: targetSum === 100 ? "var(--up)" : "var(--warn)" }} className="iv-mono">
@@ -717,7 +724,7 @@ function ApprovalStrip() {
             {audit.slice(0, 12).map((e) => (
               <div key={e.id} style={{ fontSize: 12.5, borderTop: "1px solid var(--line2)", paddingTop: 8 }}>
                 <span className="iv-mono" style={{ color: "var(--mute)" }}>{new Date(e.ts).toLocaleTimeString().slice(0, 5)}</span>{" "}
-                <span style={{ color: "var(--cyan)" }}>{e.actor}</span> {e.action} — <span style={{ color: "var(--mute)" }}>{e.detail}</span>
+                <span style={{ color: "var(--cyan)" }}>{e.actor}</span> {e.action} - <span style={{ color: "var(--mute)" }}>{e.detail}</span>
                 {e.undoneAt && <span className="down"> (undone)</span>}
               </div>
             ))}
@@ -734,7 +741,7 @@ function Spark({ data, up }: { data: number[]; up: boolean }) {
   return (
     <div style={{ width: 92, height: 34 }}>
       <ResponsiveContainer>
-        <LineChart data={d}><Line type="monotone" dataKey="v" stroke={up ? "#5BE0B0" : "#FF6B7A"} strokeWidth={1.6} dot={false} /></LineChart>
+        <LineChart data={d}><Line type="monotone" dataKey="v" stroke={up ? "#56C596" : "#E5707E"} strokeWidth={1.6} dot={false} /></LineChart>
       </ResponsiveContainer>
     </div>
   );
@@ -862,8 +869,8 @@ function Trade() {
               <ComposedChart data={merged} margin={{ top: 10, right: 6, left: -18, bottom: 0 }}>
                 <defs>
                   <linearGradient id="tArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#37E6FF" stopOpacity={0.30} />
-                    <stop offset="100%" stopColor="#37E6FF" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#62C8D8" stopOpacity={0.30} />
+                    <stop offset="100%" stopColor="#62C8D8" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid stroke="rgba(255,255,255,.05)" vertical={false} />
@@ -872,7 +879,7 @@ function Trade() {
                 <YAxis yAxisId="v" hide domain={[0, 4000]} />
                 <Tooltip content={<Tip />} cursor={{ stroke: "rgba(255,255,255,.2)" }} />
                 <Bar yAxisId="v" dataKey="vol" fill="rgba(255,255,255,.07)" radius={[2, 2, 0, 0]} />
-                <Area yAxisId="p" type="monotone" dataKey="v" stroke="#37E6FF" strokeWidth={2} fill="url(#tArea)" />
+                <Area yAxisId="p" type="monotone" dataKey="v" stroke="#62C8D8" strokeWidth={2} fill="url(#tArea)" />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
@@ -924,7 +931,7 @@ function Trade() {
               {bids.map((b, i) => (
                 <div className="iv-book-row" key={"b" + i}>
                   <span className="up">{b.px.toFixed(2)}</span><span style={{ color: "#8A93A3" }}>{b.sz}</span>
-                  <div className="iv-depth" style={{ width: (b.sz / maxSz) * 100 + "%", background: "rgba(91,224,176,.12)" }} />
+                  <div className="iv-depth" style={{ width: (b.sz / maxSz) * 100 + "%", background: "rgba(86,197,150,.12)" }} />
                 </div>
               ))}
             </div>
@@ -939,9 +946,9 @@ function Trade() {
 /* ---------- Agent Ops: role-colored, explainable, approval-gated ---------- */
 type AgentRole = "messenger" | "scout" | "steward";
 const ROLES: Record<AgentRole, { name: string; color: string; desc: string }> = {
-  messenger: { name: "Messenger", color: "#37E6FF", desc: "Plain-language portfolio summary" },
-  scout: { name: "Scout", color: "#F4B23E", desc: "Scans for unusual moves & drawdowns" },
-  steward: { name: "Steward", color: "#FF5C7A", desc: "Drift & concentration risk" },
+  messenger: { name: "Messenger", color: "#62C8D8", desc: "Plain-language portfolio summary" },
+  scout: { name: "Scout", color: "#E3B765", desc: "Scans for unusual moves & drawdowns" },
+  steward: { name: "Steward", color: "#E5707E", desc: "Drift & concentration risk" },
 };
 const toneColor: Record<AgentResult["tone"], string> = { good: "var(--up)", warn: "var(--warn)", bad: "var(--down)" };
 
@@ -1051,7 +1058,7 @@ function Advisor() {
           <div className="iv-display" style={{ fontSize: 34, marginTop: 6 }}>AI Council</div>
           <div className="iv-hero-sub">
             {connected
-              ? <span className="iv-tag" style={{ color: "var(--up)", borderColor: "rgba(91,224,176,.4)" }}><Circle size={8} /> Live Claude</span>
+              ? <span className="iv-tag" style={{ color: "var(--up)", borderColor: "rgba(86,197,150,.4)" }}><Circle size={8} /> Live Claude</span>
               : <span className="iv-tag"><Circle size={8} /> Demo · add a key</span>}
           </div>
           <div className="iv-rule" /></div>
@@ -1063,7 +1070,7 @@ function Advisor() {
       {!connected && (
         <div className="iv-panel" style={{ marginBottom: 18 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-            <span className="iv-badge" style={{ background: "rgba(55,230,255,.14)", color: "var(--cyan)" }}><KeyRound size={16} /></span>
+            <span className="iv-badge" style={{ background: "rgba(98,200,216,.14)", color: "var(--cyan)" }}><KeyRound size={16} /></span>
             <div style={{ flex: 1, minWidth: 200 }}>
               <div style={{ fontWeight: 600 }}>Connect Claude</div>
               <div style={{ fontSize: 12.5, color: "#8A93A3" }}>Paste your Anthropic key (stored only in this browser) to make the council reason live.</div>
@@ -1138,7 +1145,7 @@ function Government() {
           <div className="iv-display iv-hero-num" style={{ fontSize: "clamp(36px,5vw,58px)" }}>${fmt(shownT / 1000, 2)}T</div>
           <div className="iv-hero-sub">
             <span>Total outlays · {gov ? gov.fiscalLabel : "fiscal year"}</span>
-            <span className="iv-tag" style={live ? { color: "var(--up)", borderColor: "rgba(91,224,176,.4)" } : undefined}>
+            <span className="iv-tag" style={live ? { color: "var(--up)", borderColor: "rgba(86,197,150,.4)" } : undefined}>
               <Circle size={8} /> {live ? "Live · Treasury + USAspending" : tried ? "Sample (live unavailable)" : "Loading…"}
             </span>
           </div>
@@ -1149,7 +1156,7 @@ function Government() {
       <div className="iv-grid" style={{ gridTemplateColumns: "repeat(3,1fr)", marginBottom: 18 }}>
         <div className="iv-stat"><div className="k">Debt held public</div><div className="v">{gov && gov.debtPublic ? "$" + fmt(gov.debtPublic / 1e12, 1) + "T" : "$28.9T"}</div></div>
         <div className="iv-stat"><div className="k">Total public debt</div><div className="v">{gov && gov.totalDebt ? "$" + fmt(gov.totalDebt / 1e12, 1) + "T" : "$36.2T"}</div></div>
-        <div className="iv-stat"><div className="k">Largest function</div><div className="v" style={{ fontSize: 20 }}>{fns[0]?.k ?? "—"}</div></div>
+        <div className="iv-stat"><div className="k">Largest function</div><div className="v" style={{ fontSize: 20 }}>{fns[0]?.k ?? "-"}</div></div>
       </div>
 
       <div className="iv-grid" style={{ gridTemplateColumns: "minmax(280px,1fr) 1.7fr" }}>
@@ -1201,7 +1208,7 @@ function Government() {
         <span className="iv-eyebrow">Appropriations status · current bill</span>
         <div className="iv-fnrow" style={{ gridTemplateColumns: "200px 1fr auto", marginTop: 12 }}>
           <span style={{ fontSize: 14 }}>Full-year appropriations enacted</span>
-          <div className="iv-track"><div className="iv-fill" style={{ width: "72%", background: "linear-gradient(90deg,#5BE0B0,#2BB8C4)" }} /></div>
+          <div className="iv-track"><div className="iv-fill" style={{ width: "72%", background: "linear-gradient(90deg,#56C596,#2BB8C4)" }} /></div>
           <span className="iv-mono" style={{ fontSize: 13 }}>9 / 12 bills</span>
         </div>
         <p className="iv-foot">
@@ -1258,7 +1265,7 @@ function Connections({ onClose }: { onClose: () => void }) {
         </div>
         <p style={{ fontSize: 12.5, color: "var(--mute)", marginBottom: 6 }}>Keys live only in this browser and are sent only to their provider. For a shared deployment, use server keys on Vercel.</p>
         {field("Anthropic (Claude)", "Powers the Advisor council + agent summaries. platform.claude.com", ai, setAi, "sk-ant-…")}
-        {field("Finnhub (live quotes)", "Live prices in Folio, Markets, Trade. finnhub.io — free.", fin, setFin, "finnhub key")}
+        {field("Finnhub (live quotes)", "Live prices in Folio, Markets, Trade. finnhub.io - free.", fin, setFin, "finnhub key")}
         <button className="iv-cta brassbtn" onClick={save}>Save connections</button>
       </div>
     </div>
