@@ -8,8 +8,10 @@ import {
 import {
   Wallet, Radar, Activity, Landmark, Search, Plus, Minus, Clock, Circle,
   ArrowUpRight, ArrowDownRight, Sparkles, KeyRound, Send, X, Map as MapIcon,
+  Newspaper, History, Target, GraduationCap, Compass,
 } from "lucide-react";
 import { Town } from "./Town";
+import { NewsView, HistoryView, GoalsView, AcademyView, OpportunitiesView } from "./Workspaces";
 import { MENTORS } from "@/lib/mentors";
 import { chat, hasKey, getApiKey, setApiKey, clearApiKey, type Msg as AiMsg } from "@/lib/browser-ai";
 import { fetchQuotes, type Quote } from "@/lib/market-api";
@@ -43,30 +45,30 @@ const CSS = `
   font-family:'Inter',system-ui,sans-serif; font-size:14px; line-height:1.45;
   -webkit-font-smoothing:antialiased;
 }
-/* faint global scanlines + grid for the HUD texture */
-.iv-root::after{content:""; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.5;
-  background-image:
-    repeating-linear-gradient(0deg, rgba(120,200,255,.025) 0 1px, transparent 1px 3px),
-    linear-gradient(rgba(120,200,255,.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(120,200,255,.03) 1px, transparent 1px);
-  background-size:100% 3px, 46px 46px, 46px 46px;}
-.iv-aurora{position:absolute; inset:-20%; z-index:0; pointer-events:none; filter:blur(46px);
+/* refined: ultra-faint scanline + soft vignette for depth (no busy grid) */
+.iv-root::after{content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
   background:
-    radial-gradient(40% 50% at 16% 20%, rgba(55,230,255,.16), transparent 70%),
-    radial-gradient(45% 45% at 84% 26%, rgba(226,109,240,.12), transparent 70%),
-    radial-gradient(50% 50% at 62% 98%, rgba(244,178,62,.10), transparent 70%);
-  animation:drift 26s ease-in-out infinite alternate;
+    repeating-linear-gradient(0deg, rgba(190,215,255,.012) 0 1px, transparent 1px 4px),
+    radial-gradient(125% 85% at 50% -5%, transparent 58%, rgba(0,0,0,.5));}
+.iv-aurora{position:absolute; inset:-20%; z-index:0; pointer-events:none; filter:blur(70px);
+  background:
+    radial-gradient(38% 46% at 18% 16%, rgba(55,230,255,.10), transparent 70%),
+    radial-gradient(42% 42% at 84% 24%, rgba(244,178,62,.10), transparent 70%),
+    radial-gradient(48% 48% at 60% 100%, rgba(244,178,62,.06), transparent 70%);
+  animation:drift 40s ease-in-out infinite alternate;
 }
 @keyframes drift{ from{transform:translate3d(-2%,-1%,0) scale(1)} to{transform:translate3d(3%,2%,0) scale(1.08)} }
 
-.iv-display{font-family:'Rajdhani','Inter',sans-serif; font-weight:600; letter-spacing:.01em}
+.iv-display{font-family:'Rajdhani','Inter',sans-serif; font-weight:600; letter-spacing:.005em}
 .iv-mono{font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums}
-.iv-eyebrow{font-family:'Orbitron','Inter',sans-serif; font-size:10.5px; letter-spacing:.28em; text-transform:uppercase; color:var(--cyan); font-weight:600}
+.iv-eyebrow{font-family:'Orbitron','Inter',sans-serif; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:#92a4c4; font-weight:500}
 .up{color:var(--up)} .down{color:var(--down)} .brass{color:var(--cyan)}
 
 .iv-shell{position:relative; z-index:1; display:grid; grid-template-columns:84px 1fr; height:100%}
-.iv-rail{display:flex; flex-direction:column; align-items:center; gap:6px; padding:22px 0;
-  border-right:1px solid var(--line); background:rgba(5,8,18,.6); backdrop-filter:blur(14px)}
+.iv-rail{display:flex; flex-direction:column; align-items:center; gap:4px; padding:20px 0;
+  border-right:1px solid var(--line); background:rgba(5,8,18,.55); backdrop-filter:blur(16px);
+  overflow-y:auto; scrollbar-width:none}
+.iv-rail::-webkit-scrollbar{display:none}
 .iv-mark{width:34px; height:34px; border-radius:11px; margin-bottom:20px;
   background:linear-gradient(140deg,var(--gold),#b5791f); display:grid; place-items:center;
   font-family:'Orbitron',sans-serif; font-weight:700; color:#0A0E14; font-size:16px;
@@ -97,17 +99,17 @@ const CSS = `
 .iv-page{padding:30px; max-width:1320px; margin:0 auto}
 .iv-pagehead{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:22px; flex-wrap:wrap}
 
-.iv-panel{position:relative; background:linear-gradient(180deg, rgba(120,170,255,.06), rgba(120,170,255,.02));
-  border:1px solid var(--line); border-radius:16px; padding:24px; overflow:hidden;
-  box-shadow:0 22px 50px -24px rgba(0,8,24,.9), inset 0 1px 0 rgba(120,200,255,.12), 0 0 0 1px rgba(55,230,255,.04);
-  backdrop-filter:blur(20px) saturate(130%)}
-/* scanline veil + top neon edge on every panel */
-.iv-panel::before{content:""; position:absolute; inset:0; pointer-events:none; opacity:.6; border-radius:16px;
-  background:repeating-linear-gradient(0deg, rgba(120,200,255,.03) 0 1px, transparent 1px 4px)}
-.iv-panel::after{content:""; position:absolute; left:14px; right:14px; top:0; height:1px; pointer-events:none;
-  background:linear-gradient(90deg, transparent, rgba(55,230,255,.5), transparent)}
+.iv-panel{position:relative; background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.014));
+  border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:26px; overflow:hidden;
+  box-shadow:0 34px 80px -42px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.07);
+  backdrop-filter:blur(22px) saturate(125%)}
+/* a single, calm top-edge highlight (gold-cool) for material depth */
+.iv-panel::after{content:""; position:absolute; left:20px; right:20px; top:0; height:1px; pointer-events:none;
+  background:linear-gradient(90deg, transparent, rgba(244,178,62,.32), rgba(55,230,255,.28), transparent)}
 .iv-panel > *{position:relative}
-.iv-grid{display:grid; gap:18px}
+.iv-panel{min-width:0}
+.iv-grid{display:grid; gap:20px; min-width:0}
+.iv-grid > *{min-width:0}
 
 .iv-hero-num{font-size:clamp(40px,6vw,68px); font-weight:400; line-height:1; margin:10px 0 6px}
 .iv-hero-sub{display:flex; align-items:center; gap:10px; color:var(--mute); font-size:14px; flex-wrap:wrap}
@@ -132,7 +134,7 @@ const CSS = `
 
 .iv-chip{border:1px solid var(--line); background:var(--frost); color:var(--mute);
   padding:7px 14px; border-radius:999px; cursor:pointer; font-size:12.5px; font-weight:500}
-.iv-chip.on{background:var(--cyan); border-color:var(--cyan); color:#04121a; font-weight:600; box-shadow:0 0 14px rgba(55,230,255,.4)}
+.iv-chip.on{background:linear-gradient(180deg,#5fe9ff,var(--cyan)); border-color:var(--cyan); color:#04121a; font-weight:600; box-shadow:0 4px 14px -4px rgba(55,230,255,.45)}
 
 .iv-mover{flex:none; min-width:150px; padding:14px 16px; border-radius:14px;
   background:var(--frost); border:1px solid var(--line)}
@@ -152,8 +154,9 @@ const CSS = `
   color:var(--paper);cursor:pointer;display:grid;place-items:center}
 .iv-cta{width:100%; margin-top:20px; padding:14px; border:0; border-radius:12px; cursor:pointer;
   font-weight:600; font-size:14px; letter-spacing:.02em}
-.iv-cta.buy{background:var(--up); color:#04130d; box-shadow:0 0 18px rgba(67,230,160,.35)} .iv-cta.sell{background:var(--down); color:#1a0508; box-shadow:0 0 18px rgba(255,92,122,.3)}
-.iv-cta.brassbtn{background:linear-gradient(180deg,var(--cyan),#16c8e6); color:#04121a; box-shadow:0 0 18px rgba(55,230,255,.4)}
+.iv-cta{transition:transform .15s ease, box-shadow .2s ease} .iv-cta:active{transform:translateY(1px)}
+.iv-cta.buy{background:var(--up); color:#04130d; box-shadow:0 8px 22px -10px rgba(67,230,160,.5)} .iv-cta.sell{background:var(--down); color:#1a0508; box-shadow:0 8px 22px -10px rgba(255,92,122,.45)}
+.iv-cta.brassbtn{background:linear-gradient(180deg,#5fe9ff,var(--cyan)); color:#04121a; box-shadow:0 8px 22px -10px rgba(55,230,255,.55)}
 input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:4px;background:var(--line);outline:0}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;
   background:var(--cyan);cursor:pointer;box-shadow:0 0 0 4px rgba(55,230,255,.2), 0 0 10px rgba(55,230,255,.6)}
@@ -203,9 +206,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .iv-mob-only{display:none}
 @media (max-width:880px){
   .iv-shell{grid-template-columns:1fr}
-  .iv-rail{flex-direction:row; justify-content:space-around; height:auto; width:100%; padding:8px 4px;
-    border-right:0; border-top:1px solid var(--line); position:fixed; bottom:0; left:0; z-index:20;
-    order:2; background:rgba(7,10,15,.9); padding-bottom:calc(8px + env(safe-area-inset-bottom,0px))}
+  .iv-rail{flex-direction:row; justify-content:flex-start; height:auto; width:100%; padding:8px 8px;
+    gap:2px; border-right:0; border-top:1px solid var(--line); position:fixed; bottom:0; left:0; z-index:20;
+    order:2; background:rgba(5,8,18,.92); backdrop-filter:blur(16px); overflow-x:auto;
+    padding-bottom:calc(8px + env(safe-area-inset-bottom,0px)); -webkit-overflow-scrolling:touch}
+  .iv-navbtn{flex:0 0 auto; width:58px}
   .iv-mark{display:none}
   .iv-navbtn.on::before{display:none}
   .iv-main{order:1; padding-bottom:84px}
@@ -213,6 +218,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   .iv-page{padding:18px}
   .iv-mob-hide{display:none}
   .iv-grid{grid-template-columns:1fr !important}
+  .iv-panel{padding:18px}
+  .iv-tbl th,.iv-tbl td{font-size:12.5px}
+  .iv-tbl td{padding:12px 0}
+  .iv-pagehead{gap:12px}
+  .iv-tabs{flex-wrap:wrap}
+  /* wide tables scroll within their own block instead of clipping */
+  .iv-tbl{display:block; overflow-x:auto; -webkit-overflow-scrolling:touch}
+}
+@media (max-width:560px){
+  .iv-hero-num{font-size:34px}
+  .iv-page{padding:14px}
 }
 @media (prefers-reduced-motion:reduce){ .iv-aurora{animation:none} .iv-rule{transition:none} }
 `;
@@ -1122,9 +1138,14 @@ function Government() {
 const NAV = [
   { id: "portfolio", label: "Folio", Icon: Wallet, View: Portfolio },
   { id: "markets", label: "Markets", Icon: Radar, View: Markets },
+  { id: "news", label: "News", Icon: Newspaper, View: NewsView },
+  { id: "opportunities", label: "Scout", Icon: Compass, View: OpportunitiesView },
   { id: "trade", label: "Trade", Icon: Activity, View: Trade },
   { id: "advisor", label: "Advisor", Icon: Sparkles, View: Advisor },
   { id: "town", label: "Town", Icon: MapIcon, View: Town },
+  { id: "history", label: "History", Icon: History, View: HistoryView },
+  { id: "goals", label: "Goals", Icon: Target, View: GoalsView },
+  { id: "academy", label: "Academy", Icon: GraduationCap, View: AcademyView },
   { id: "gov", label: "Gov", Icon: Landmark, View: Government },
 ];
 

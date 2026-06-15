@@ -19,6 +19,17 @@ const B: Building[] = [
   { id: "real", name: "Real Assets", x: 730, y: 525, color: "#43E6A0", kind: "district" },
 ];
 const byId = (id: string) => B.find((b) => b.id === id)!;
+const PURPOSE: Record<string, string> = {
+  townhall: "Where every agent reports and you review and approve decisions.",
+  bank: "Your cash buffer, balances and safety reserve.",
+  market: "Market Square — where the Scout hunts for new opportunities.",
+  library: "Research & comparison: opportunities are tagged and weighed here.",
+  workshop: "Where the Builder drafts rules, runs backtests and tests scenarios.",
+  trading: "The action queue — proposed orders wait here for your approval.",
+  equity: "Equity District — your stock-sector exposure.",
+  crypto: "Crypto Block — digital-asset exposure.",
+  real: "Real Assets — property and real-economy exposure.",
+};
 const ROADS: [string, string][] = [
   ["townhall", "bank"], ["townhall", "market"], ["townhall", "workshop"],
   ["workshop", "library"], ["workshop", "trading"], ["workshop", "crypto"],
@@ -74,6 +85,7 @@ export function Town() {
   const metrics = computeMetrics(holdings);
   const drift = needsRebalance(metrics, 5);
 
+  const [selected, setSelected] = useState<string | null>(null);
   const rt = useRef<Record<string, RT>>(
     Object.fromEntries(ROLES.map((r) => {
       const start = byId(r.route[0].b);
@@ -142,21 +154,30 @@ export function Town() {
               const p = byId(a), q = byId(b);
               return <line key={i} x1={p.x} y1={p.y} x2={q.x} y2={q.y} stroke="rgba(120,200,255,.14)" strokeWidth={2} strokeDasharray="2 6" strokeLinecap="round" />;
             })}
-            {B.map((b) => (
-              <g key={b.id}>
-                <ellipse cx={b.x} cy={b.y + 26} rx={34} ry={8} fill="rgba(0,0,0,.45)" />
-                <rect x={b.x - 30} y={b.y - 22} width={60} height={44} rx={11}
-                  fill={b.kind === "district" ? "rgba(120,170,255,.06)" : "rgba(120,170,255,.1)"}
-                  stroke={b.color} strokeWidth={1.4} opacity={0.95} filter="url(#glow)" />
-                <circle cx={b.x} cy={b.y - 2} r={4} fill={b.color} />
-                <text x={b.x} y={b.y + 40} textAnchor="middle" fontFamily="Orbitron, sans-serif" fontSize="11" letterSpacing="1" fill="#aebbd6">{b.name}</text>
-              </g>
-            ))}
+            {B.map((b) => {
+              const on = selected === b.id;
+              return (
+                <g key={b.id} style={{ cursor: "pointer" }} onClick={() => setSelected(on ? null : b.id)}>
+                  <ellipse cx={b.x} cy={b.y + 26} rx={34} ry={8} fill="rgba(0,0,0,.45)" />
+                  <rect x={b.x - 30} y={b.y - 22} width={60} height={44} rx={11}
+                    fill={on ? "rgba(244,178,62,.16)" : b.kind === "district" ? "rgba(120,170,255,.06)" : "rgba(120,170,255,.1)"}
+                    stroke={on ? "#F4B23E" : b.color} strokeWidth={on ? 2.2 : 1.4} opacity={0.95} filter="url(#glow)" />
+                  <circle cx={b.x} cy={b.y - 2} r={4} fill={on ? "#F4B23E" : b.color} />
+                  <text x={b.x} y={b.y + 40} textAnchor="middle" fontFamily="Orbitron, sans-serif" fontSize="11" letterSpacing="1" fill={on ? "#F4B23E" : "#aebbd6"}>{b.name}</text>
+                </g>
+              );
+            })}
             {ROLES.map((r) => {
               const a = rt.current[r.id];
               return (
                 <g key={r.id}>
                   <ellipse cx={a.x} cy={a.y + 11} rx={11} ry={3.4} fill="rgba(0,0,0,.5)" />
+                  {!a.moving && (
+                    <circle cx={a.x} cy={a.y} r={9} fill="none" stroke={r.color} strokeWidth={1.4} opacity={0.6}>
+                      <animate attributeName="r" values="9;18;9" dur="2.4s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.6;0;0.6" dur="2.4s" repeatCount="indefinite" />
+                    </circle>
+                  )}
                   <circle cx={a.x} cy={a.y} r={9} fill={r.color} filter="url(#glow)" />
                   <circle cx={a.x} cy={a.y} r={9} fill="none" stroke="rgba(255,255,255,.5)" strokeWidth={1} />
                   <text x={a.x} y={a.y - 14} textAnchor="middle" fontFamily="Rajdhani, sans-serif" fontWeight={600} fontSize="12" fill={r.color}>{r.name}</text>
