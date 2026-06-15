@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  /* deep black + charcoal surfaces, blue accent, gold wealth */
-  --bg: #06080d;
+  /* warm editorial paper (matches the Observatory theme) */
+  --bg: #F4F1E8;
   --surface: #0e1320;
   --surface2: #131a2b;
   --line: rgba(255, 255, 255, 0.08);

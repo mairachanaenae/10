@@ -27,7 +27,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-bg bg-radial-glow font-sans text-ink antialiased">
+      <body className="min-h-screen bg-bg font-sans text-ink antialiased">
         <PasswordGate>{children}</PasswordGate>
       </body>
     </html>
