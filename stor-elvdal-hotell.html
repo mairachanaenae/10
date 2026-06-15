@@ -315,6 +315,56 @@
   .lb-close::before,.lb-close::after{content:"";position:absolute;left:10px;top:21px;width:24px;height:2px;background:#fff}
   .lb-close::before{transform:rotate(45deg)}.lb-close::after{transform:rotate(-45deg)}
 
+  /* ===== PREMIUM GLOBAL REFINEMENTS ===== */
+  ::-webkit-scrollbar{width:5px}
+  ::-webkit-scrollbar-track{background:var(--paper)}
+  ::-webkit-scrollbar-thumb{background:var(--gilt-2);border-radius:3px}
+
+  /* button: inner top-light sheen */
+  .btn:not(.btn-ghost){
+    background-image:linear-gradient(to bottom,rgba(255,255,255,.16) 0%,transparent 55%);
+    box-shadow:0 1px 0 rgba(255,255,255,.14) inset,0 3px 14px rgba(0,0,0,.18);
+  }
+  .btn:not(.btn-ghost):hover{
+    background-image:linear-gradient(to bottom,rgba(255,255,255,.22) 0%,transparent 55%);
+  }
+  .btn-ink{background-image:linear-gradient(to bottom,rgba(255,255,255,.07),transparent)!important}
+
+  /* room card depth */
+  .room{box-shadow:0 2px 18px rgba(27,35,30,.06),0 0 0 1px var(--line)}
+  .room:hover{box-shadow:0 32px 58px -24px rgba(27,35,30,.42),0 0 0 1px rgba(190,145,79,.2)}
+
+  /* gallery frame depth */
+  .frame{box-shadow:0 4px 22px rgba(0,0,0,.4)}
+  .frame:hover{box-shadow:0 28px 64px -18px rgba(0,0,0,.95),0 0 0 1px rgba(214,180,115,.4)}
+
+  /* hero rule: gold glow */
+  .hero-rule{box-shadow:0 0 24px 3px rgba(190,145,79,.5)}
+
+  /* eyebrow: tighter, more refined */
+  .eyebrow{font-size:.67rem;letter-spacing:.3em}
+
+  /* aquavit card: top accent */
+  .aquavit{border-top:2px solid var(--gilt);box-shadow:inset 0 1px 0 rgba(190,145,79,.25)}
+
+  /* pack pill: glass blur */
+  .pack .pill{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+
+  /* wayfind numbers: larger weight */
+  .wayfind b{font-size:1.28rem;font-weight:500}
+
+  /* footer brand size */
+  .foot-brand b{font-size:1.55rem}
+
+  /* nav brand: tighter */
+  .brand b{letter-spacing:.05em}
+
+  /* facts: slightly bigger number */
+  .facts .yr{font-size:1.12rem;letter-spacing:.02em}
+
+  /* conf stats number */
+  .conf-stats .n{font-size:2.4rem}
+
   /* ---------- responsive ---------- */
   @media (max-width:1000px){
     .frame.lg,.frame.md,.frame.sm{grid-column:span 6}
@@ -328,27 +378,111 @@
     .nav .lang{display:none}
     .intro-grid,.split,.split.flip,.gallery-head,.menu-cols,.conf-grid,.loc-grid{grid-template-columns:1fr}
     .split.flip .ed-media{order:0}
-    .ed-media{min-height:300px}
+    .ed-media{min-height:clamp(260px,50vw,420px)}
     .packs{grid-template-columns:1fr}
+    section{padding-block:clamp(52px,8vw,96px)}
+    .wayfind ul{gap:6px 28px}
+    .gallery-head{gap:18px}
+    .gallery-head h2{font-size:clamp(1.75rem,5.5vw,2.8rem)}
+    .hero h1{text-wrap:balance}
+    .book-band h2{font-size:clamp(1.8rem,5.5vw,3rem)}
+  }
+  @media (max-width:600px){
+    .frames{grid-template-columns:repeat(6,1fr)}
+    .frame.lg{grid-column:span 6}
+    .frame.md,.frame.sm{grid-column:span 3}
+    .conf-stats{grid-template-columns:1fr 1fr}
   }
   @media (max-width:560px){
     .rooms{grid-template-columns:1fr}
-    .frames{grid-template-columns:repeat(6,1fr)}
+    .frames{grid-template-columns:1fr 1fr}
+    .frame.lg,.frame.md,.frame.sm{grid-column:span 1}
     .conf-stats{grid-template-columns:1fr}
     .foot-grid{grid-template-columns:1fr}
     body{font-size:16px}
+    .wayfind ul{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;padding:20px var(--gut)}
+    .news form{flex-direction:column}
+    .news button{width:100%;justify-content:center}
+    .perks{gap:7px 9px}
+    .perk{font-size:.73rem;padding:7px 12px}
+    .hero h1{font-size:clamp(2.4rem,10vw,3.6rem)}
+    .pack{min-height:220px;padding:clamp(20px,4vw,32px)}
+    .facet{padding:clamp(20px,4vw,32px)}
+    .lb-card{padding:0 8px}
   }
-  /* mobile menu */
+  @media (max-width:400px){
+    .wayfind ul{grid-template-columns:1fr}
+    .hero-cta{flex-direction:column}
+    .hero-cta .btn{justify-content:center}
+    .hero-badge{font-size:.63rem}
+  }
+
+  /* ---- menu overlay ---- */
+  .menu-overlay{
+    position:fixed;inset:0;z-index:54;
+    background:rgba(4,10,22,.72);
+    opacity:0;pointer-events:none;
+    transition:opacity .42s ease;
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  }
+  body.menu-open .menu-overlay{opacity:1;pointer-events:auto}
+
+  /* ---- premium mobile menu: slides in from right ---- */
   .mobile-menu{
-    position:fixed;inset:0;z-index:55;background:var(--night);
-    display:flex;flex-direction:column;justify-content:center;gap:8px;padding:0 var(--gut);
-    transform:translateY(-100%);transition:transform .5s cubic-bezier(.7,0,.2,1);
+    position:fixed;top:0;right:0;bottom:0;z-index:55;
+    width:min(340px,86vw);
+    background:linear-gradient(155deg,#0e2244 0%,#09162b 50%,#050d1c 100%);
+    border-left:1px solid rgba(214,180,115,.14);
+    box-shadow:-28px 0 80px rgba(0,0,0,.7);
+    display:flex;flex-direction:column;
+    transform:translateX(105%);
+    transition:transform .52s cubic-bezier(.76,0,.24,1);
+    overflow-y:auto;overflow-x:hidden;
   }
   body.menu-open .mobile-menu{transform:none}
-  .mobile-menu a{font-family:var(--serif);font-size:1.7rem;color:#fff;padding:10px 0;border-bottom:1px solid var(--line-night)}
-  .mobile-menu a.btn{border-bottom:none;font-family:var(--sans);font-size:.82rem}
-  .mobile-menu .btn{margin-top:22px;justify-content:center;display:inline-flex}
-  .mobile-menu .lang{margin-top:18px}
+
+  .mobile-menu-inner{
+    flex:1;display:flex;flex-direction:column;
+    padding:clamp(82px,15vw,106px) clamp(26px,6vw,44px) 36px;
+  }
+  .mobile-menu-links{display:flex;flex-direction:column}
+  .mobile-menu-links a{
+    font-family:var(--serif);
+    font-size:clamp(1.25rem,4.5vw,1.55rem);
+    color:rgba(255,255,255,.72);
+    padding:14px 0;
+    border-bottom:1px solid rgba(214,180,115,.1);
+    display:block;
+    transition:color .22s,padding-left .22s,opacity .36s,transform .36s;
+    letter-spacing:.01em;
+    opacity:0;transform:translateX(24px);
+  }
+  .mobile-menu-links a:last-of-type{border-bottom:none}
+  .mobile-menu-links a:hover{color:var(--gilt-2);padding-left:10px}
+  body.menu-open .mobile-menu-links a:nth-child(1){opacity:1;transform:none;transition-delay:.1s}
+  body.menu-open .mobile-menu-links a:nth-child(2){opacity:1;transform:none;transition-delay:.15s}
+  body.menu-open .mobile-menu-links a:nth-child(3){opacity:1;transform:none;transition-delay:.2s}
+  body.menu-open .mobile-menu-links a:nth-child(4){opacity:1;transform:none;transition-delay:.25s}
+  body.menu-open .mobile-menu-links a:nth-child(5){opacity:1;transform:none;transition-delay:.3s}
+  body.menu-open .mobile-menu-links a:nth-child(6){opacity:1;transform:none;transition-delay:.35s}
+
+  .mobile-menu-footer{
+    margin-top:auto;padding-top:28px;
+    border-top:1px solid rgba(214,180,115,.12);
+    display:flex;flex-direction:column;gap:16px;
+  }
+  .mobile-menu-footer .btn{width:100%;justify-content:center;padding:14px 22px}
+  .mobile-menu .lang{margin-top:0;gap:4px}
+  .mobile-menu .lang button{padding:6px 10px;font-size:.76rem}
+  .mobile-menu-contact{font-size:.74rem;color:var(--paper-on-dark-soft)}
+  .mobile-menu-contact small{
+    display:block;text-transform:uppercase;letter-spacing:.2em;
+    font-size:.62rem;color:rgba(255,255,255,.32);margin-bottom:6px;
+  }
+  .mobile-menu-contact a{color:var(--gilt-2);display:block}
+  @media (prefers-reduced-motion:reduce){
+    .mobile-menu-links a{opacity:1;transform:none}
+  }
 
   /* ===== AESTHETIC ENHANCEMENTS ===== */
 
@@ -468,18 +602,29 @@
   <button class="nav-toggle" id="navToggle" aria-label="Åpne meny" aria-expanded="false"><span></span><span></span><span></span></button>
 </nav>
 
-<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-  <a href="#opphold" data-i18n="nav.stay">Bo hos oss</a>
-  <a href="#kunst" data-i18n="nav.art">Kunsten</a>
-  <a href="#kafe" data-i18n="nav.cafe">Tunet Kafé</a>
-  <a href="#opplevelser" data-i18n="nav.exp">Opplevelser</a>
-  <a href="#selskap" data-i18n="nav.conf">Kurs &amp; selskap</a>
-  <a href="#finn-fram" data-i18n="nav.find">Finn fram</a>
-  <a href="#book" class="btn" data-i18n="nav.book">Book opphold</a>
-  <div class="lang" role="group" aria-label="Språk">
-    <button data-lang="no" class="active">NO</button><span>·</span>
-    <button data-lang="en">EN</button><span>·</span>
-    <button data-lang="de">DE</button>
+<div class="menu-overlay" id="menuOverlay" aria-hidden="true"></div>
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true" role="dialog" aria-label="Navigasjonsmeny">
+  <div class="mobile-menu-inner">
+    <nav class="mobile-menu-links" aria-label="Sidenavigasjon">
+      <a href="#opphold" data-i18n="nav.stay">Bo hos oss</a>
+      <a href="#kunst" data-i18n="nav.art">Kunsten</a>
+      <a href="#kafe" data-i18n="nav.cafe">Tunet Kafé</a>
+      <a href="#opplevelser" data-i18n="nav.exp">Opplevelser</a>
+      <a href="#selskap" data-i18n="nav.conf">Kurs &amp; selskap</a>
+      <a href="#finn-fram" data-i18n="nav.find">Finn fram</a>
+    </nav>
+    <div class="mobile-menu-footer">
+      <a href="#book" class="btn" data-i18n="nav.book">Book opphold</a>
+      <div class="lang" role="group" aria-label="Språk">
+        <button data-lang="no" class="active">NO</button><span>·</span>
+        <button data-lang="en">EN</button><span>·</span>
+        <button data-lang="de">DE</button>
+      </div>
+      <div class="mobile-menu-contact">
+        <small>Kontakt</small>
+        <a href="mailto:post@storelvdalhotell.no">post@storelvdalhotell.no</a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1023,16 +1168,22 @@ document.addEventListener("DOMContentLoaded",()=>{
   });
 
   const toggle = document.getElementById("navToggle");
+  const overlay = document.getElementById("menuOverlay");
+  function closeMenu(){
+    document.body.classList.remove("menu-open");
+    toggle.setAttribute("aria-expanded","false");
+    toggle.setAttribute("aria-label","Åpne meny");
+    document.getElementById("mobileMenu").setAttribute("aria-hidden","true");
+  }
   toggle.addEventListener("click", ()=>{
     const open = document.body.classList.toggle("menu-open");
-    toggle.setAttribute("aria-expanded", open ? "true":"false");
-    toggle.setAttribute("aria-label", open ? "Lukk meny":"Åpne meny");
+    toggle.setAttribute("aria-expanded", open?"true":"false");
+    toggle.setAttribute("aria-label", open?"Lukk meny":"Åpne meny");
+    document.getElementById("mobileMenu").setAttribute("aria-hidden", open?"false":"true");
   });
-  document.querySelectorAll("#mobileMenu a").forEach(a=>{
-    a.addEventListener("click", ()=>{
-      document.body.classList.remove("menu-open");
-      toggle.setAttribute("aria-expanded","false");
-    });
+  overlay.addEventListener("click", closeMenu);
+  document.querySelectorAll(".mobile-menu-links a, .mobile-menu-footer .btn").forEach(a=>{
+    a.addEventListener("click", closeMenu);
   });
 
   const io = new IntersectionObserver((entries)=>{
