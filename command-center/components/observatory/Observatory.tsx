@@ -203,6 +203,30 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
 *:focus-visible{outline:2px solid var(--brass); outline-offset:2px}
 
+/* KPI bento tiles */
+.iv-kpi{position:relative; overflow:hidden; border-radius:16px; padding:18px 20px;
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
+  border:1px solid rgba(255,255,255,.08)}
+.iv-kpi::after{content:""; position:absolute; left:16px; right:16px; top:0; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.1), transparent)}
+.iv-kpi .lab{font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--mute)}
+.iv-kpi .val{font-family:'Space Mono',monospace; font-weight:700; font-size:26px; margin-top:9px; letter-spacing:-.01em; line-height:1}
+.iv-kpi .meta{font-size:12px; color:var(--mute); margin-top:6px}
+.iv-kpi.feature{background:linear-gradient(150deg, rgba(98,200,216,.10), rgba(255,255,255,.015) 60%)}
+
+/* product wordmark in the topbar */
+.iv-word{font-family:'Space Mono',monospace; font-weight:700; letter-spacing:.06em; font-size:13px; white-space:nowrap}
+.iv-word .dim{color:var(--mute); font-weight:400}
+
+/* tasteful entrance: page children rise in once, staggered */
+@keyframes ivrise{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+.iv-page > *{animation:ivrise .5s cubic-bezier(.16,1,.3,1) both}
+.iv-page > *:nth-child(2){animation-delay:.05s}
+.iv-page > *:nth-child(3){animation-delay:.1s}
+.iv-page > *:nth-child(4){animation-delay:.15s}
+.iv-page > *:nth-child(n+5){animation-delay:.2s}
+@media (prefers-reduced-motion:reduce){ .iv-page > *{animation:none} }
+
 .iv-mob-only{display:none}
 @media (max-width:880px){
   .iv-shell{grid-template-columns:1fr}
@@ -371,23 +395,38 @@ function Portfolio() {
 
   return (
     <div className="iv-page">
-      <div className="iv-pagehead">
+      <div className="iv-pagehead" style={{ marginBottom: 14 }}>
         <div>
           <span className="iv-eyebrow">Portfolio</span>
-          <div className="iv-display iv-hero-num">{usd(shown)}</div>
-          <div className="iv-hero-sub">
-            <ChgTag v={totals.dayPct} big /><span>·</span>
-            <span className={totals.dayAbs >= 0 ? "up" : "down"}>{sign(totals.dayAbs)}{usd(totals.dayAbs)} today</span>
-            <span className="iv-tag" style={qb.c ? { color: qb.c, borderColor: qb.c } : undefined}>
-              <Circle size={8} /> {qb.t}
-            </span>
-          </div>
-          <div className="iv-rule" style={{ width: 64 }} />
+          <div className="iv-display" style={{ fontSize: 30, marginTop: 4 }}>Overview</div>
         </div>
-        <div className="iv-tabs">
-          {["1M", "3M", "1Y", "ALL"].map((k) => (
-            <button key={k} className={"iv-tab" + (tf === k ? " on" : "")} onClick={() => setTf(k)}>{k}</button>
-          ))}
+        <span className="iv-tag" style={qb.c ? { color: qb.c, borderColor: qb.c } : undefined}>
+          <Circle size={8} /> {qb.t}
+        </span>
+      </div>
+
+      <div className="iv-grid" style={{ gridTemplateColumns: "1.5fr 1fr 1fr 1fr", marginBottom: 18 }}>
+        <div className="iv-kpi feature">
+          <div className="lab">Net worth</div>
+          <div className="val">{usd(shown, 0)}</div>
+          <div className="meta" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <ChgTag v={totals.dayPct} /> {sign(totals.dayAbs)}{usd(totals.dayAbs, 0)} today
+          </div>
+        </div>
+        <div className="iv-kpi">
+          <div className="lab">Today</div>
+          <div className="val" style={{ color: totals.dayPct >= 0 ? "var(--up)" : "var(--down)" }}>{sign(totals.dayPct)}{totals.dayPct.toFixed(2)}%</div>
+          <div className="meta">{rows.length} positions</div>
+        </div>
+        <div className="iv-kpi">
+          <div className="lab">Allocation drift</div>
+          <div className="val" style={{ color: needsRebalance(metrics, 5) ? "var(--warn)" : "var(--up)" }}>{metrics.totalDrift.toFixed(1)}<span style={{ fontSize: 14, color: "var(--mute)" }}>pp</span></div>
+          <div className="meta">{needsRebalance(metrics, 5) ? "rebalance suggested" : "on target"}</div>
+        </div>
+        <div className="iv-kpi">
+          <div className="lab">Concentration</div>
+          <div className="val" style={{ color: metrics.concentrationLabel === "Concentrated" ? "var(--down)" : metrics.concentrationLabel === "Moderate" ? "var(--warn)" : "var(--up)" }}>{metrics.topWeight.toFixed(0)}%</div>
+          <div className="meta">{metrics.concentrationLabel}</div>
         </div>
       </div>
 
@@ -395,7 +434,15 @@ function Portfolio() {
 
       <div className="iv-grid" style={{ gridTemplateColumns: "1fr", marginBottom: 18 }}>
         <div className="iv-panel" style={{ paddingBottom: 14 }}>
-          <div style={{ height: 280 }}>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: 4 }}>
+            <span className="iv-eyebrow">Performance</span>
+            <div className="iv-tabs" style={{ marginLeft: "auto" }}>
+              {["1M", "3M", "1Y", "ALL"].map((k) => (
+                <button key={k} className={"iv-tab" + (tf === k ? " on" : "")} onClick={() => setTf(k)}>{k}</button>
+              ))}
+            </div>
+          </div>
+          <div style={{ height: 260 }}>
             <ResponsiveContainer>
               <AreaChart data={data} margin={{ top: 10, right: 6, left: -18, bottom: 0 }}>
                 <defs>
@@ -1277,6 +1324,7 @@ export default function Observatory() {
   const View = NAV.find((n) => n.id === active)!.View;
   const [clock, setClock] = useState("");
   const [keys, setKeys] = useState(false);
+  const shellMetrics = computeMetrics(useHoldings());
   useEffect(() => {
     const tick = () => setClock(new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }));
     tick(); const id = setInterval(tick, 30000); return () => clearInterval(id);
@@ -1299,8 +1347,14 @@ export default function Observatory() {
 
         <div className="iv-main">
           <div className="iv-topbar">
+            <div className="iv-word iv-mob-hide">OBSERVATORY<span className="dim"> / {NAV.find((n) => n.id === active)?.label}</span></div>
             <div className="iv-srch"><Search size={16} /><input placeholder="Search ticker, fund, or agency…" /></div>
-            <div className="iv-pill iv-mob-hide"><span className="dot-live" /> Markets open</div>
+            <div className="iv-pill iv-mob-hide" title="Portfolio value">
+              <span className="iv-mono" style={{ color: "var(--paper)" }}>{usd(shellMetrics.total, 0)}</span>
+              <span className="iv-mono" style={{ color: shellMetrics.dayChangePct >= 0 ? "var(--up)" : "var(--down)" }}>
+                {shellMetrics.dayChangePct >= 0 ? "+" : ""}{shellMetrics.dayChangePct.toFixed(2)}%
+              </span>
+            </div>
             <div className="iv-pill iv-mob-hide"><Clock size={14} /> <span className="iv-mono">{clock}</span></div>
             <button className="iv-icon-btn" aria-label="Connections" onClick={() => setKeys(true)}><KeyRound size={17} /></button>
           </div>
