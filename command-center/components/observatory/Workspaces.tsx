@@ -174,6 +174,21 @@ export function GoalsView() {
   return (
     <div className="iv-page">
       <Head eyebrow="Wealth Goals" title="Roadmap" sub="Progress toward the milestones that matter." />
+      {(() => {
+        const avg = Math.round(SAMPLE_GOALS.reduce((a, g) => a + Math.min(100, (g.current / g.target) * 100), 0) / SAMPLE_GOALS.length);
+        return (
+          <div className="iv-kpi feature" style={{ marginBottom: 18, display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
+            <div>
+              <div className="lab">Overall progress</div>
+              <div className="val" style={{ color: "var(--cyan)" }}>{avg}%</div>
+            </div>
+            <div style={{ flex: 1, minWidth: 200 }}>
+              <div className="iv-track" style={{ height: 10 }}><div className="iv-fill" style={{ width: avg + "%" }} /></div>
+              <div className="meta" style={{ marginTop: 8 }}>{SAMPLE_GOALS.length} active goals - keep contributing to move every bar right.</div>
+            </div>
+          </div>
+        );
+      })()}
       <div className="iv-grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))" }}>
         {SAMPLE_GOALS.map((g) => {
           const pc = Math.min(100, Math.round((g.current / g.target) * 100));

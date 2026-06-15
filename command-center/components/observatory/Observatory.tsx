@@ -828,7 +828,10 @@ function Markets() {
       <div className="iv-pagehead">
         <div><span className="iv-eyebrow">Markets</span>
           <div className="iv-display" style={{ fontSize: 34, marginTop: 6 }}>Scanner</div>
-          <div className="iv-hero-sub" style={{ marginTop: 8 }}>
+          <div className="iv-hero-sub" style={{ marginTop: 8, gap: 14 }}>
+            <span className="iv-mono" style={{ fontSize: 13, color: "var(--up)" }}>{scan.filter((s) => s.chg >= 0).length} advancing</span>
+            <span className="iv-mono" style={{ fontSize: 13, color: "var(--down)" }}>{scan.filter((s) => s.chg < 0).length} declining</span>
+            <span className="iv-mono" style={{ fontSize: 13, color: "var(--mute)" }}>avg {(scan.reduce((a, s) => a + s.chg, 0) / scan.length).toFixed(2)}%</span>
             <span className="iv-tag" style={qb.c ? { color: qb.c, borderColor: qb.c } : undefined}>
               <Circle size={8} /> {qb.t}
             </span>
