@@ -12,7 +12,7 @@ import { SAMPLE_GOALS } from "@/lib/sample-data";
 import { ask, hasKey } from "@/lib/browser-ai";
 import { useHoldings, type Position } from "@/lib/holdings-store";
 
-const tip = { background: "rgba(5,8,18,.94)", border: "1px solid rgba(98,200,216,.3)", borderRadius: 11, fontSize: 12, color: "#E6ECF5" };
+const tip = { background: "#FCFAF4", border: "1px solid rgba(39,35,32,.14)", borderRadius: 11, fontSize: 12, color: "#272320" };
 
 function ctx(holdings: Position[]): string {
   const v = holdings.reduce((a, h) => a + h.sh * h.px, 0) || 1;
@@ -134,9 +134,9 @@ export function HistoryView() {
             <BarChart data={chart} margin={{ top: 6, right: 6, left: -18, bottom: 0 }}>
               <XAxis dataKey="year" tick={{ fill: "#7E8BA6", fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: "#7E8BA6", fontSize: 11 }} axisLine={false} tickLine={false} width={34} unit="%" />
-              <Tooltip contentStyle={tip} cursor={{ fill: "rgba(255,255,255,.04)" }} formatter={(v: number) => [`-${v}%`, "drawdown"]} />
+              <Tooltip contentStyle={tip} cursor={{ fill: "rgba(39,35,32,.04)" }} formatter={(v: number) => [`-${v}%`, "drawdown"]} />
               <Bar dataKey="drawdown" radius={[5, 5, 0, 0]}>
-                {chart.map((d, i) => <Cell key={i} fill={d.drawdown >= 60 ? "#E5707E" : d.drawdown >= 40 ? "#E3B765" : "#62C8D8"} />)}
+                {chart.map((d, i) => <Cell key={i} fill={d.drawdown >= 60 ? "#B0463F" : d.drawdown >= 40 ? "#9A6B2E" : "#3E6B52"} />)}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
@@ -196,7 +196,7 @@ export function GoalsView() {
           return (
             <div key={g.id} className="iv-panel">
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span className="iv-badge" style={{ background: "rgba(227,183,101,.14)", color: "var(--gold)", border: "1px solid rgba(227,183,101,.3)" }}><g.icon size={18} /></span>
+                <span className="iv-badge" style={{ background: "rgba(154,107,46,.14)", color: "var(--gold)", border: "1px solid rgba(154,107,46,.3)" }}><g.icon size={18} /></span>
                 <div style={{ fontWeight: 600, fontFamily: "'Space Mono', monospace", fontSize: 17 }}>{g.title}</div>
                 <span className="iv-display" style={{ marginLeft: "auto", fontSize: 24, color: "var(--cyan)" }}>{pc}%</span>
               </div>
@@ -236,7 +236,7 @@ export function AcademyView() {
       <Head eyebrow="Learning Center" title="Academy" sub="Bite-size lessons with an AI tutor grounded in your portfolio." />
       <div className="iv-panel" style={{ marginBottom: 18 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span className="iv-badge" style={{ background: "rgba(98,200,216,.14)", color: "var(--cyan)" }}><GraduationCap size={18} /></span>
+          <span className="iv-badge" style={{ background: "rgba(62,107,82,.14)", color: "var(--cyan)" }}><GraduationCap size={18} /></span>
           <div style={{ fontWeight: 600 }}>AI Tutor</div>
         </div>
         <div className="iv-chatin" style={{ marginTop: 12 }}>

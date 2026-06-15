@@ -25,204 +25,144 @@ import { propose, approve, dismiss, usePendingApprovals } from "@/lib/approvals"
 import { useAudit } from "@/lib/audit";
 
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
 .iv-root *{box-sizing:border-box;margin:0;padding:0}
 .iv-root{
-  /* refined dark terminal: ONE muted accent + semantics, no neon (taste pass) */
-  --ink:#070A12; --abyss:#04060D; --paper:#E6ECF5; --mute:#8A97AD;
-  --frost:rgba(150,180,220,.045); --frost2:rgba(150,180,220,.08);
-  --line:rgba(170,195,230,.11); --line2:rgba(170,195,230,.055);
-  --up:#56C596; --down:#E5707E; --warn:#E3B765;
-  --cyan:#62C8D8; --gold:#E3B765; --magenta:#9A86C9;
-  --brass:#62C8D8; /* legacy alias -> the single accent */
+  /* Warm editorial: cream paper, ink charcoal, olive + brick (taste pass) */
+  --ink:#F4F1E8; --paper:#272320; --surface:#FCFAF4; --abyss:#FFFFFF; --mute:#6B6358;
+  --line:rgba(39,35,32,.14); --line2:rgba(39,35,32,.07);
+  --frost:rgba(39,35,32,.03); --frost2:rgba(39,35,32,.05);
+  --up:#3E6B52; --down:#B0463F; --warn:#9A6B2E;
+  --cyan:#3E6B52; --gold:#9A6B2E; --magenta:#7A5C86; --brass:#3E6B52;
   position:fixed; inset:0; overflow:hidden;
-  background:
-    radial-gradient(120% 90% at 50% -10%, #0A1024, transparent 70%),
-    radial-gradient(100% 80% at 100% 110%, #0A0A1E, transparent 70%),
-    var(--ink);
-  color:var(--paper);
-  font-family:'Space Mono','JetBrains Mono',ui-monospace,monospace; font-size:13.5px; line-height:1.5;
+  background:var(--ink); color:var(--paper);
+  font-family:'Inter',system-ui,sans-serif; font-size:14px; line-height:1.55;
   -webkit-font-smoothing:antialiased;
 }
-/* refined: ultra-faint scanline + soft vignette for depth (no busy grid) */
-.iv-root::after{content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
-  background:
-    repeating-linear-gradient(0deg, rgba(190,215,255,.012) 0 1px, transparent 1px 4px),
-    radial-gradient(125% 85% at 50% -5%, transparent 58%, rgba(0,0,0,.5));}
-.iv-aurora{position:absolute; inset:-20%; z-index:0; pointer-events:none; filter:blur(70px);
-  background:
-    radial-gradient(38% 46% at 18% 16%, rgba(98,200,216,.10), transparent 70%),
-    radial-gradient(42% 42% at 84% 24%, rgba(227,183,101,.10), transparent 70%),
-    radial-gradient(48% 48% at 60% 100%, rgba(227,183,101,.06), transparent 70%);
-  animation:drift 40s ease-in-out infinite alternate;
-}
-@keyframes drift{ from{transform:translate3d(-2%,-1%,0) scale(1)} to{transform:translate3d(3%,2%,0) scale(1.08)} }
+.iv-aurora{display:none}
 
-.iv-display{font-family:'Space Mono',monospace; font-weight:700; letter-spacing:-.01em}
+.iv-display{font-family:'Newsreader',Georgia,serif; font-weight:500; letter-spacing:-.01em; color:var(--paper)}
 .iv-mono{font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums}
-.iv-eyebrow{font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:#92a4c4; font-weight:400}
+.iv-eyebrow{font-family:'Inter',sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--mute); font-weight:600}
 .up{color:var(--up)} .down{color:var(--down)} .brass{color:var(--cyan)}
 
 .iv-shell{position:relative; z-index:1; display:grid; grid-template-columns:84px 1fr; height:100%}
 .iv-rail{display:flex; flex-direction:column; align-items:center; gap:4px; padding:20px 0;
-  border-right:1px solid var(--line); background:rgba(5,8,18,.55); backdrop-filter:blur(16px);
-  overflow-y:auto; scrollbar-width:none}
+  border-right:1px solid var(--line); background:#EEEADF; overflow-y:auto; scrollbar-width:none}
 .iv-rail::-webkit-scrollbar{display:none}
-.iv-mark{width:34px; height:34px; border-radius:11px; margin-bottom:20px;
-  background:linear-gradient(140deg,var(--gold),#b5791f); display:grid; place-items:center;
-  font-family:'Space Mono',monospace; font-weight:700; color:#0A0E14; font-size:16px;
-  inset 0 1px 0 rgba(255,255,255,.25)}
+.iv-mark{width:34px; height:34px; border-radius:10px; margin-bottom:20px; background:var(--paper);
+  display:grid; place-items:center; font-family:'Newsreader',serif; font-weight:600; color:var(--ink); font-size:18px}
 .iv-navbtn{position:relative; width:52px; height:52px; border:0; background:transparent; cursor:pointer;
-  border-radius:14px; color:var(--mute); display:grid; place-items:center; transition:.18s}
-.iv-navbtn:hover{color:var(--paper); background:var(--frost)}
-.iv-navbtn.on{color:var(--paper); background:var(--frost2)}
-.iv-navbtn.on::before{content:""; position:absolute; left:-2px; top:14px; bottom:14px; width:3px;
-  border-radius:3px; background:var(--cyan); box-shadow:none}
-.iv-navlbl{font-size:9.5px; letter-spacing:.08em; margin-top:2px}
+  border-radius:12px; color:var(--mute); display:grid; place-items:center; transition:.18s}
+.iv-navbtn:hover{color:var(--paper); background:rgba(39,35,32,.05)}
+.iv-navbtn.on{color:var(--paper); background:rgba(39,35,32,.07)}
+.iv-navbtn.on::before{content:""; position:absolute; left:-1px; top:14px; bottom:14px; width:3px; border-radius:3px; background:var(--cyan)}
+.iv-navlbl{font-size:9.5px; letter-spacing:.04em; margin-top:2px}
 
 .iv-main{overflow-y:auto; overflow-x:hidden; padding:0}
-.iv-topbar{position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:16px;
-  padding:18px 30px; border-bottom:1px solid var(--line);
-  background:rgba(5,8,18,.8); backdrop-filter:blur(18px)}
-.iv-srch{flex:1; max-width:420px; display:flex; align-items:center; gap:10px; padding:10px 14px;
-  background:var(--frost); border:1px solid var(--line); border-radius:12px; color:var(--mute)}
+.iv-topbar{position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:16px; padding:15px 30px;
+  border-bottom:1px solid var(--line); background:rgba(244,241,232,.9); backdrop-filter:blur(8px)}
+.iv-srch{flex:1; max-width:420px; display:flex; align-items:center; gap:10px; padding:9px 14px;
+  background:var(--surface); border:1px solid var(--line); border-radius:10px; color:var(--mute)}
 .iv-srch input{background:transparent; border:0; outline:0; color:var(--paper); width:100%; font-size:13.5px}
 .iv-srch input::placeholder{color:var(--mute)}
-.iv-pill{display:flex; align-items:center; gap:7px; padding:8px 13px; border-radius:11px;
-  border:1px solid var(--line); background:var(--frost); font-size:13px}
-.iv-icon-btn{width:40px; height:40px; border-radius:11px; border:1px solid var(--line);
-  background:var(--frost); color:var(--mute); display:grid; place-items:center; cursor:pointer}
+.iv-pill{display:flex; align-items:center; gap:7px; padding:7px 12px; border-radius:9px; border:1px solid var(--line); background:var(--surface); font-size:13px}
+.iv-icon-btn{width:38px; height:38px; border-radius:10px; border:1px solid var(--line); background:var(--surface); color:var(--mute); display:grid; place-items:center; cursor:pointer}
 .iv-icon-btn:hover{color:var(--paper)}
-.dot-live{width:7px;height:7px;border-radius:50%;background:var(--up);box-shadow:0 0 9px var(--up)}
+.dot-live{width:7px; height:7px; border-radius:50%; background:var(--up)}
 
-.iv-page{padding:30px; max-width:1320px; margin:0 auto}
-.iv-pagehead{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:22px; flex-wrap:wrap}
+.iv-page{padding:34px; max-width:1240px; margin:0 auto}
+.iv-pagehead{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:24px; flex-wrap:wrap}
 
-.iv-panel{position:relative; background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.014));
-  border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:26px; overflow:hidden;
-  box-shadow:0 34px 80px -42px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.07);
-  backdrop-filter:blur(22px) saturate(125%)}
-/* a single, calm top-edge highlight (gold-cool) for material depth */
-.iv-panel::after{content:""; position:absolute; left:20px; right:20px; top:0; height:1px; pointer-events:none;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent)}
-.iv-panel > *{position:relative}
-.iv-panel{min-width:0}
+.iv-panel{position:relative; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:24px;
+  box-shadow:0 1px 2px rgba(39,35,32,.04), 0 10px 28px -20px rgba(39,35,32,.25); min-width:0}
 .iv-grid{display:grid; gap:20px; min-width:0}
 .iv-grid > *{min-width:0}
 
-.iv-hero-num{font-size:clamp(40px,6vw,68px); font-weight:400; line-height:1; margin:10px 0 6px}
+.iv-hero-num{font-size:clamp(36px,5vw,56px); font-weight:500; line-height:1.05; margin:8px 0 6px}
 .iv-hero-sub{display:flex; align-items:center; gap:10px; color:var(--mute); font-size:14px; flex-wrap:wrap}
-.iv-rule{height:2px; width:64px; margin-top:16px; border-radius:2px;
-  background:linear-gradient(90deg,var(--brass),transparent); transition:width .9s ease}
+.iv-rule{height:1px; width:54px; margin-top:18px; background:var(--cyan)}
 
-.iv-tabs{display:inline-flex; gap:2px; padding:3px; border-radius:11px; background:var(--frost); border:1px solid var(--line)}
-.iv-tab{border:0; background:transparent; color:var(--mute); padding:6px 13px; border-radius:8px;
-  cursor:pointer; font-size:12.5px; font-weight:500; font-family:'JetBrains Mono',monospace}
-.iv-tab.on{background:rgba(98,200,216,.14); color:#bff4ff; box-shadow:inset 0 0 0 1px rgba(98,200,216,.35)}
+.iv-tabs{display:inline-flex; gap:2px; padding:3px; border-radius:9px; background:rgba(39,35,32,.05); border:1px solid var(--line)}
+.iv-tab{border:0; background:transparent; color:var(--mute); padding:6px 13px; border-radius:7px; cursor:pointer; font-size:12.5px; font-weight:500}
+.iv-tab.on{background:var(--surface); color:var(--paper); box-shadow:0 1px 2px rgba(39,35,32,.12)}
 
 .iv-tbl{width:100%; border-collapse:collapse}
-.iv-tbl th{text-align:right; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--mute); font-weight:600; padding:0 0 14px; cursor:pointer; user-select:none}
+.iv-tbl th{text-align:right; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--mute); font-weight:600; padding:0 0 14px; cursor:pointer; user-select:none}
 .iv-tbl th:first-child,.iv-tbl td:first-child{text-align:left}
 .iv-tbl td{padding:14px 0; border-top:1px solid var(--line2); font-size:14px}
-.iv-tbl tr:hover td{background:rgba(255,255,255,.02)}
+.iv-tbl tr:hover td{background:rgba(39,35,32,.02)}
 .iv-sym{display:flex; align-items:center; gap:12px}
-.iv-badge{width:36px; height:36px; border-radius:10px; display:grid; place-items:center;
-  font-family:'Space Mono',monospace; font-weight:700; font-size:15px; flex:none}
+.iv-badge{width:36px; height:36px; border-radius:9px; display:grid; place-items:center; font-family:'Newsreader',serif; font-weight:600; font-size:15px; flex:none}
 .iv-symname{font-size:12px; color:var(--mute)}
 
-.iv-chip{border:1px solid var(--line); background:var(--frost); color:var(--mute);
-  padding:7px 14px; border-radius:999px; cursor:pointer; font-size:12.5px; font-weight:500}
-.iv-chip.on{background:var(--cyan); border-color:var(--cyan); color:#04121a; font-weight:600; box-shadow:none}
+.iv-chip{border:1px solid var(--line); background:var(--surface); color:var(--mute); padding:7px 14px; border-radius:999px; cursor:pointer; font-size:12.5px; font-weight:500}
+.iv-chip.on{background:var(--cyan); border-color:var(--cyan); color:#FBF9F3; font-weight:600}
 
-.iv-mover{flex:none; min-width:150px; padding:14px 16px; border-radius:14px;
-  background:var(--frost); border:1px solid var(--line)}
-
-.iv-seg{display:flex; padding:3px; border-radius:12px; background:var(--frost); border:1px solid var(--line)}
-.iv-seg button{flex:1; border:0; background:transparent; color:var(--mute); padding:10px;
-  border-radius:9px; cursor:pointer; font-weight:600; font-size:13px}
-.iv-seg button.buy{background:var(--up); color:#04130d}
-.iv-seg button.sell{background:var(--down); color:#1a0508}
-.iv-field{display:flex; flex-direction:column; gap:7px; margin-top:16px}
-.iv-field label{font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--mute)}
-.iv-input{display:flex; align-items:center; gap:8px; padding:11px 13px; border-radius:11px;
-  background:var(--abyss); border:1px solid var(--line)}
-.iv-input input{flex:1; background:transparent; border:0; outline:0; color:var(--paper);
-  font-family:'JetBrains Mono',monospace; font-size:16px}
-.iv-stepper{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--frost);
-  color:var(--paper);cursor:pointer;display:grid;place-items:center}
-.iv-cta{width:100%; margin-top:20px; padding:14px; border:0; border-radius:12px; cursor:pointer;
-  font-weight:600; font-size:14px; letter-spacing:.02em}
-.iv-cta{transition:transform .15s ease, box-shadow .2s ease} .iv-cta:active{transform:translateY(1px)}
-.iv-cta.buy{background:var(--up); color:#04130d; box-shadow:0 8px 20px -12px rgba(0,0,0,.7)} .iv-cta.sell{background:var(--down); color:#1a0508; box-shadow:0 8px 20px -12px rgba(0,0,0,.7)}
-.iv-cta.brassbtn{background:var(--cyan); color:#04121a; box-shadow:0 8px 20px -12px rgba(0,0,0,.7)}
-input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:4px;background:var(--line);outline:0}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;
-  background:var(--cyan);cursor:pointer;box-shadow:0 0 0 4px rgba(98,200,216,.16)}
-
-.iv-book-row{position:relative; display:flex; justify-content:space-between; padding:5px 10px;
-  font-family:'JetBrains Mono',monospace; font-size:12.5px; border-radius:6px}
-.iv-depth{position:absolute; top:0; bottom:0; right:0; border-radius:6px; z-index:0}
-.iv-book-row span{position:relative; z-index:1}
-.iv-spread{display:flex; justify-content:space-between; padding:9px 10px; margin:4px 0;
-  border-top:1px solid var(--line2); border-bottom:1px solid var(--line2);
-  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--mute)}
-
-.iv-fnrow{display:grid; grid-template-columns:160px 1fr auto; gap:14px; align-items:center; padding:9px 0}
-.iv-track{height:9px; border-radius:6px; background:var(--line2); overflow:hidden}
-.iv-fill{height:100%; border-radius:6px; background:linear-gradient(90deg,var(--cyan),#1a86c0); }
-.iv-tag{display:inline-flex; align-items:center; gap:6px; font-size:10px; letter-spacing:.16em;
-  text-transform:uppercase; font-family:'Space Mono',monospace; color:var(--cyan); border:1px solid rgba(98,200,216,.35);
-  padding:4px 9px; border-radius:999px}
-.iv-foot{font-size:11.5px; color:var(--mute); margin-top:20px; line-height:1.6}
-.iv-foot a{color:var(--cyan); text-decoration:none}
-
-.iv-stat{position:relative; padding:18px 20px; border-radius:14px; background:linear-gradient(180deg, rgba(150,180,220,.06), rgba(150,180,220,.02)); border:1px solid var(--line)}
-.iv-stat .k{font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute)}
-.iv-stat .v{font-family:'Space Mono',monospace; font-weight:600; font-size:28px; margin-top:6px}
-
-.iv-tip{background:rgba(5,8,18,.94); border:1px solid rgba(98,200,216,.3); border-radius:11px; padding:10px 13px;
-  backdrop-filter:blur(8px)}
-.iv-tip .tt{font-size:11px; color:var(--mute)} .iv-tip .tv{font-family:'JetBrains Mono',monospace; font-size:14px; margin-top:3px}
-
-/* advisor */
-.iv-mentor{display:flex; align-items:center; gap:12px; width:100%; text-align:left; cursor:pointer;
-  padding:12px 14px; border-radius:14px; border:1px solid var(--line); background:var(--frost); color:var(--paper); transition:.15s}
-.iv-mentor:hover{background:var(--frost2)}
-.iv-mentor.on{border-color:rgba(98,200,216,.45); background:rgba(98,200,216,.09)}
-.iv-mentor .mi{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;flex:none;
-  background:rgba(98,200,216,.12); color:var(--cyan)}
-.iv-chatbox{display:flex; flex-direction:column; gap:10px; height:340px; overflow:auto; padding-right:4px}
-.iv-bub{max-width:84%; padding:10px 13px; border-radius:14px; font-size:13.5px; line-height:1.5; white-space:pre-wrap}
-.iv-bub.me{align-self:flex-end; background:rgba(98,200,216,.14); border:1px solid rgba(98,200,216,.3)}
-.iv-bub.ai{align-self:flex-start; background:var(--frost); border:1px solid var(--line)}
-.iv-chatin{display:flex; gap:8px; margin-top:12px}
-.iv-chatin input{flex:1; background:var(--abyss); border:1px solid var(--line); border-radius:11px;
-  padding:11px 13px; color:var(--paper); outline:0; font-size:13.5px}
-
-*:focus-visible{outline:2px solid var(--brass); outline-offset:2px}
-
-/* KPI bento tiles */
-.iv-kpi{position:relative; overflow:hidden; border-radius:16px; padding:18px 20px;
-  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
-  border:1px solid rgba(255,255,255,.08)}
-.iv-kpi::after{content:""; position:absolute; left:16px; right:16px; top:0; height:1px;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,.1), transparent)}
-.iv-kpi .lab{font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--mute)}
-.iv-kpi .val{font-family:'Space Mono',monospace; font-weight:700; font-size:26px; margin-top:9px; letter-spacing:-.01em; line-height:1}
-.iv-kpi .meta{font-size:12px; color:var(--mute); margin-top:6px}
-.iv-kpi.feature{background:linear-gradient(150deg, rgba(98,200,216,.10), rgba(255,255,255,.015) 60%)}
-.iv-kpi{transition:transform .2s cubic-bezier(.16,1,.3,1), border-color .2s ease}
-.iv-kpi:hover{transform:translateY(-2px); border-color:rgba(170,195,230,.2)}
-.iv-mover{transition:transform .2s cubic-bezier(.16,1,.3,1)}
+.iv-mover{flex:none; min-width:150px; padding:14px 16px; border-radius:12px; background:var(--surface); border:1px solid var(--line); transition:transform .2s cubic-bezier(.16,1,.3,1)}
 .iv-mover:hover{transform:translateY(-2px)}
 
-/* product wordmark in the topbar */
-.iv-word{font-family:'Space Mono',monospace; font-weight:700; letter-spacing:.06em; font-size:13px; white-space:nowrap}
+.iv-seg{display:flex; padding:3px; border-radius:10px; background:rgba(39,35,32,.05); border:1px solid var(--line)}
+.iv-seg button{flex:1; border:0; background:transparent; color:var(--mute); padding:10px; border-radius:8px; cursor:pointer; font-weight:600; font-size:13px}
+.iv-seg button.buy{background:var(--up); color:#FBF9F3}
+.iv-seg button.sell{background:var(--down); color:#FBF9F3}
+.iv-field{display:flex; flex-direction:column; gap:7px; margin-top:16px}
+.iv-field label{font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--mute)}
+.iv-input{display:flex; align-items:center; gap:8px; padding:11px 13px; border-radius:10px; background:var(--abyss); border:1px solid var(--line)}
+.iv-input input{flex:1; background:transparent; border:0; outline:0; color:var(--paper); font-family:'JetBrains Mono',monospace; font-size:16px}
+.iv-stepper{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--paper);cursor:pointer;display:grid;place-items:center}
+.iv-cta{width:100%; margin-top:20px; padding:13px; border:0; border-radius:10px; cursor:pointer; font-weight:600; font-size:14px; transition:transform .15s ease, filter .2s ease}
+.iv-cta:active{transform:translateY(1px)}
+.iv-cta.buy{background:var(--up); color:#FBF9F3} .iv-cta.sell{background:var(--down); color:#FBF9F3}
+.iv-cta.brassbtn{background:var(--paper); color:var(--ink)}
+.iv-cta.brassbtn:hover{filter:brightness(1.12)}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:4px;background:var(--line);outline:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+  background:var(--cyan);cursor:pointer;box-shadow:0 0 0 3px rgba(62,107,82,.16)}
+
+.iv-book-row{position:relative; display:flex; justify-content:space-between; padding:5px 10px; font-family:'JetBrains Mono',monospace; font-size:12.5px; border-radius:6px}
+.iv-depth{position:absolute; top:0; bottom:0; right:0; border-radius:6px; z-index:0}
+.iv-book-row span{position:relative; z-index:1}
+.iv-spread{display:flex; justify-content:space-between; padding:9px 10px; margin:4px 0; border-top:1px solid var(--line2); border-bottom:1px solid var(--line2); font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--mute)}
+
+.iv-fnrow{display:grid; grid-template-columns:160px 1fr auto; gap:14px; align-items:center; padding:9px 0}
+.iv-track{height:9px; border-radius:6px; background:rgba(39,35,32,.08); overflow:hidden}
+.iv-fill{height:100%; border-radius:6px; background:var(--cyan)}
+.iv-tag{display:inline-flex; align-items:center; gap:6px; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-family:'Inter',sans-serif; color:var(--mute); border:1px solid var(--line); padding:4px 9px; border-radius:999px}
+.iv-foot{font-size:11.5px; color:var(--mute); margin-top:20px; line-height:1.6}
+.iv-foot a{color:var(--cyan); text-decoration:underline}
+
+.iv-stat{position:relative; padding:18px 20px; border-radius:12px; background:var(--surface); border:1px solid var(--line)}
+.iv-stat .k{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--mute)}
+.iv-stat .v{font-family:'Newsreader',serif; font-weight:600; font-size:28px; margin-top:6px}
+
+.iv-tip{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:10px 13px; box-shadow:0 10px 28px -14px rgba(39,35,32,.35)}
+.iv-tip .tt{font-size:11px; color:var(--mute)} .iv-tip .tv{font-family:'JetBrains Mono',monospace; font-size:14px; margin-top:3px; color:var(--paper)}
+
+.iv-mentor{display:flex; align-items:center; gap:12px; width:100%; text-align:left; cursor:pointer; padding:12px 14px; border-radius:12px; border:1px solid var(--line); background:var(--surface); color:var(--paper); transition:.15s}
+.iv-mentor:hover{background:rgba(39,35,32,.03)}
+.iv-mentor.on{border-color:var(--cyan); background:rgba(62,107,82,.07)}
+.iv-mentor .mi{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;flex:none; background:rgba(62,107,82,.1); color:var(--cyan)}
+.iv-chatbox{display:flex; flex-direction:column; gap:10px; height:340px; overflow:auto; padding-right:4px}
+.iv-bub{max-width:84%; padding:10px 13px; border-radius:12px; font-size:13.5px; line-height:1.55; white-space:pre-wrap}
+.iv-bub.me{align-self:flex-end; background:rgba(62,107,82,.1); border:1px solid rgba(62,107,82,.2)}
+.iv-bub.ai{align-self:flex-start; background:rgba(39,35,32,.04); border:1px solid var(--line)}
+.iv-chatin{display:flex; gap:8px; margin-top:12px}
+.iv-chatin input{flex:1; background:var(--abyss); border:1px solid var(--line); border-radius:10px; padding:11px 13px; color:var(--paper); outline:0; font-size:13.5px}
+
+*:focus-visible{outline:2px solid var(--cyan); outline-offset:2px}
+
+.iv-kpi{position:relative; overflow:hidden; border-radius:14px; padding:18px 20px; background:var(--surface); border:1px solid var(--line); transition:transform .2s cubic-bezier(.16,1,.3,1), border-color .2s ease}
+.iv-kpi:hover{transform:translateY(-2px); border-color:rgba(39,35,32,.22)}
+.iv-kpi .lab{font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--mute)}
+.iv-kpi .val{font-family:'Newsreader',serif; font-weight:600; font-size:28px; margin-top:9px; line-height:1}
+.iv-kpi .meta{font-size:12px; color:var(--mute); margin-top:6px}
+.iv-kpi.feature{background:linear-gradient(150deg, rgba(62,107,82,.09), var(--surface) 62%)}
+
+.iv-word{font-family:'Newsreader',serif; font-weight:600; letter-spacing:.005em; font-size:16px; white-space:nowrap}
 .iv-word .dim{color:var(--mute); font-weight:400}
 
-/* tasteful entrance: page children rise in once, staggered */
 @keyframes ivrise{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
 .iv-page > *{animation:ivrise .5s cubic-bezier(.16,1,.3,1) both}
 .iv-page > *:nth-child(2){animation-delay:.05s}
@@ -234,10 +174,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .iv-mob-only{display:none}
 @media (max-width:880px){
   .iv-shell{grid-template-columns:1fr}
-  .iv-rail{flex-direction:row; justify-content:flex-start; height:auto; width:100%; padding:8px 8px;
-    gap:2px; border-right:0; border-top:1px solid var(--line); position:fixed; bottom:0; left:0; z-index:20;
-    order:2; background:rgba(5,8,18,.92); backdrop-filter:blur(16px); overflow-x:auto;
-    padding-bottom:calc(8px + env(safe-area-inset-bottom,0px)); -webkit-overflow-scrolling:touch}
+  .iv-rail{flex-direction:row; justify-content:flex-start; height:auto; width:100%; padding:8px 8px; gap:2px;
+    border-right:0; border-top:1px solid var(--line); position:fixed; bottom:0; left:0; z-index:20; order:2;
+    background:#EEEADF; overflow-x:auto; padding-bottom:calc(8px + env(safe-area-inset-bottom,0px)); -webkit-overflow-scrolling:touch}
   .iv-navbtn{flex:0 0 auto; width:58px}
   .iv-mark{display:none}
   .iv-navbtn.on::before{display:none}
@@ -251,14 +190,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   .iv-tbl td{padding:12px 0}
   .iv-pagehead{gap:12px}
   .iv-tabs{flex-wrap:wrap}
-  /* wide tables scroll within their own block instead of clipping */
   .iv-tbl{display:block; overflow-x:auto; -webkit-overflow-scrolling:touch}
 }
-@media (max-width:560px){
-  .iv-hero-num{font-size:34px}
-  .iv-page{padding:14px}
-}
-@media (prefers-reduced-motion:reduce){ .iv-aurora{animation:none} .iv-rule{transition:none} }
+@media (max-width:560px){ .iv-hero-num{font-size:34px} .iv-page{padding:14px} }
 `;
 
 /* ---------- helpers ---------- */
@@ -451,15 +385,15 @@ function Portfolio() {
               <AreaChart data={data} margin={{ top: 10, right: 6, left: -18, bottom: 0 }}>
                 <defs>
                   <linearGradient id="pArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#62C8D8" stopOpacity={0.34} />
-                    <stop offset="100%" stopColor="#62C8D8" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#3E6B52" stopOpacity={0.34} />
+                    <stop offset="100%" stopColor="#3E6B52" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="rgba(255,255,255,.05)" vertical={false} />
+                <CartesianGrid stroke="rgba(39,35,32,.05)" vertical={false} />
                 <XAxis dataKey="t" hide />
-                <YAxis tick={{ fill: "#8A97AD", fontSize: 11, fontFamily: "JetBrains Mono" }} axisLine={false} tickLine={false} width={56} tickFormatter={(v: number) => "$" + (v / 1000).toFixed(0) + "k"} />
-                <Tooltip content={<Tip />} cursor={{ stroke: "rgba(255,255,255,.2)" }} />
-                <Area type="monotone" dataKey="v" stroke="#62C8D8" strokeWidth={2} fill="url(#pArea)" />
+                <YAxis tick={{ fill: "#6B6358", fontSize: 11, fontFamily: "JetBrains Mono" }} axisLine={false} tickLine={false} width={56} tickFormatter={(v: number) => "$" + (v / 1000).toFixed(0) + "k"} />
+                <Tooltip content={<Tip />} cursor={{ stroke: "rgba(39,35,32,.2)" }} />
+                <Area type="monotone" dataKey="v" stroke="#3E6B52" strokeWidth={2} fill="url(#pArea)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -487,7 +421,7 @@ function Portfolio() {
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 6 }}>
             {donut.map((d) => (
-              <span key={d.name} className="iv-mono" style={{ fontSize: 11.5, color: "#8A97AD", display: "flex", alignItems: "center", gap: 6 }}>
+              <span key={d.name} className="iv-mono" style={{ fontSize: 11.5, color: "#6B6358", display: "flex", alignItems: "center", gap: 6 }}>
                 <i style={{ width: 8, height: 8, borderRadius: 2, background: d.tone, display: "inline-block" }} />{d.name}
               </span>
             ))}
@@ -653,7 +587,7 @@ function RiskTargets({ metrics }: { metrics: PortfolioMetrics }) {
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
           <span className="iv-eyebrow">Allocation vs Target</span>
           <button className="iv-chip" style={{ marginLeft: "auto", padding: "5px 12px" }} onClick={() => runStewardCheck(metrics)}>Run Steward check</button>
-          <span className="iv-tag" style={{ color: over ? "var(--warn)" : "var(--up)", borderColor: over ? "rgba(227,183,101,.4)" : "rgba(86,197,150,.4)" }}>
+          <span className="iv-tag" style={{ color: over ? "var(--warn)" : "var(--up)", borderColor: over ? "rgba(154,107,46,.4)" : "rgba(86,197,150,.4)" }}>
             <Circle size={8} /> {over ? "Rebalance suggested" : "On target"}
           </span>
         </div>
@@ -664,7 +598,7 @@ function RiskTargets({ metrics }: { metrics: PortfolioMetrics }) {
               <div key={p.sym} style={{ display: "grid", gridTemplateColumns: "56px 1fr 84px", gap: 12, alignItems: "center" }}>
                 <span className="iv-mono" style={{ fontSize: 12.5 }}>{p.sym}</span>
                 <div style={{ position: "relative", height: 10, borderRadius: 6, background: "var(--line2)" }}>
-                  <div style={{ position: "absolute", left: "50%", top: -2, bottom: -2, width: 1, background: "rgba(255,255,255,.25)" }} />
+                  <div style={{ position: "absolute", left: "50%", top: -2, bottom: -2, width: 1, background: "rgba(39,35,32,.25)" }} />
                   <div style={{ position: "absolute", top: 0, bottom: 0, borderRadius: 6,
                     [drift >= 0 ? "left" : "right"]: "50%", width: w + "%",
                     background: drift >= 0 ? "linear-gradient(90deg,var(--cyan),#1a86c0)" : "linear-gradient(90deg,#b5454f,var(--down))" } as React.CSSProperties} />
@@ -735,7 +669,7 @@ function HoldingEditor({ holdings }: { holdings: Position[] }) {
         <input value={sym} onChange={(e) => setSym(e.target.value.toUpperCase())} placeholder="Add ticker (e.g. MSFT)"
           style={{ background: "var(--abyss)", border: "1px solid var(--line)", borderRadius: 10, color: "var(--paper)", padding: "9px 12px", fontFamily: "JetBrains Mono" }} />
         <button className="iv-cta brassbtn" style={{ width: "auto", margin: 0, padding: "9px 16px" }}
-          onClick={() => { if (sym.trim()) { upsertHolding({ sym: sym.trim(), name: sym.trim(), sh: 0, px: 0, tone: "#62C8D8", target: 0 }); setSym(""); } }}>
+          onClick={() => { if (sym.trim()) { upsertHolding({ sym: sym.trim(), name: sym.trim(), sh: 0, px: 0, tone: "#3E6B52", target: 0 }); setSym(""); } }}>
           Add
         </button>
         <span style={{ marginLeft: "auto", fontSize: 12, color: targetSum === 100 ? "var(--up)" : "var(--warn)" }} className="iv-mono">
@@ -798,7 +732,7 @@ function Spark({ data, up }: { data: number[]; up: boolean }) {
   return (
     <div style={{ width: 92, height: 34 }}>
       <ResponsiveContainer>
-        <LineChart data={d}><Line type="monotone" dataKey="v" stroke={up ? "#56C596" : "#E5707E"} strokeWidth={1.6} dot={false} /></LineChart>
+        <LineChart data={d}><Line type="monotone" dataKey="v" stroke={up ? "#3E6B52" : "#B0463F"} strokeWidth={1.6} dot={false} /></LineChart>
       </ResponsiveContainer>
     </div>
   );
@@ -929,17 +863,17 @@ function Trade() {
               <ComposedChart data={merged} margin={{ top: 10, right: 6, left: -18, bottom: 0 }}>
                 <defs>
                   <linearGradient id="tArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#62C8D8" stopOpacity={0.30} />
-                    <stop offset="100%" stopColor="#62C8D8" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#3E6B52" stopOpacity={0.30} />
+                    <stop offset="100%" stopColor="#3E6B52" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="rgba(255,255,255,.05)" vertical={false} />
+                <CartesianGrid stroke="rgba(39,35,32,.05)" vertical={false} />
                 <XAxis dataKey="t" hide />
-                <YAxis yAxisId="p" tick={{ fill: "#8A97AD", fontSize: 11, fontFamily: "JetBrains Mono" }} axisLine={false} tickLine={false} width={52} domain={["dataMin - 1", "dataMax + 1"]} tickFormatter={(v: number) => "$" + v.toFixed(0)} />
+                <YAxis yAxisId="p" tick={{ fill: "#6B6358", fontSize: 11, fontFamily: "JetBrains Mono" }} axisLine={false} tickLine={false} width={52} domain={["dataMin - 1", "dataMax + 1"]} tickFormatter={(v: number) => "$" + v.toFixed(0)} />
                 <YAxis yAxisId="v" hide domain={[0, 4000]} />
-                <Tooltip content={<Tip />} cursor={{ stroke: "rgba(255,255,255,.2)" }} />
-                <Bar yAxisId="v" dataKey="vol" fill="rgba(255,255,255,.07)" radius={[2, 2, 0, 0]} />
-                <Area yAxisId="p" type="monotone" dataKey="v" stroke="#62C8D8" strokeWidth={2} fill="url(#tArea)" />
+                <Tooltip content={<Tip />} cursor={{ stroke: "rgba(39,35,32,.2)" }} />
+                <Bar yAxisId="v" dataKey="vol" fill="rgba(39,35,32,.07)" radius={[2, 2, 0, 0]} />
+                <Area yAxisId="p" type="monotone" dataKey="v" stroke="#3E6B52" strokeWidth={2} fill="url(#tArea)" />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
@@ -967,15 +901,15 @@ function Trade() {
             </div>
             {type === "limit" && (
               <div className="iv-field"><label>Limit price</label>
-                <div className="iv-input"><span className="iv-mono" style={{ color: "#8A97AD" }}>$</span>
+                <div className="iv-input"><span className="iv-mono" style={{ color: "#6B6358" }}>$</span>
                   <input type="text" defaultValue={limit} /></div></div>
             )}
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18, color: "#8A97AD", fontSize: 13 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18, color: "#6B6358", fontSize: 13 }}>
               <span>Estimated {side === "buy" ? "cost" : "credit"}</span>
-              <span className="iv-mono" style={{ color: "#E6ECF5", fontSize: 16 }}>{usd(qty * px)}</span>
+              <span className="iv-mono" style={{ color: "#272320", fontSize: 16 }}>{usd(qty * px)}</span>
             </div>
             <button className={"iv-cta " + side}>{side === "buy" ? "Review buy order" : "Review sell order"}</button>
-            <p style={{ fontSize: 11, color: "#8A97AD", marginTop: 10, textAlign: "center" }}>Paper trade · demo only, no order is placed.</p>
+            <p style={{ fontSize: 11, color: "#6B6358", marginTop: 10, textAlign: "center" }}>Paper trade · demo only, no order is placed.</p>
           </div>
 
           <div className="iv-panel">
@@ -983,14 +917,14 @@ function Trade() {
             <div style={{ marginTop: 12 }}>
               {book.map((b, i) => (
                 <div className="iv-book-row" key={"a" + i}>
-                  <span className="down">{b.px.toFixed(2)}</span><span style={{ color: "#8A97AD" }}>{b.sz}</span>
+                  <span className="down">{b.px.toFixed(2)}</span><span style={{ color: "#6B6358" }}>{b.sz}</span>
                   <div className="iv-depth" style={{ width: (b.sz / maxSz) * 100 + "%", background: "rgba(255,107,122,.12)" }} />
                 </div>
               ))}
               <div className="iv-spread"><span>spread</span><span>{(0.12).toFixed(2)} · 0.07%</span></div>
               {bids.map((b, i) => (
                 <div className="iv-book-row" key={"b" + i}>
-                  <span className="up">{b.px.toFixed(2)}</span><span style={{ color: "#8A97AD" }}>{b.sz}</span>
+                  <span className="up">{b.px.toFixed(2)}</span><span style={{ color: "#6B6358" }}>{b.sz}</span>
                   <div className="iv-depth" style={{ width: (b.sz / maxSz) * 100 + "%", background: "rgba(86,197,150,.12)" }} />
                 </div>
               ))}
@@ -1006,9 +940,9 @@ function Trade() {
 /* ---------- Agent Ops: role-colored, explainable, approval-gated ---------- */
 type AgentRole = "messenger" | "scout" | "steward";
 const ROLES: Record<AgentRole, { name: string; color: string; desc: string }> = {
-  messenger: { name: "Messenger", color: "#62C8D8", desc: "Plain-language portfolio summary" },
-  scout: { name: "Scout", color: "#E3B765", desc: "Scans for unusual moves & drawdowns" },
-  steward: { name: "Steward", color: "#E5707E", desc: "Drift & concentration risk" },
+  messenger: { name: "Messenger", color: "#3E6B52", desc: "Plain-language portfolio summary" },
+  scout: { name: "Scout", color: "#9A6B2E", desc: "Scans for unusual moves & drawdowns" },
+  steward: { name: "Steward", color: "#B0463F", desc: "Drift & concentration risk" },
 };
 const toneColor: Record<AgentResult["tone"], string> = { good: "var(--up)", warn: "var(--warn)", bad: "var(--down)" };
 
@@ -1130,10 +1064,10 @@ function Advisor() {
       {!connected && (
         <div className="iv-panel" style={{ marginBottom: 18 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-            <span className="iv-badge" style={{ background: "rgba(98,200,216,.14)", color: "var(--cyan)" }}><KeyRound size={16} /></span>
+            <span className="iv-badge" style={{ background: "rgba(62,107,82,.14)", color: "var(--cyan)" }}><KeyRound size={16} /></span>
             <div style={{ flex: 1, minWidth: 200 }}>
               <div style={{ fontWeight: 600 }}>Connect Claude</div>
-              <div style={{ fontSize: 12.5, color: "#8A97AD" }}>Paste your Anthropic key (stored only in this browser) to make the council reason live.</div>
+              <div style={{ fontSize: 12.5, color: "#6B6358" }}>Paste your Anthropic key (stored only in this browser) to make the council reason live.</div>
             </div>
           </div>
           <div className="iv-chatin">
@@ -1150,7 +1084,7 @@ function Advisor() {
               <span className="mi"><m.Icon size={20} strokeWidth={1.75} /></span>
               <span>
                 <span style={{ display: "block", fontWeight: 600, fontSize: 14 }}>{m.name}</span>
-                <span style={{ fontSize: 11.5, color: "#8A97AD" }}>{m.focus}</span>
+                <span style={{ fontSize: 11.5, color: "#6B6358" }}>{m.focus}</span>
               </span>
             </button>
           ))}
@@ -1167,13 +1101,13 @@ function Advisor() {
             {threads[activeId].map((m, i) => (
               <div key={i} className={"iv-bub " + m.who}>{m.text}</div>
             ))}
-            {busy && <div className="iv-bub ai" style={{ color: "#8A97AD" }}>thinking…</div>}
+            {busy && <div className="iv-bub ai" style={{ color: "#6B6358" }}>thinking…</div>}
           </div>
           <div className="iv-chatin">
             <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="Ask about a holding, risk, dividends…" />
             <button className="iv-cta brassbtn" style={{ width: "auto", margin: 0, padding: "0 16px", display: "grid", placeItems: "center" }} onClick={send} disabled={busy} aria-label="Send"><Send size={16} /></button>
           </div>
-          <p style={{ fontSize: 11, color: "#8A97AD", marginTop: 10 }}>Educational only, not financial advice.</p>
+          <p style={{ fontSize: 11, color: "#6B6358", marginTop: 10 }}>Educational only, not financial advice.</p>
         </div>
       </div>
     </div>
@@ -1235,7 +1169,7 @@ function Government() {
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 6 }}>
             {GOV_SPLIT.map((d) => (
-              <span key={d.k} className="iv-mono" style={{ fontSize: 11.5, color: "#8A97AD", display: "flex", alignItems: "center", gap: 6 }}>
+              <span key={d.k} className="iv-mono" style={{ fontSize: 11.5, color: "#6B6358", display: "flex", alignItems: "center", gap: 6 }}>
                 <i style={{ width: 8, height: 8, borderRadius: 2, background: d.tone, display: "inline-block" }} />{d.k} {d.v}%
               </span>
             ))}
@@ -1257,7 +1191,7 @@ function Government() {
                   <div className="iv-fnrow" key={f.k}>
                     <span style={{ fontSize: 13.5 }}>{f.k}</span>
                     <div className="iv-track"><div className="iv-fill" style={{ width: (f.v / maxF) * 100 + "%" }} /></div>
-                    <span className="iv-mono" style={{ fontSize: 13, color: "#E6ECF5", minWidth: 64, textAlign: "right" }}>${fmt(f.v / 1000, 2)}T</span>
+                    <span className="iv-mono" style={{ fontSize: 13, color: "#272320", minWidth: 64, textAlign: "right" }}>${fmt(f.v / 1000, 2)}T</span>
                   </div>
                 ))}
           </div>
@@ -1268,7 +1202,7 @@ function Government() {
         <span className="iv-eyebrow">Appropriations status · current bill</span>
         <div className="iv-fnrow" style={{ gridTemplateColumns: "200px 1fr auto", marginTop: 12 }}>
           <span style={{ fontSize: 14 }}>Full-year appropriations enacted</span>
-          <div className="iv-track"><div className="iv-fill" style={{ width: "72%", background: "linear-gradient(90deg,#56C596,#2BB8C4)" }} /></div>
+          <div className="iv-track"><div className="iv-fill" style={{ width: "72%", background: "linear-gradient(90deg,#3E6B52,#2BB8C4)" }} /></div>
           <span className="iv-mono" style={{ fontSize: 13 }}>9 / 12 bills</span>
         </div>
         <p className="iv-foot">
@@ -1317,7 +1251,7 @@ function Connections({ onClose }: { onClose: () => void }) {
   );
   return (
     <div onClick={(e) => e.target === e.currentTarget && onClose()}
-      style={{ position: "fixed", inset: 0, zIndex: 60, display: "grid", placeItems: "center", padding: 16, background: "rgba(3,5,11,.7)", backdropFilter: "blur(6px)" }}>
+      style={{ position: "fixed", inset: 0, zIndex: 60, display: "grid", placeItems: "center", padding: 16, background: "rgba(39,35,32,.4)", backdropFilter: "blur(4px)" }}>
       <div className="iv-panel" style={{ width: "min(440px,96vw)" }}>
         <div style={{ display: "flex", alignItems: "center", marginBottom: 6 }}>
           <span className="iv-eyebrow">Connections</span>

@@ -8,15 +8,15 @@ import { usePendingApprovals } from "@/lib/approvals";
 // ── Town map ────────────────────────────────────────────────────────────────
 interface Building { id: string; name: string; x: number; y: number; color: string; kind: "civic" | "district" }
 const B: Building[] = [
-  { id: "townhall", name: "Town Hall", x: 500, y: 90, color: "#E3B765", kind: "civic" },
-  { id: "bank", name: "Bank", x: 175, y: 150, color: "#62C8D8", kind: "civic" },
-  { id: "market", name: "Market Square", x: 825, y: 150, color: "#56C596", kind: "civic" },
-  { id: "library", name: "Research Library", x: 160, y: 350, color: "#9A86C9", kind: "civic" },
-  { id: "workshop", name: "Workshop", x: 500, y: 330, color: "#E3B765", kind: "civic" },
-  { id: "trading", name: "Trading Post", x: 840, y: 360, color: "#E5707E", kind: "civic" },
-  { id: "equity", name: "Equity District", x: 300, y: 520, color: "#62C8D8", kind: "district" },
-  { id: "crypto", name: "Crypto Block", x: 520, y: 545, color: "#9A86C9", kind: "district" },
-  { id: "real", name: "Real Assets", x: 730, y: 525, color: "#56C596", kind: "district" },
+  { id: "townhall", name: "Town Hall", x: 500, y: 90, color: "#9A6B2E", kind: "civic" },
+  { id: "bank", name: "Bank", x: 175, y: 150, color: "#3E6B52", kind: "civic" },
+  { id: "market", name: "Market Square", x: 825, y: 150, color: "#3E6B52", kind: "civic" },
+  { id: "library", name: "Research Library", x: 160, y: 350, color: "#7A5C86", kind: "civic" },
+  { id: "workshop", name: "Workshop", x: 500, y: 330, color: "#9A6B2E", kind: "civic" },
+  { id: "trading", name: "Trading Post", x: 840, y: 360, color: "#B0463F", kind: "civic" },
+  { id: "equity", name: "Equity District", x: 300, y: 520, color: "#3E6B52", kind: "district" },
+  { id: "crypto", name: "Crypto Block", x: 520, y: 545, color: "#7A5C86", kind: "district" },
+  { id: "real", name: "Real Assets", x: 730, y: 525, color: "#3E6B52", kind: "district" },
 ];
 const byId = (id: string) => B.find((b) => b.id === id)!;
 const PURPOSE: Record<string, string> = {
@@ -41,33 +41,33 @@ const ROADS: [string, string][] = [
 interface WP { b: string; state: string; dwell: number }
 interface Role { id: string; name: string; color: string; route: WP[] }
 const ROLES: Role[] = [
-  { id: "scout", name: "Scout", color: "#62C8D8", route: [
+  { id: "scout", name: "Scout", color: "#3E6B52", route: [
     { b: "market", state: "scanning Market Square", dwell: 1600 },
     { b: "equity", state: "patrolling Equity District", dwell: 1400 },
     { b: "crypto", state: "discovered a lead", dwell: 1200 },
     { b: "library", state: "tagging for analysis", dwell: 1500 },
     { b: "townhall", state: "reporting findings", dwell: 1600 },
   ] },
-  { id: "analyst", name: "Analyst", color: "#56C596", route: [
+  { id: "analyst", name: "Analyst", color: "#3E6B52", route: [
     { b: "townhall", state: "awaiting a lead", dwell: 1400 },
     { b: "market", state: "receiving the opportunity", dwell: 1200 },
     { b: "library", state: "comparing options", dwell: 1800 },
     { b: "workshop", state: "testing scenarios", dwell: 1600 },
     { b: "townhall", state: "delivering a recommendation", dwell: 1500 },
   ] },
-  { id: "builder", name: "Builder", color: "#E3B765", route: [
+  { id: "builder", name: "Builder", color: "#9A6B2E", route: [
     { b: "townhall", state: "taking the recommendation", dwell: 1300 },
     { b: "workshop", state: "drafting rules & lists", dwell: 1800 },
     { b: "workshop", state: "backtesting", dwell: 1400 },
     { b: "trading", state: "queueing for approval", dwell: 1700 },
   ] },
-  { id: "steward", name: "Steward", color: "#E5707E", route: [
+  { id: "steward", name: "Steward", color: "#B0463F", route: [
     { b: "bank", state: "checking cash buffer", dwell: 1500 },
     { b: "workshop", state: "auditing rules", dwell: 1300 },
     { b: "equity", state: "checking sector risk", dwell: 1400 },
     { b: "townhall", state: "raising a flag", dwell: 1700 },
   ] },
-  { id: "messenger", name: "Messenger", color: "#E8F0FF", route: [
+  { id: "messenger", name: "Messenger", color: "#5C5750", route: [
     { b: "bank", state: "gathering balances", dwell: 1200 },
     { b: "trading", state: "gathering orders", dwell: 1200 },
     { b: "workshop", state: "gathering rules", dwell: 1200 },
@@ -173,25 +173,25 @@ export function Town() {
           <svg viewBox="0 0 1000 620" style={{ width: "100%", height: "auto", display: "block" }} role="img" aria-label="Investment town map">
             <defs>
               <radialGradient id="ground" cx="50%" cy="40%" r="75%">
-                <stop offset="0%" stopColor="#0c1330" /><stop offset="100%" stopColor="#05070e" />
+                <stop offset="0%" stopColor="#F2EEE2" /><stop offset="100%" stopColor="#E7E1D3" />
               </radialGradient>
               <filter id="glow"><feGaussianBlur stdDeviation="2" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
             </defs>
             <rect x="0" y="0" width="1000" height="620" rx="14" fill="url(#ground)" />
             {ROADS.map(([a, b], i) => {
               const p = byId(a), q = byId(b);
-              return <line key={i} x1={p.x} y1={p.y} x2={q.x} y2={q.y} stroke="rgba(170,195,230,.14)" strokeWidth={2} strokeDasharray="2 6" strokeLinecap="round" />;
+              return <line key={i} x1={p.x} y1={p.y} x2={q.x} y2={q.y} stroke="rgba(39,35,32,.14)" strokeWidth={2} strokeDasharray="2 6" strokeLinecap="round" />;
             })}
             {B.map((b) => {
               const on = selected === b.id;
               return (
                 <g key={b.id} style={{ cursor: "pointer" }} onClick={() => setSelected(on ? null : b.id)}>
-                  <ellipse cx={b.x} cy={b.y + 26} rx={34} ry={8} fill="rgba(0,0,0,.45)" />
+                  <ellipse cx={b.x} cy={b.y + 26} rx={34} ry={8} fill="rgba(39,35,32,.14)" />
                   <rect x={b.x - 30} y={b.y - 22} width={60} height={44} rx={11}
-                    fill={on ? "rgba(227,183,101,.16)" : b.kind === "district" ? "rgba(150,180,220,.06)" : "rgba(150,180,220,.1)"}
-                    stroke={on ? "#E3B765" : b.color} strokeWidth={on ? 2.2 : 1.4} opacity={0.95} filter="url(#glow)" />
-                  <circle cx={b.x} cy={b.y - 2} r={4} fill={on ? "#E3B765" : b.color} />
-                  <text x={b.x} y={b.y + 40} textAnchor="middle" fontFamily="'Space Mono', monospace" fontSize="11" letterSpacing="1" fill={on ? "#E3B765" : "#aebbd6"}>{b.name}</text>
+                    fill={on ? "rgba(154,107,46,.16)" : b.kind === "district" ? "rgba(62,107,82,.06)" : "rgba(62,107,82,.1)"}
+                    stroke={on ? "#9A6B2E" : b.color} strokeWidth={on ? 2.2 : 1.4} opacity={0.95} filter="url(#glow)" />
+                  <circle cx={b.x} cy={b.y - 2} r={4} fill={on ? "#9A6B2E" : b.color} />
+                  <text x={b.x} y={b.y + 40} textAnchor="middle" fontFamily="'Space Mono', monospace" fontSize="11" letterSpacing="1" fill={on ? "#9A6B2E" : "#6B6358"}>{b.name}</text>
                 </g>
               );
             })}
@@ -199,7 +199,7 @@ export function Town() {
               const a = rt.current[r.id];
               return (
                 <g key={r.id}>
-                  <ellipse cx={a.x} cy={a.y + 11} rx={11} ry={3.4} fill="rgba(0,0,0,.5)" />
+                  <ellipse cx={a.x} cy={a.y + 11} rx={11} ry={3.4} fill="rgba(39,35,32,.16)" />
                   {!a.moving && (
                     <circle cx={a.x} cy={a.y} r={9} fill="none" stroke={r.color} strokeWidth={1.4} opacity={0.6}>
                       <animate attributeName="r" values="9;18;9" dur="2.4s" repeatCount="indefinite" />
@@ -207,7 +207,7 @@ export function Town() {
                     </circle>
                   )}
                   <circle cx={a.x} cy={a.y} r={9} fill={r.color} filter="url(#glow)" />
-                  <circle cx={a.x} cy={a.y} r={9} fill="none" stroke="rgba(255,255,255,.5)" strokeWidth={1} />
+                  <circle cx={a.x} cy={a.y} r={9} fill="none" stroke="rgba(39,35,32,.5)" strokeWidth={1} />
                   <text x={a.x} y={a.y - 14} textAnchor="middle" fontFamily="'Space Mono', monospace" fontWeight={600} fontSize="12" fill={r.color}>{r.name}</text>
                 </g>
               );
