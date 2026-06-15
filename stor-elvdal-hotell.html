@@ -186,7 +186,9 @@
 
   /* photo slots */
   .photo{position:absolute;inset:0;overflow:hidden}
-  .photo .ph{position:absolute;inset:0;display:flex;align-items:flex-end;padding:18px}
+  .photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+  .photo-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(5,12,28,.6) 0%,rgba(5,12,28,.15) 55%,transparent 100%)}
+  .photo .ph{position:absolute;inset:0;display:flex;align-items:flex-end;padding:18px;z-index:2}
   .ph-cap{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.9);background:rgba(14,30,58,.42);backdrop-filter:blur(3px);padding:6px 11px;border:1px solid rgba(255,255,255,.18);border-radius:4px;display:inline-flex;gap:8px;align-items:center}
   .duo{position:absolute;inset:0}
   .duo.tun{background:linear-gradient(150deg,#2b4a37,#16302a 55%,#0e1f1a)}
@@ -213,6 +215,7 @@
   .art.melgaard{background:linear-gradient(135deg,#7a2a4a,#3a1830 60%,#160b12)}
   .art.books{background:linear-gradient(120deg,#5a3a22,#33210f)}
   .art.tour{background:linear-gradient(150deg,#244a37,#10241b)}
+  .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.72}
   .art .ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,12,28,.7),transparent 60%)}
 
   /* ---------- café ---------- */
@@ -914,16 +917,10 @@
 <section class="sec-tar" style="padding:0" id="historie">
   <div class="split">
     <div class="ed-media">
-      <div class="photo"><div class="duo barn"><div class="grain"></div></div>
-        <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;opacity:.5" aria-hidden="true">
-          <g stroke="rgba(255,255,255,.5)" stroke-width="2" fill="none" stroke-linejoin="round">
-            <path d="M150 470V230h100v240"/><path d="M140 230l60-60 60 60"/>
-            <rect x="178" y="300" width="44" height="60"/><path d="M178 230h44v40h-44z"/>
-            <path d="M200 110l24 60h-48z"/><rect x="188" y="170" width="24" height="60"/>
-            <path d="M188 90h24v20h-24z"/><circle cx="200" cy="80" r="4"/>
-          </g>
-        </svg>
-        <div class="ph"><span class="ph-cap" data-i18n="cap.barn">▲ Foto: det røde klokketårnet i tunet</span></div>
+      <div class="photo">
+        <img src="img/hotel-exterior-rainbow.jpg" alt="Stor-Elvdal Hotell med regnbue over tunet" loading="lazy">
+        <div class="photo-overlay"></div>
+        <div class="ph"><span class="ph-cap" data-i18n="cap.barn">▲ Hotellet med regnbue over tunet</span></div>
       </div>
     </div>
     <div class="ed-text">
@@ -984,7 +981,7 @@
         data-title="Omvisning" data-art="tour"
         data-desc="Eier og kurator Pål Sagen tar gjester med på omvisning i samlingen. Hør historiene bak verkene — inkludert i en velkomstpakke når du booker direkte.">
         <div class="mat"><div class="art tour">
-          <svg viewBox="0 0 300 375" style="position:absolute;inset:0;width:100%;height:100%;opacity:.85" aria-hidden="true"><g stroke="rgba(214,180,115,.6)" stroke-width="3" fill="none" stroke-linecap="round"><circle cx="150" cy="120" r="34"/><path d="M150 154v120M150 200l-46 38M150 200l46 38"/></g></svg>
+          <img src="img/askeladden.jpg" alt="Askeladden — tradisjonelt norsk tømmerhus med torvtak" loading="lazy">
           <div class="ov"></div>
         </div></div>
         <div class="plate"><b data-i18n="art.cap.tour.t">Omvisning</b><span data-i18n="art.cap.tour">Med kuratoren · på forespørsel</span></div>
@@ -1020,6 +1017,9 @@
         <div class="menu-item"><div><div class="nm" data-i18n="cafe.m4.n">Kaffe &amp; bolle</div><div class="ds" data-i18n="cafe.m4.d">Trakta kaffe og dagens bakst. Den beste pausen på rv. 3.</div></div><div class="pr">kr 65</div></div>
       </div>
       <div class="aquavit rv">
+        <div class="cafe-photo-wrap" style="margin-bottom:24px;border-radius:10px;overflow:hidden;aspect-ratio:4/3;position:relative">
+          <img src="img/table-setting.jpg" alt="Norsk flagg og roser på bordet — festpyntet i restauranten" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block">
+        </div>
         <span class="tag" data-i18n="cafe.aq.tag">Vår egen</span>
         <h3 style="margin-top:10px">Storelgen Aquavit</h3>
         <p data-i18n="cafe.aq.p">Hotellet har sin egen akevitt, oppkalt etter elgen oppe i veien og produsert ved Det Norske Brenneri i Grimstad. Smak den til maten — eller som en velkomstdram.</p>
@@ -1039,7 +1039,11 @@
     </div>
     <div class="rooms">
       <article class="room rv">
-        <div class="rm-media"><div class="photo"><div class="duo tun"><div class="grain"></div></div><div class="ph"><span class="ph-cap" data-i18n="cap.room1">▲ Foto: rom i de historiske husene</span></div></div></div>
+        <div class="rm-media"><div class="photo">
+          <img src="img/dining-room.jpg" alt="Det historiske spisesalen med peis, hvite duker og gul trekledning" loading="lazy">
+          <div class="photo-overlay"></div>
+          <div class="ph"><span class="ph-cap" data-i18n="cap.room1">▲ Det historiske spisesalet med peis</span></div>
+        </div></div>
         <div class="rm-body"><h3 data-i18n="rooms.r1.h">Historiske rom</h3><p data-i18n="rooms.r1.p">Rom i de vernede tømmerhusene — karakter, knirk i golvet og kunst på veggen.</p><div class="rm-meta" data-i18n="rooms.r1.m">I tunet · særpreg</div></div>
       </article>
       <article class="room rv">
@@ -1047,7 +1051,11 @@
         <div class="rm-body"><h3 data-i18n="rooms.r2.h">Moderne rom</h3><p data-i18n="rooms.r2.p">Nyere rom i besøkssenteret ved sida av — lyst, romslig og praktisk for lengre opphold.</p><div class="rm-meta" data-i18n="rooms.r2.m">Nordstu · nytt</div></div>
       </article>
       <article class="room rv">
-        <div class="rm-media"><div class="photo"><div class="duo river"><div class="grain"></div></div><div class="ph"><span class="ph-cap" data-i18n="cap.room3">▲ Foto: familie / gruppe</span></div></div></div>
+        <div class="rm-media"><div class="photo">
+          <img src="img/terrace-guests.jpg" alt="Gjester på uteserveringen i solskinn foran det røde bygget" loading="lazy">
+          <div class="photo-overlay"></div>
+          <div class="ph"><span class="ph-cap" data-i18n="cap.room3">▲ Uteserveringen i solskinn</span></div>
+        </div></div>
         <div class="rm-body"><h3 data-i18n="rooms.r3.h">Familie &amp; grupper</h3><p data-i18n="rooms.r3.p">Plass til følget — for familieturen, fisketuren eller laget på tur. Ta kontakt for større grupper.</p><div class="rm-meta" data-i18n="rooms.r3.m">Fleksibelt · på forespørsel</div></div>
       </article>
     </div>
