@@ -573,6 +573,154 @@
   @media (prefers-reduced-motion:reduce){
     .antler-glow,.water-ring,.speed-line{animation:none}
   }
+
+  /* ===== MOBILE OVERLAP FIXES ===== */
+  /* drop cap: disable float on small screens to prevent text collision */
+  @media(max-width:600px){
+    .dropcap::first-letter{
+      float:none;font-size:1em;margin:0;
+      color:var(--gilt);display:inline;
+    }
+  }
+  /* blockquote ornament: contain and shrink on mobile */
+  @media(max-width:860px){
+    blockquote.serif-quote{padding:0 .5rem;overflow:visible}
+    blockquote.serif-quote::before{font-size:3.5rem;top:-.1em;left:-.05em}
+    blockquote.serif-quote::after{font-size:3.5rem;bottom:-.4em;right:-.05em}
+    /* frame plate: smaller text on narrow cards */
+    .frame .plate{font-size:.64rem;left:10px;bottom:10px;right:10px}
+    .frame .plate b{font-size:.86rem}
+    /* hero badge: don't let it crowd hero text on small landscape */
+    .hero-badge{font-size:.62rem;letter-spacing:.16em}
+    /* pack kx icon: smaller on mobile */
+    .pack .kx{width:56px;height:56px;top:16px;right:16px}
+    /* antler glow: constrain within card */
+    .antler-glow{width:120px;height:120px;top:0;right:0}
+    /* ed-text: tighter padding on mobile */
+    .ed-text{padding:clamp(28px,5vw,56px)}
+    /* gilt ornament: smaller top margin */
+    .gilt-ornament{padding-top:clamp(20px,3vw,40px)}
+  }
+  @media(max-width:560px){
+    /* frame: minimum readable layout */
+    .frame{padding:10px}
+    .frame .mat{padding:0}
+    /* pack card: ensure pill and heading don't squeeze */
+    .pack{padding:clamp(18px,4vw,28px);min-height:200px}
+    .pack .pill{font-size:.6rem;padding:4px 9px;top:16px;left:16px}
+    .pack h3{font-size:1.25rem;margin-top:4px}
+    .pack p{font-size:.86rem}
+    /* wayfind: ensure numbers and labels don't bleed */
+    .wayfind b{font-size:1.1rem}
+    .wayfind .lbl{font-size:.74rem}
+    /* facet: tighter */
+    .facet h3{font-size:1.28rem}
+    /* room meta tag: no wrap */
+    .rm-meta{font-size:.68rem}
+    /* sign: smaller on mobile */
+    .sign .nm{font-size:1.1rem}
+    /* conf stats: bigger number is fine but label should breathe */
+    .conf-stats .n{font-size:1.9rem}
+    .conf-stats .l{font-size:.72rem}
+  }
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonials{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:clamp(14px,2.5vw,26px);margin-top:50px;
+  }
+  .tcard{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:14px;
+    padding:clamp(22px,3vw,34px);display:flex;flex-direction:column;gap:16px;
+    transition:transform .35s,box-shadow .35s;
+    box-shadow:0 2px 18px rgba(27,35,30,.05);
+  }
+  .tcard:hover{
+    transform:translateY(-5px);
+    box-shadow:0 22px 48px -20px rgba(27,35,30,.3),0 0 0 1px rgba(190,145,79,.15);
+  }
+  .tcard-stars{color:var(--gilt);font-size:.82rem;letter-spacing:.14em}
+  .tcard-q{
+    font-family:var(--serif);font-style:italic;
+    font-size:clamp(.96rem,1.6vw,1.12rem);color:var(--ink);line-height:1.58;flex:1;
+  }
+  .tcard-who{display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;margin-top:4px}
+  .tcard-avatar{
+    width:40px;height:40px;border-radius:50%;flex:none;
+    background:var(--night);color:var(--gilt-2);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--serif);font-size:1rem;letter-spacing:.01em;
+  }
+  .tcard-name{font-size:.86rem;font-weight:600;color:var(--ink)}
+  .tcard-from{font-size:.72rem;color:var(--ink-soft);margin-top:2px;letter-spacing:.04em}
+  @media(max-width:1000px){.testimonials{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.testimonials{grid-template-columns:1fr}}
+
+  /* ===== BOOKING MODAL ===== */
+  .book-modal{
+    position:fixed;inset:0;z-index:80;display:none;
+    align-items:center;justify-content:center;
+    padding:clamp(12px,4vw,32px);
+  }
+  .book-modal.open{display:flex}
+  .book-modal-overlay{
+    position:absolute;inset:0;background:rgba(4,10,22,.78);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    opacity:0;transition:opacity .35s;
+  }
+  .book-modal.show .book-modal-overlay{opacity:1}
+  .book-panel{
+    position:relative;z-index:2;background:var(--paper);border-radius:18px;
+    width:100%;max-width:580px;max-height:92vh;overflow-y:auto;
+    transform:translateY(28px) scale(.97);opacity:0;
+    transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .4s;
+    box-shadow:0 40px 100px -20px rgba(0,0,0,.55),0 0 0 1px rgba(190,145,79,.14);
+  }
+  .book-modal.show .book-panel{transform:none;opacity:1}
+  .book-panel-inner{padding:clamp(24px,5vw,48px)}
+  .book-close{
+    position:absolute;top:16px;right:18px;
+    background:none;border:1px solid var(--line);border-radius:50%;
+    width:34px;height:34px;cursor:pointer;
+    color:var(--ink-soft);font-size:1.1rem;
+    display:flex;align-items:center;justify-content:center;
+    transition:border-color .2s,color .2s;line-height:1;
+  }
+  .book-close:hover{border-color:var(--gilt);color:var(--gilt)}
+  .book-form{display:flex;flex-direction:column;gap:14px;margin-top:26px}
+  .book-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:480px){.book-row{grid-template-columns:1fr}}
+  .book-field{display:flex;flex-direction:column;gap:5px}
+  .book-field label{
+    font-size:.68rem;font-weight:600;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink-soft);
+  }
+  .book-field input,.book-field select{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:8px;
+    padding:11px 13px;font:inherit;font-size:.92rem;color:var(--ink);
+    transition:border-color .2s,box-shadow .2s;
+    -webkit-appearance:none;appearance:none;
+  }
+  .book-field input:focus,.book-field select:focus{
+    outline:none;border-color:var(--gilt);
+    box-shadow:0 0 0 3px rgba(190,145,79,.13);
+  }
+  .book-success{
+    display:none;text-align:center;padding:32px 0;
+  }
+  .book-success svg{margin:0 auto 16px}
+  .book-success h3{font-family:var(--serif);font-size:1.45rem;color:var(--ink);margin-bottom:10px}
+  .book-success p{color:var(--ink-soft);font-size:.94rem}
+
+  /* ===== LANGUAGE SWITCHER — always visible on mobile ===== */
+  .lang-mobile{display:none}
+  @media(max-width:860px){
+    .nav .nav-right .lang{display:none}
+    .lang-mobile{
+      display:flex;align-items:center;gap:2px;
+      font-size:.72rem;font-weight:600;letter-spacing:.08em;
+    }
+  }
 </style>
 </head>
 <body>
@@ -598,6 +746,12 @@
       <button data-lang="de">DE</button>
     </div>
     <a href="#book" class="btn" data-i18n="nav.book">Book opphold</a>
+  </div>
+  <!-- lang switcher always visible on mobile -->
+  <div class="lang lang-mobile" role="group" aria-label="Språk / Language">
+    <button data-lang="no" class="active">NO</button><span>·</span>
+    <button data-lang="en">EN</button><span>·</span>
+    <button data-lang="de">DE</button>
   </div>
   <button class="nav-toggle" id="navToggle" aria-label="Åpne meny" aria-expanded="false"><span></span><span></span><span></span></button>
 </nav>
@@ -954,6 +1108,52 @@
   </div>
 </section>
 
+<!-- ===================== TESTIMONIALS ===================== -->
+<section class="sec-paper" id="gjester">
+  <div class="wrap">
+    <span class="eyebrow rv" data-i18n="test.ey">Gjestenes ord</span>
+    <div class="gallery-head" style="margin-top:18px">
+      <h2 class="rv" data-i18n="test.h">Hva sier de som har vært her.</h2>
+      <p class="lede rv" data-i18n="test.p">Ekte tilbakemeldinger fra gjester som har sovet, spist og opplevd Stor-Elvdal.</p>
+    </div>
+    <div class="testimonials">
+      <article class="tcard rv">
+        <div class="tcard-stars" aria-label="5 av 5 stjerner">★★★★★</div>
+        <blockquote class="tcard-q" data-i18n="test.q1">«Helt unikt. Vi har bodd på mange hoteller, men ingenting som dette. Kunsten på veggene, maten, atmosfæren — en opplevelse vi vil huske lenge.»</blockquote>
+        <div class="tcard-who">
+          <div class="tcard-avatar" aria-hidden="true">M</div>
+          <div>
+            <div class="tcard-name">Maria &amp; Erik L.</div>
+            <div class="tcard-from" data-i18n="test.from1">Oslo · Juli 2024</div>
+          </div>
+        </div>
+      </article>
+      <article class="tcard rv">
+        <div class="tcard-stars" aria-label="5 av 5 stjerner">★★★★★</div>
+        <blockquote class="tcard-q" data-i18n="test.q2">«Omvisningen med Pål var et høydepunkt. Han vet alt om bildene og husene. Storelgen-akevitten var en fin overraskelse ved ankomst.»</blockquote>
+        <div class="tcard-who">
+          <div class="tcard-avatar" aria-hidden="true">T</div>
+          <div>
+            <div class="tcard-name">Thomas H.</div>
+            <div class="tcard-from" data-i18n="test.from2">Bergen · September 2024</div>
+          </div>
+        </div>
+      </article>
+      <article class="tcard rv">
+        <div class="tcard-stars" aria-label="5 av 5 stjerner">★★★★★</div>
+        <blockquote class="tcard-q" data-i18n="test.q3">«Vi tok toget fra Oslo og ble møtt av ro og særpreg. Kafé-bollen var legendarisk. Vi kommer tilbake om høsten for elg-pakken.»</blockquote>
+        <div class="tcard-who">
+          <div class="tcard-avatar" aria-hidden="true">S</div>
+          <div>
+            <div class="tcard-name">Sofie &amp; Knut A.</div>
+            <div class="tcard-from" data-i18n="test.from3">Trondheim · August 2024</div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
 <!-- ===================== CONFERENCE / EVENTS ===================== -->
 <section class="sec-tar" style="padding:0" id="selskap">
   <div class="conf-grid">
@@ -1068,6 +1268,69 @@
   </div>
 </footer>
 
+<!-- ===================== BOOKING MODAL ===================== -->
+<div class="book-modal" id="bookModal" role="dialog" aria-modal="true" aria-label="Book opphold" aria-hidden="true">
+  <div class="book-modal-overlay" id="bookModalOverlay"></div>
+  <div class="book-panel">
+    <button class="book-close" id="bookClose" aria-label="Lukk">✕</button>
+    <div class="book-panel-inner">
+      <span class="eyebrow" style="color:var(--gilt)">Book direkte</span>
+      <h2 style="font-size:clamp(1.5rem,3vw,2.2rem);margin:14px 0 4px;color:var(--ink)" data-i18n="bm.h">Sjekk ledige rom</h2>
+      <p style="font-size:.9rem;color:var(--ink-soft);margin-bottom:4px" data-i18n="bm.sub">Beste pris direkte — vi svarer innen 24 timer.</p>
+      <form class="book-form" id="bookForm" novalidate>
+        <div class="book-row">
+          <div class="book-field">
+            <label for="bfCheckin" data-i18n="bm.checkin">Innsjekk</label>
+            <input type="date" id="bfCheckin" name="checkin" required>
+          </div>
+          <div class="book-field">
+            <label for="bfCheckout" data-i18n="bm.checkout">Utsjekk</label>
+            <input type="date" id="bfCheckout" name="checkout" required>
+          </div>
+        </div>
+        <div class="book-row">
+          <div class="book-field">
+            <label for="bfRoom" data-i18n="bm.room">Romtype</label>
+            <select id="bfRoom" name="room">
+              <option value="historisk" data-i18n="bm.r1">Historisk rom (i tunet)</option>
+              <option value="moderne" data-i18n="bm.r2">Moderne rom (Nordstu)</option>
+              <option value="gruppe" data-i18n="bm.r3">Familie / gruppe</option>
+            </select>
+          </div>
+          <div class="book-field">
+            <label for="bfGuests" data-i18n="bm.guests">Gjester</label>
+            <select id="bfGuests" name="guests">
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <option value="3">3</option>
+              <option value="4+">4+</option>
+            </select>
+          </div>
+        </div>
+        <div class="book-row">
+          <div class="book-field">
+            <label for="bfName" data-i18n="bm.name">Navn</label>
+            <input type="text" id="bfName" name="name" placeholder="Fullt navn" required>
+          </div>
+          <div class="book-field">
+            <label for="bfEmail" data-i18n="bm.email">E-post</label>
+            <input type="email" id="bfEmail" name="email" placeholder="din@epost.no" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-ink" style="width:100%;justify-content:center;margin-top:6px;padding:15px 22px" data-i18n="bm.send">Send forespørsel</button>
+        <p style="font-size:.74rem;color:var(--ink-soft);text-align:center;margin-top:12px">
+          <a href="mailto:post@storelvdalhotell.no" style="color:var(--gilt)">post@storelvdalhotell.no</a>
+        </p>
+      </form>
+      <div class="book-success" id="bookSuccess">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none" aria-hidden="true"><circle cx="26" cy="26" r="25" stroke="#BE914F" stroke-width="1.4"/><path d="M15 26l9 9 13-16" stroke="#BE914F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3 data-i18n="bm.ok.h">Takk for din forespørsel!</h3>
+        <p data-i18n="bm.ok.p">Vi kontakter deg innen 24 timer for å bekrefte oppholdet.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ===================== LIGHTBOX ===================== -->
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Kunstverk">
   <button class="lb-close" id="lbClose" aria-label="Lukk">Lukk</button>
@@ -1095,7 +1358,13 @@ const I18N = {
     "conf.ey":"Meetings, conferences & events","conf.h":"Meetings, Christmas parties and weddings — in a setting no one forgets.","conf.p1":"Gather the team somewhere with soul. Meeting rooms for small and large groups, homemade food, and an art tour or a dram as the social touch.","conf.p2":"Perfect for kick-offs, seminars, julebord and celebrations far from the ordinary conference hotel.","conf.s1":"guests in meeting rooms","conf.s2":"historic houses to celebrate in","conf.cta":"Request a quote","cap.conf":"▲ Photo: event / laid table in the courtyard",
     "loc.ey":"Find us","loc.h":"Easy to find. Worth stopping for.","loc.p":"We're right in the centre of Koppang, on the shortest road between Oslo and Trondheim — and just 350 metres from the train station.","loc.addr":"Address","loc.phone":"Phone","loc.email":"Email",
     "book.ey":"Book direct","book.h":"Book direct — and get more than a room.","book.p":"Book straight with us for the best price, and get a welcome dram of our own aquavit or a tour of the collection on the house.","book.perk1":"Best price direct","book.perk2":"Welcome dram or art tour","book.perk3":"A personal reply from us","book.cta1":"Check availability","book.cta2":"Contact us",
-    "foot.tag":"A gallery you can sleep in — art, food and history in the heart of Østerdalen, halfway between Oslo and Trondheim.","foot.visit":"Visit","foot.contact":"Contact","foot.news":"Friends of Stor-Elvdal","foot.newsp":"Get the season's packages, art evenings and news from the courtyard in your inbox.","foot.email":"Your email","foot.sub":"Sign me up","foot.thanks":"Thanks — you're on the list.","foot.credit":"Org. no. 000 000 000 · Privacy"
+    "foot.tag":"A gallery you can sleep in — art, food and history in the heart of Østerdalen, halfway between Oslo and Trondheim.","foot.visit":"Visit","foot.contact":"Contact","foot.news":"Friends of Stor-Elvdal","foot.newsp":"Get the season's packages, art evenings and news from the courtyard in your inbox.","foot.email":"Your email","foot.sub":"Sign me up","foot.thanks":"Thanks — you're on the list.","foot.credit":"Org. no. 000 000 000 · Privacy",
+    "test.ey":"Guest Reviews","test.h":"What those who've stayed say.","test.p":"Genuine feedback from guests who've slept, eaten and experienced Stor-Elvdal.",
+    "test.q1":"\"Completely unique. We've stayed at many hotels, but nothing like this. The art on the walls, the food, the atmosphere — an experience we'll remember for a long time.\"",
+    "test.q2":"\"The guided tour with Pål was a highlight. He knows everything about the paintings and the buildings. The Storelgen aquavit was a lovely surprise on arrival.\"",
+    "test.q3":"\"We took the train from Oslo and were met with calm and character. The café bun was legendary. We're coming back in autumn for the moose package.\"",
+    "test.from1":"Oslo · July 2024","test.from2":"Bergen · September 2024","test.from3":"Trondheim · August 2024",
+    "bm.h":"Check availability","bm.sub":"Best price direct — we reply within 24 hours.","bm.checkin":"Check-in","bm.checkout":"Check-out","bm.room":"Room type","bm.r1":"Historic room (courtyard)","bm.r2":"Modern room (Nordstu)","bm.r3":"Family / group","bm.guests":"Guests","bm.name":"Name","bm.email":"Email","bm.send":"Send enquiry","bm.ok.h":"Thank you for your enquiry!","bm.ok.p":"We will contact you within 24 hours to confirm your stay."
   },
   de:{
     "brand.tag":"Koppang · Østerdalen","nav.stay":"Übernachten","nav.art":"Die Kunst","nav.cafe":"Das Café","nav.exp":"Erlebnisse","nav.conf":"Tagungen & Feiern","nav.find":"Anreise","nav.book":"Zimmer buchen",
@@ -1111,7 +1380,13 @@ const I18N = {
     "conf.ey":"Tagungen, Konferenzen & Feiern","conf.h":"Tagungen, Weihnachtsfeiern und Hochzeiten — in einem Rahmen, den niemand vergisst.","conf.p1":"Versammeln Sie das Team an einem Ort mit Seele. Tagungsräume für kleine und große Gruppen, hausgemachte Küche und eine Kunstführung oder ein Schluck als gesellschaftlicher Akzent.","conf.p2":"Perfekt für Kick-offs, Seminare, Weihnachtsfeiern und Feste fernab des gewöhnlichen Tagungshotels.","conf.s1":"Gäste in Tagungsräumen","conf.s2":"historische Häuser zum Feiern","conf.cta":"Angebot anfragen","cap.conf":"▲ Foto: Feier / gedeckter Tisch im Hof",
     "loc.ey":"Anreise","loc.h":"Leicht zu finden. Einen Halt wert.","loc.p":"Wir liegen mitten im Zentrum von Koppang, an der kürzesten Straße zwischen Oslo und Trondheim — und nur 350 Meter vom Bahnhof entfernt.","loc.addr":"Adresse","loc.phone":"Telefon","loc.email":"E-Mail",
     "book.ey":"Direkt buchen","book.h":"Direkt buchen — und mehr als ein Zimmer bekommen.","book.p":"Buchen Sie direkt bei uns zum besten Preis und erhalten Sie einen Willkommensschluck unseres eigenen Aquavits oder eine Führung durch die Sammlung gratis dazu.","book.perk1":"Bestpreis direkt","book.perk2":"Willkommensschluck oder Kunstführung","book.perk3":"Eine persönliche Antwort von uns","book.cta1":"Verfügbarkeit prüfen","book.cta2":"Kontakt",
-    "foot.tag":"Eine Galerie zum Übernachten — Kunst, Küche und Geschichte mitten im Østerdalen, auf halbem Weg zwischen Oslo und Trondheim.","foot.visit":"Besuchen","foot.contact":"Kontakt","foot.news":"Freunde von Stor-Elvdal","foot.newsp":"Erhalten Sie die Pakete der Saison, Kunstabende und Neues aus dem Hof in Ihr Postfach.","foot.email":"Ihre E-Mail","foot.sub":"Anmelden","foot.thanks":"Danke — Sie sind auf der Liste.","foot.credit":"Org.-Nr. 000 000 000 · Datenschutz"
+    "foot.tag":"Eine Galerie zum Übernachten — Kunst, Küche und Geschichte mitten im Østerdalen, auf halbem Weg zwischen Oslo und Trondheim.","foot.visit":"Besuchen","foot.contact":"Kontakt","foot.news":"Freunde von Stor-Elvdal","foot.newsp":"Erhalten Sie die Pakete der Saison, Kunstabende und Neues aus dem Hof in Ihr Postfach.","foot.email":"Ihre E-Mail","foot.sub":"Anmelden","foot.thanks":"Danke — Sie sind auf der Liste.","foot.credit":"Org.-Nr. 000 000 000 · Datenschutz",
+    "test.ey":"Gästestimmen","test.h":"Was unsere Gäste sagen.","test.p":"Echte Rückmeldungen von Gästen, die bei uns geschlafen, gegessen und Stor-Elvdal erlebt haben.",
+    "test.q1":"„Einzigartig. Wir haben in vielen Hotels übernachtet, aber nichts davon war wie hier. Die Kunst an den Wänden, das Essen, die Atmosphäre — ein Erlebnis, das wir lange in Erinnerung behalten werden."",
+    "test.q2":"„Die Führung mit Pål war ein Highlight. Er weiß alles über die Bilder und die Gebäude. Der Storelgen-Aquavit bei der Ankunft war eine schöne Überraschung."",
+    "test.q3":"„Wir nahmen den Zug aus Oslo und wurden von Ruhe und Charakter empfangen. Das Café-Brötchen war legendär. Wir kommen im Herbst für das Elch-Paket wieder."",
+    "test.from1":"Oslo · Juli 2024","test.from2":"Bergen · September 2024","test.from3":"Trondheim · August 2024",
+    "bm.h":"Verfügbarkeit prüfen","bm.sub":"Bestpreis direkt — wir antworten innerhalb von 24 Stunden.","bm.checkin":"Anreise","bm.checkout":"Abreise","bm.room":"Zimmertyp","bm.r1":"Historisches Zimmer (Hof)","bm.r2":"Modernes Zimmer (Nordstu)","bm.r3":"Familie / Gruppe","bm.guests":"Gäste","bm.name":"Name","bm.email":"E-Mail","bm.send":"Anfrage senden","bm.ok.h":"Danke für Ihre Anfrage!","bm.ok.p":"Wir melden uns innerhalb von 24 Stunden, um Ihren Aufenthalt zu bestätigen."
   }
 };
 const NO_STORE = {};
@@ -1214,11 +1489,43 @@ document.addEventListener("DOMContentLoaded",()=>{
   const form=document.getElementById("newsForm"), msg=document.getElementById("newsMsg");
   form.addEventListener("submit", e=>{ e.preventDefault(); form.reset(); msg.style.display="block"; });
 
-  document.getElementById("bookBtn").addEventListener("click", e=>{
+  /* ---------- booking modal ---------- */
+  const bookModal   = document.getElementById("bookModal");
+  const bookMOverlay= document.getElementById("bookModalOverlay");
+  const bookClose   = document.getElementById("bookClose");
+  const bookForm    = document.getElementById("bookForm");
+  const bookSuccess = document.getElementById("bookSuccess");
+  const bfCheckin   = document.getElementById("bfCheckin");
+  const bfCheckout  = document.getElementById("bfCheckout");
+
+  const todayStr = new Date().toISOString().split("T")[0];
+  bfCheckin.min = todayStr;
+  bfCheckout.min = todayStr;
+  bfCheckin.addEventListener("change", ()=>{ bfCheckout.min = bfCheckin.value || todayStr; });
+
+  function openBooking(){
+    bookModal.classList.add("open");
+    bookModal.setAttribute("aria-hidden","false");
+    document.body.style.overflow="hidden";
+    requestAnimationFrame(()=>bookModal.classList.add("show"));
+  }
+  function closeBooking(){
+    bookModal.classList.remove("show");
+    bookModal.setAttribute("aria-hidden","true");
+    document.body.style.overflow="";
+    setTimeout(()=>{ bookModal.classList.remove("open"); bookForm.style.display=""; bookSuccess.style.display="none"; },420);
+  }
+  document.querySelectorAll(".book-trigger, #bookBtn").forEach(el=>{
+    el.addEventListener("click", e=>{ e.preventDefault(); openBooking(); });
+  });
+  bookMOverlay.addEventListener("click", closeBooking);
+  bookClose.addEventListener("click", closeBooking);
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape" && bookModal.classList.contains("open")) closeBooking(); });
+  bookForm.addEventListener("submit", e=>{
     e.preventDefault();
-    alert(curLang==="en" ? "Connect your booking engine (e.g. Visbook) here."
-        : curLang==="de" ? "Hier Ihr Buchungssystem (z. B. Visbook) verknüpfen."
-        : "Koble til bookingmotoren (f.eks. Visbook) her.");
+    bookForm.style.display="none";
+    bookSuccess.style.display="block";
+    setTimeout(closeBooking, 3200);
   });
 });
 </script>
