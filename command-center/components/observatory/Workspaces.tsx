@@ -13,7 +13,7 @@ import { useHoldings, type Position } from "@/lib/holdings-store";
 import { useGoals, upsertGoal, removeGoal } from "@/lib/goals-store";
 import { computeMetrics } from "@/lib/analytics";
 
-const tip = { background: "#FCFAF4", border: "1px solid rgba(39,35,32,.14)", borderRadius: 11, fontSize: 12, color: "#272320" };
+const tip = { background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 11, fontSize: 12, color: "var(--paper)" };
 
 function ctx(holdings: Position[]): string {
   const v = holdings.reduce((a, h) => a + h.sh * h.px, 0) || 1;
@@ -80,7 +80,14 @@ export function NewsView() {
           items.map((n) => {
             const tm = toneMeta[n.tone];
             return (
-              <div key={n.id} className="iv-panel">
+              <div key={n.id} className="iv-panel" style={{ overflow: "hidden" }}>
+                {n.image && (
+                  <div style={{ margin: "-26px -26px 16px", height: 168, position: "relative" }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={n.image} alt="" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "grayscale(.3) contrast(1.02)" }} />
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(39,35,32,.04), rgba(39,35,32,.1))" }} />
+                  </div>
+                )}
                 <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: "var(--mute)" }}>
                   <span className="iv-mono" style={{ color: "var(--cyan)", border: "1px solid var(--line)", borderRadius: 6, padding: "1px 6px" }}>{n.symbol}</span>
                   <span>{n.source}</span><span>·</span><span className="iv-mono">{n.time}</span>
@@ -284,11 +291,18 @@ export function AcademyView() {
         {a && <div style={{ marginTop: 12, border: "1px solid var(--line)", borderRadius: 10, padding: 14, fontSize: 13.5, lineHeight: 1.6 }}>{a}</div>}
       </div>
       <div className="iv-grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))" }}>
-        {TOPICS.map((x) => (
-          <button key={x.t} className="iv-panel" style={{ textAlign: "left", cursor: "pointer" }} onClick={() => { setQ(x.t); tutor("Explain: " + x.t + " - " + x.d); }}>
-            <div style={{ fontWeight: 600, fontFamily: "'Space Mono', monospace", fontSize: 16 }}>{x.t}</div>
-            <div style={{ fontSize: 12.5, color: "var(--mute)", marginTop: 4 }}>{x.d}</div>
-            <div style={{ fontSize: 12, color: "var(--cyan)", marginTop: 10 }}>Ask the tutor →</div>
+        {TOPICS.map((x, i) => (
+          <button key={x.t} className="iv-panel" style={{ textAlign: "left", cursor: "pointer", overflow: "hidden", padding: 0 }} onClick={() => { setQ(x.t); tutor("Explain: " + x.t + " - " + x.d); }}>
+            <div style={{ height: 110, position: "relative" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`https://picsum.photos/seed/finance-edu-${i}/520/240?grayscale`} alt="" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "contrast(1.02)" }} />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(62,107,82,.28), rgba(39,35,32,.4))", mixBlendMode: "multiply" }} />
+            </div>
+            <div style={{ padding: "16px 18px 18px" }}>
+              <div className="iv-display" style={{ fontSize: 18 }}>{x.t}</div>
+              <div style={{ fontSize: 12.5, color: "var(--mute)", marginTop: 4 }}>{x.d}</div>
+              <div style={{ fontSize: 12, color: "var(--cyan)", marginTop: 10 }}>Ask the tutor →</div>
+            </div>
           </button>
         ))}
       </div>

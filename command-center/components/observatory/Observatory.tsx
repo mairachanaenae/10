@@ -8,7 +8,7 @@ import {
 import {
   Wallet, Radar, Activity, Landmark, Search, Plus, Minus, Clock, Circle,
   ArrowUpRight, ArrowDownRight, Sparkles, KeyRound, Send, X, Map as MapIcon,
-  Newspaper, History, Target, GraduationCap, Compass, Star,
+  Newspaper, History, Target, GraduationCap, Compass, Star, Sun, Moon,
 } from "lucide-react";
 import { Town } from "./Town";
 import { NewsView, HistoryView, GoalsView, AcademyView, OpportunitiesView } from "./Workspaces";
@@ -35,7 +35,7 @@ const CSS = `
   --line:rgba(39,35,32,.14); --line2:rgba(39,35,32,.07);
   --frost:rgba(39,35,32,.03); --frost2:rgba(39,35,32,.05);
   --up:#3E6B52; --down:#B0463F; --warn:#9A6B2E;
-  --cyan:#3E6B52; --gold:#9A6B2E; --magenta:#7A5C86; --brass:#3E6B52;
+  --cyan:#3E6B52; --gold:#9A6B2E; --magenta:#7A5C86; --brass:#3E6B52; --on-accent:#FBF9F3;
   position:fixed; inset:0; overflow:hidden;
   background:var(--ink); color:var(--paper);
   font-family:'Inter',system-ui,sans-serif; font-size:14px; line-height:1.55;
@@ -45,6 +45,22 @@ const CSS = `
 /* faint paper grain for editorial warmth (fixed, no repaint cost) */
 .iv-root::after{content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5; mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E")}
+
+/* warm dark mode: espresso paper, cream ink, lifted accents */
+.iv-root.dark{
+  --ink:#1A1714; --paper:#ECE6DA; --surface:#231F1B; --abyss:#15120F; --mute:#9B9183;
+  --line:rgba(236,230,218,.13); --line2:rgba(236,230,218,.06);
+  --frost:rgba(236,230,218,.04); --frost2:rgba(236,230,218,.07);
+  --up:#6FB58E; --down:#E0796F; --warn:#D2A24E;
+  --cyan:#79B597; --gold:#D2A24E; --magenta:#B49BD0; --brass:#79B597; --on-accent:#1A1714;
+}
+.iv-root.dark::after{mix-blend-mode:screen; opacity:.3}
+.iv-root.dark .iv-panel{box-shadow:inset 0 1px 0 rgba(236,230,218,.05), 0 2px 4px rgba(0,0,0,.3), 0 16px 32px -22px rgba(0,0,0,.6)}
+.iv-root.dark .iv-rail{background:#15120F}
+.iv-root.dark .iv-topbar{background:rgba(26,23,20,.9)}
+.iv-root.dark .iv-input, .iv-root.dark .iv-chatin input{background:#15120F}
+.iv-root.dark .iv-tab.on{background:#322C26}
+.iv-root.dark .iv-mark{background:var(--paper); color:var(--ink)}
 
 .iv-display{font-family:'Newsreader',Georgia,serif; font-weight:500; letter-spacing:-.018em; color:var(--paper); line-height:1.12; font-variant-numeric:tabular-nums lining-nums}
 .iv-mono{font-family:'JetBrains Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums}
@@ -106,15 +122,15 @@ const CSS = `
 
 .iv-chip{border:1px solid var(--line); background:var(--surface); color:var(--mute); padding:7px 14px; border-radius:999px; cursor:pointer; font-size:12.5px; font-weight:500; transition:background .18s ease, color .18s ease, border-color .18s ease, transform .15s ease}
 .iv-chip:hover{color:var(--paper); border-color:rgba(39,35,32,.24)} .iv-chip:active{transform:translateY(1px)}
-.iv-chip.on{background:var(--cyan); border-color:var(--cyan); color:#FBF9F3; font-weight:600}
+.iv-chip.on{background:var(--cyan); border-color:var(--cyan); color:var(--on-accent); font-weight:600}
 
 .iv-mover{flex:none; min-width:150px; padding:14px 16px; border-radius:12px; background:var(--surface); border:1px solid var(--line); transition:transform .2s cubic-bezier(.16,1,.3,1)}
 .iv-mover:hover{transform:translateY(-2px)}
 
 .iv-seg{display:flex; padding:3px; border-radius:10px; background:rgba(39,35,32,.05); border:1px solid var(--line)}
 .iv-seg button{flex:1; border:0; background:transparent; color:var(--mute); padding:10px; border-radius:8px; cursor:pointer; font-weight:600; font-size:13px}
-.iv-seg button.buy{background:var(--up); color:#FBF9F3}
-.iv-seg button.sell{background:var(--down); color:#FBF9F3}
+.iv-seg button.buy{background:var(--up); color:var(--on-accent)}
+.iv-seg button.sell{background:var(--down); color:var(--on-accent)}
 .iv-field{display:flex; flex-direction:column; gap:7px; margin-top:16px}
 .iv-field label{font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--mute)}
 .iv-input{display:flex; align-items:center; gap:8px; padding:11px 13px; border-radius:10px; background:var(--abyss); border:1px solid var(--line)}
@@ -122,7 +138,7 @@ const CSS = `
 .iv-stepper{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--paper);cursor:pointer;display:grid;place-items:center}
 .iv-cta{width:100%; margin-top:20px; padding:13px; border:0; border-radius:10px; cursor:pointer; font-weight:600; font-size:14px; transition:transform .15s ease, filter .2s ease}
 .iv-cta:active{transform:translateY(1px)}
-.iv-cta.buy{background:var(--up); color:#FBF9F3} .iv-cta.sell{background:var(--down); color:#FBF9F3}
+.iv-cta.buy{background:var(--up); color:var(--on-accent)} .iv-cta.sell{background:var(--down); color:var(--on-accent)}
 .iv-cta.brassbtn{background:var(--paper); color:var(--ink)}
 .iv-cta.brassbtn:hover{filter:brightness(1.12)}
 input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:4px;background:var(--line);outline:0}
@@ -419,7 +435,7 @@ function Portfolio() {
           <div style={{ height: 200, marginTop: 10, position: "relative" }}>
             <ResponsiveContainer>
               <PieChart>
-                <Pie data={donut} dataKey="value" innerRadius={60} outerRadius={88} paddingAngle={2.5} stroke="#FCFAF4" strokeWidth={2} cornerRadius={3}>
+                <Pie data={donut} dataKey="value" innerRadius={60} outerRadius={88} paddingAngle={2.5} stroke="var(--surface)" strokeWidth={2} cornerRadius={3}>
                   {donut.map((d, i) => <Cell key={i} fill={d.tone} />)}
                 </Pie>
                 <Tooltip content={<Tip prefix="$" />} />
@@ -1339,14 +1355,17 @@ export default function Observatory() {
   const View = NAV.find((n) => n.id === active)!.View;
   const [clock, setClock] = useState("");
   const [keys, setKeys] = useState(false);
+  const [dark, setDark] = useState(false);
   const shellMetrics = computeMetrics(useHoldings());
   useEffect(() => {
     const tick = () => setClock(new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }));
     tick(); const id = setInterval(tick, 30000); return () => clearInterval(id);
   }, []);
+  useEffect(() => { setDark(localStorage.getItem("cc_theme") === "dark"); }, []);
+  function toggleTheme() { setDark((d) => { const n = !d; localStorage.setItem("cc_theme", n ? "dark" : "light"); return n; }); }
 
   return (
-    <div className="iv-root">
+    <div className={"iv-root" + (dark ? " dark" : "")}>
       <style>{CSS}</style>
       <div className="iv-aurora" />
       <div className="iv-shell">
@@ -1376,6 +1395,7 @@ export default function Observatory() {
               </span>
             </div>
             <div className="iv-pill iv-mob-hide"><Clock size={14} /> <span className="iv-mono">{clock}</span></div>
+            <button className="iv-icon-btn" aria-label={dark ? "Light mode" : "Dark mode"} onClick={toggleTheme}>{dark ? <Sun size={17} /> : <Moon size={17} />}</button>
             <button className="iv-icon-btn" aria-label="Connections" onClick={() => setKeys(true)}><KeyRound size={17} /></button>
           </div>
           <View />

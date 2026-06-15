@@ -10,6 +10,7 @@ export interface NewsItem {
   tone: NewsTone;
   tags: string[];
   url?: string;
+  image?: string;
 }
 
 /**

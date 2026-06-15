@@ -27,6 +27,7 @@ interface FinnhubArticle {
   summary?: string;
   url?: string;
   related?: string;
+  image?: string;
 }
 
 const BULL = /(beat|surge|jump|soar|record|rally|upgrade|growth|profit|gain|rise|strong|raises)/i;
@@ -63,6 +64,7 @@ export function mapArticles(raw: FinnhubArticle[], symbol: string): NewsItem[] {
         tone: toneOf(blob),
         tags: [a.category || (symbol === "All" ? "Market" : symbol)],
         url: a.url,
+        image: a.image && a.image.startsWith("http") ? a.image : undefined,
       };
     });
 }
