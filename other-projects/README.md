@@ -7,6 +7,5 @@ are kept here for reference, isolated from the main project (the investment
 - **stor-elvdal-hotell/** - a hotel landing site (`index.html` / `page.html`,
   `img/` photos). `deploy.yml` is its old GitHub Pages workflow, parked here
   (inert: it only runs when placed under `.github/workflows/`).
-- **facial-aesthetics/** - a standalone "Facial Aesthetics Report" page.
 
-These do not affect the investment app or its deployment.
+This does not affect the investment app or its deployment.
