@@ -111,6 +111,13 @@ export function Town() {
 
   const [selected, setSelected] = useState<string | null>(null);
   const [mode, setMode] = useState<"map" | "play">("map");
+  const [best, setBest] = useState(0);
+  useEffect(() => {
+    const sync = () => setBest(Number(localStorage.getItem("cc_towngame_best") || 0));
+    sync();
+    window.addEventListener("cc-towngame", sync);
+    return () => window.removeEventListener("cc-towngame", sync);
+  }, []);
   const rt = useRef<Record<string, RT>>(
     Object.fromEntries(ROLES.map((r) => {
       const start = byId(r.route[0].b);
@@ -166,6 +173,7 @@ export function Town() {
           <div className="iv-display" style={{ fontSize: 40, marginTop: 6 }}>The Town</div>
           <div className="iv-hero-sub" style={{ marginTop: 8 }}>
             <span style={{ color: "var(--mute)", fontSize: 13 }}>{mode === "map" ? "Each agent moves as its task changes. A living view of your decision system." : "Dividend Dash: collect coins, dodge volatility."}</span>
+            {best > 0 && <span className="iv-tag" style={{ color: "var(--gold)", borderColor: "var(--gold)" }}>High score £{best}</span>}
           </div>
           <div className="iv-rule" /></div>
         <div className="iv-tabs">

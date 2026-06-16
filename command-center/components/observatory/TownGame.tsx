@@ -63,6 +63,7 @@ export function TownGame() {
         setRunning(false);
         const b = Math.max(g.current.score, Number(localStorage.getItem("cc_towngame_best") || 0));
         localStorage.setItem("cc_towngame_best", String(b)); setBest(b);
+        window.dispatchEvent(new Event("cc-towngame"));
         return 0;
       }
       return t - 1;
