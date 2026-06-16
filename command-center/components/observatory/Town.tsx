@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useHoldings } from "@/lib/holdings-store";
 import { computeMetrics, needsRebalance } from "@/lib/analytics";
 import { usePendingApprovals } from "@/lib/approvals";
+import { TownGame } from "./TownGame";
 
 // ── Town map ────────────────────────────────────────────────────────────────
 interface Building { id: string; name: string; x: number; y: number; color: string; kind: "civic" | "district" }
@@ -109,6 +110,7 @@ export function Town() {
   const drift = needsRebalance(metrics, 5);
 
   const [selected, setSelected] = useState<string | null>(null);
+  const [mode, setMode] = useState<"map" | "play">("map");
   const rt = useRef<Record<string, RT>>(
     Object.fromEntries(ROLES.map((r) => {
       const start = byId(r.route[0].b);
@@ -163,11 +165,19 @@ export function Town() {
         <div><span className="iv-eyebrow">Investment Town</span>
           <div className="iv-display" style={{ fontSize: 40, marginTop: 6 }}>The Town</div>
           <div className="iv-hero-sub" style={{ marginTop: 8 }}>
-            <span style={{ color: "var(--mute)", fontSize: 13 }}>Each agent moves as its task changes. A living view of your decision system.</span>
+            <span style={{ color: "var(--mute)", fontSize: 13 }}>{mode === "map" ? "Each agent moves as its task changes. A living view of your decision system." : "Dividend Dash: collect coins, dodge volatility."}</span>
           </div>
           <div className="iv-rule" /></div>
+        <div className="iv-tabs">
+          {(["map", "play"] as const).map((m) => (
+            <button key={m} className={"iv-tab" + (mode === m ? " on" : "")} style={{ textTransform: "capitalize" }} onClick={() => setMode(m)}>{m === "map" ? "Map" : "Play"}</button>
+          ))}
+        </div>
       </div>
 
+      {mode === "play" ? (
+        <div className="iv-panel"><TownGame /></div>
+      ) : (
       <div className="iv-grid" style={{ gridTemplateColumns: "1.7fr 1fr" }}>
         <div className="iv-panel" style={{ padding: 14 }}>
           <svg viewBox="0 0 1000 620" style={{ width: "100%", height: "auto", display: "block" }} role="img" aria-label="Investment town map">
@@ -274,6 +284,7 @@ export function Town() {
           )}
         </div>
       </div>
+      )}
     </div>
   );
 }
